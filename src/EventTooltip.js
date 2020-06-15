@@ -5,7 +5,7 @@ import React, { Fragment, useLayoutEffect, useRef } from 'react';
 import { COLORS } from './constants';
 import { getBatchRange } from './utils';
 import useSmartTooltip from './useSmartTooltip';
-import styles from './EventTooltip.css';
+import styles from './EventTooltip.module.css';
 
 const TOOLTIP_OFFSET = 4;
 
