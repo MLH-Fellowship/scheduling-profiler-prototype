@@ -790,14 +790,21 @@ const zoomToBatch = (data, measure, state) => {
   state.zoomTo(startTime, stopTime);
 };
 
+type Props = {|
+  data: any, // TODO: Fix
+  flamechart: any, // TODO: Fix
+  height: number,
+  schedulerCanvasHeight: number,
+  width: number,
+|};
 function AutoSizedCanvas({
   data,
   flamechart,
   height,
   schedulerCanvasHeight,
   width,
-}) {
-  const canvasRef = useRef();
+}: Props) {
+  const canvasRef = useRef<?HTMLCanvasElement>(null);
 
   const state = usePanAndZoom({
     canvasRef,

@@ -1,3 +1,5 @@
+// @flow
+
 import memoize from 'memoize-one';
 
 // hidpi canvas: https://www.html5rocks.com/en/tutorials/canvas/hidpi/
@@ -22,7 +24,10 @@ export const getCanvasContext = memoize(
   }
 );
 
-export function getCanvasMousePos(canvas, mouseEvent) {
+export function getCanvasMousePos(
+  canvas: HTMLCanvasElement,
+  mouseEvent: MouseEvent
+) {
   const rect =
     canvas instanceof HTMLCanvasElement
       ? canvas.getBoundingClientRect()

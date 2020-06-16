@@ -43,7 +43,7 @@ export default function reactProfilerProcessor(
     },
   };
 
-  let currentMetadata = null;
+  let currentMetadata: ?Metadata = null;
   let currentPriority = 'unscheduled';
   let currentProfilerDataGroup = null;
   let uidCounter = 0;
@@ -72,6 +72,9 @@ export default function reactProfilerProcessor(
   };
 
   const getLastType = () => {
+    if (!currentMetadata) {
+      return null;
+    }
     const { stack } = currentMetadata;
     if (stack.length > 0) {
       const { type } = stack[stack.length - 1];
@@ -81,6 +84,9 @@ export default function reactProfilerProcessor(
   };
 
   const getDepth = () => {
+    if (!currentMetadata) {
+      return 0;
+    }
     const { stack } = currentMetadata;
     if (stack.length > 0) {
       const { depth, type } = stack[stack.length - 1];
@@ -90,6 +96,9 @@ export default function reactProfilerProcessor(
   };
 
   const markWorkCompleted = (type, stopTime) => {
+    if (!currentMetadata) {
+      return;
+    }
     const { stack } = currentMetadata;
     if (stack.length === 0) {
       console.error(
