@@ -1,5 +1,7 @@
 // @flow
 
+import type { TimelineEvent } from './speedscope/import/chrome';
+
 import { copy } from 'clipboard-js';
 import React, {
   Fragment,
@@ -725,7 +727,7 @@ function App() {
   useEffect(() => {
     fetch(JSON_PATH)
       .then(data => data.json())
-      .then(data => {
+      .then((data: TimelineEvent[]) => {
         // Filter null entries and sort by timestamp.
         // I would not expect to have to do either of this,
         // but some of the data being passed in requires it.
@@ -792,7 +794,7 @@ const zoomToBatch = (data, measure, state) => {
 
 type Props = {|
   data: any, // TODO: Fix
-  flamechart: any, // TODO: Fix
+  flamechart: FlamechartData,
   height: number,
   schedulerCanvasHeight: number,
   width: number,

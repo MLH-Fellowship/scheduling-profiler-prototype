@@ -1,5 +1,7 @@
 // @flow
 
+import type { TimelineEvent } from './speedscope/import/chrome';
+
 import type {
   BatchUID,
   ReactPriority,
@@ -16,7 +18,7 @@ type Metadata = {|
 |};
 
 export default function reactProfilerProcessor(
-  rawData: Array<any>
+  rawData: TimelineEvent[]
 ): ReactProfilerData {
   const reactProfilerData = {
     startTime: rawData[0].ts,
