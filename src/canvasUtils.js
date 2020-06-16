@@ -3,8 +3,12 @@
 import memoize from 'memoize-one';
 
 // hidpi canvas: https://www.html5rocks.com/en/tutorials/canvas/hidpi/
-export function configureRetinaCanvas(canvas, height, width) {
-  const dpr = window.devicePixelRatio || 1;
+export function configureRetinaCanvas(
+  canvas: HTMLCanvasElement,
+  height: number,
+  width: number
+): number {
+  const dpr: number = window.devicePixelRatio || 1;
   canvas.width = width * dpr;
   canvas.height = height * dpr;
   canvas.style.width = `${width}px`;
@@ -13,7 +17,12 @@ export function configureRetinaCanvas(canvas, height, width) {
 }
 
 export const getCanvasContext = memoize(
-  (canvas, height, width, scaleCanvas = true) => {
+  (
+    canvas: HTMLCanvasElement,
+    height: number,
+    width: number,
+    scaleCanvas: boolean = true
+  ): CanvasRenderingContext2D => {
     const context = canvas.getContext('2d', { alpha: false });
     if (scaleCanvas) {
       const dpr = configureRetinaCanvas(canvas, height, width);
