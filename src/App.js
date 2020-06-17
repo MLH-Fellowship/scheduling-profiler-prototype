@@ -812,7 +812,7 @@ const zoomToBatch = (
 };
 
 type AutoSizedCanvasProps = {|
-  data: ReactProfilerData | null, // TODO: Fix
+  data: ReactProfilerData | null,
   flamechart: FlamechartData | null,
   height: number,
   schedulerCanvasHeight: number,
