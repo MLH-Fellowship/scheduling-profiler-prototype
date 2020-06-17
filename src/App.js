@@ -9,6 +9,7 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
+  useCallback
 } from 'react';
 import { unstable_batchedUpdates } from 'react-dom';
 import memoize from 'memoize-one';
@@ -51,7 +52,7 @@ import {
   useContextMenu,
 } from './context';
 
-import JSON_PATH from 'url:../static/small-devtools.json';
+// import JSON_PATH from 'url:../static/small-devtools.json';
 //import JSON_PATH from 'url:../static/initial-render.json';
 
 const CONTEXT_MENU_ID = 'canvas';
@@ -723,6 +724,22 @@ function App() {
   const [data, setData] = useState<ReactProfilerData | null>(null);
   const [flamechart, setFlamechart] = useState<FlamechartData | null>(null);
   const [schedulerCanvasHeight, setSchedulerCanvasHeight] = useState<number>(0);
+  const [JSON_PATH, setJSON_PATH] = useState('../static/small-devtools.json'); //TODO: add type
+  
+  const inputProfilerData = useCallback(
+    (file) => {
+
+      let fileName = file.target.files[0];
+
+      const regex = /^.*\.json$/g;
+      
+      if(fileName.name.match(regex)){
+        console.log(JSON_PATH);
+        setJSON_PATH = file;
+      }
+    },
+    [JSON_PATH, setJSON_PATH]
+  );
 
   useEffect(() => {
     fetch(JSON_PATH)
@@ -932,6 +949,7 @@ function AutoSizedCanvas({
       {!isContextMenuShown && (
         <EventTooltip data={data} hoveredEvent={hoveredEvent} state={state} />
       )}
+      <input type="file" onChange={(e) => inputProfilerData(e)}/>
     </Fragment>
   );
 }
