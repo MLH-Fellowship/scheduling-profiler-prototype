@@ -18,7 +18,7 @@ import usePanAndZoom, {
   positionToTimestamp,
   timestampToPosition,
 } from './usePanAndZoom';
-import { getCanvasContext } from './canvasUtils';
+import { getCanvasContext, getTimeTickInterval, cachedFlamegraphTextWidths, trimFlamegraphText } from './canvasUtils';
 import prettyMilliseconds from 'pretty-ms';
 import { getBatchRange } from './utils';
 import useInteractiveEvents from './useInteractiveEvents';
@@ -62,7 +62,6 @@ import {
 import { ContextMenu, ContextMenuItem, useContextMenu } from './context';
 
 import JSON_PATH from 'url:../static/small-devtools.json';
-//import JSON_PATH from 'url:../static/initial-render.json';
 
 const CONTEXT_MENU_ID = 'canvas';
 
@@ -82,22 +81,7 @@ type ContextMenuContextData = {|
   state: PanAndZoomState,
 |};
 
-// Time mark intervals vary based on the current zoom range and the time it represents.
-// In Chrome, these seem to range from 70-140 pixels wide.
-// Time wise, they represent intervals of e.g. 1s, 500ms, 200ms, 100ms, 50ms, 20ms.
-// Based on zoom, we should determine which amount to actually show.
-function getTimeTickInterval(zoomLevel) {
-  let interval = INTERVAL_TIMES[0];
-  for (let i = 0; i < INTERVAL_TIMES.length; i++) {
-    const currentInteval = INTERVAL_TIMES[i];
-    const pixels = currentInteval * zoomLevel;
-    if (pixels <= MAX_INTERVAL_SIZE_PX) {
-      interval = currentInteval;
-    }
-  }
-  return interval;
-}
-
+// TODO: Move to canvasutils
 function getHoveredEvent(
   schedulerCanvasHeight: number,
   data: ReactProfilerData | null,
@@ -229,25 +213,6 @@ function getHoveredEvent(
 
   return null;
 }
-
-const cachedFlamegraphTextWidths = new Map();
-const trimFlamegraphText = (context, text, width) => {
-  for (let i = text.length - 1; i >= 0; i--) {
-    const trimmedText = i === text.length - 1 ? text : text.substr(0, i) + '…';
-
-    let measuredWidth = cachedFlamegraphTextWidths.get(trimmedText);
-    if (measuredWidth == null) {
-      measuredWidth = context.measureText(trimmedText).width;
-      cachedFlamegraphTextWidths.set(trimmedText, measuredWidth);
-    }
-
-    if (measuredWidth <= width) {
-      return trimmedText;
-    }
-  }
-
-  return null;
-};
 
 const renderReact = ({
   baseY,
