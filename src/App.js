@@ -793,8 +793,8 @@ const zoomToBatch = (data, measure, state) => {
 };
 
 type Props = {|
-  data: any, // TODO: Fix
-  flamechart: FlamechartData,
+  data: ReactProfilerData | null, // TODO: Fix
+  flamechart: FlamechartData | null,
   height: number,
   schedulerCanvasHeight: number,
   width: number,

@@ -45,6 +45,8 @@ export type ReactProfilerDataPriority = {|
 |};
 
 export type ReactProfilerData = {|
+  startTime: number,
+  duration: number,
   unscheduled: ReactProfilerDataPriority,
   high: ReactProfilerDataPriority,
   normal: ReactProfilerDataPriority,
