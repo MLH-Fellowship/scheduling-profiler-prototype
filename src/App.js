@@ -9,7 +9,7 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
-  useCallback
+  useCallback,
 } from 'react';
 import { unstable_batchedUpdates } from 'react-dom';
 import memoize from 'memoize-one';
@@ -724,50 +724,29 @@ function App() {
   const [data, setData] = useState<ReactProfilerData | null>(null);
   const [flamechart, setFlamechart] = useState<FlamechartData | null>(null);
   const [schedulerCanvasHeight, setSchedulerCanvasHeight] = useState<number>(0);
-  const [JSON_PATH, setJSON_PATH] = useState('../static/small-devtools.json'); //TODO: add type
-  
-  const inputProfilerData = useCallback(
-    (file) => {
-
-      let fileName = file.target.files[0];
-
-      const regex = /^.*\.json$/g;
-      
-      if(fileName.name.match(regex)){
-        console.log(JSON_PATH);
-        setJSON_PATH = file;
-      }
-    },
-    [JSON_PATH, setJSON_PATH]
-  );
 
   useEffect(() => {
-    fetch(JSON_PATH)
-      .then(data => data.json())
-      .then((data: TimelineEvent[]) => {
-        // Filter null entries and sort by timestamp.
-        // I would not expect to have to do either of this,
-        // but some of the data being passed in requires it.
-        data = data.filter(Boolean).sort((a, b) => (a.ts > b.ts ? 1 : -1));
-
-        if (data.length > 0) {
-          unstable_batchedUpdates(() => {
-            const processedData = preprocessData(data);
-            setData(processedData);
-
-            const flamechart = preprocessFlamechart(data);
-            setFlamechart(flamechart);
-
-            let height = 0;
-
-            REACT_PRIORITIES.forEach(priority => {
-              height += getPriorityHeight(processedData, priority);
-            });
-
-            setSchedulerCanvasHeight(height);
-          });
-        }
-      });
+    // fetch(JSON_PATH)
+    //   .then(data => data.json())
+    //   .then((data: TimelineEvent[]) => {
+    //     // Filter null entries and sort by timestamp.
+    //     // I would not expect to have to do either of this,
+    //     // but some of the data being passed in requires it.
+    //     data = data.filter(Boolean).sort((a, b) => (a.ts > b.ts ? 1 : -1));
+    //     if (data.length > 0) {
+    //       unstable_batchedUpdates(() => {
+    //         const processedData = preprocessData(data);
+    //         setData(processedData);
+    //         const flamechart = preprocessFlamechart(data);
+    //         setFlamechart(flamechart);
+    //         let height = 0;
+    //         REACT_PRIORITIES.forEach(priority => {
+    //           height += getPriorityHeight(processedData, priority);
+    //         });
+    //         setSchedulerCanvasHeight(height);
+    //       });
+    //     }
+    //   });
   }, []);
 
   return (
@@ -846,6 +825,24 @@ function AutoSizedCanvas({
     state
   );
   const [isContextMenuShown, setIsContextMenuShown] = useState<boolean>(false);
+  const [file, setFile] = useState(null); //TODO: add type
+
+  const inputProfilerData = useCallback(
+    event => {
+      let file: File = event.target.files[0];
+      const regex = /^.*\.json$/g;
+      if (file.name.match(regex)) {
+        setFile(file);
+        console.log(file, 'hi');
+        console.log(
+          'hi',
+          file.text.then(hi => console.log(hi))
+        );
+        // console.log(file, 'hi');
+      }
+    },
+    [file, setFile]
+  );
 
   useContextMenu({
     data: {
@@ -876,6 +873,7 @@ function AutoSizedCanvas({
 
   return (
     <Fragment>
+      <input type="file" onChange={inputProfilerData} />
       <canvas
         ref={canvasRef}
         className={styles.Canvas}
@@ -949,7 +947,6 @@ function AutoSizedCanvas({
       {!isContextMenuShown && (
         <EventTooltip data={data} hoveredEvent={hoveredEvent} state={state} />
       )}
-      <input type="file" onChange={(e) => inputProfilerData(e)}/>
     </Fragment>
   );
 }
