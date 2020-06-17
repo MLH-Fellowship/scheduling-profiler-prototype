@@ -23,7 +23,6 @@ import prettyMilliseconds from 'pretty-ms';
 import { getBatchRange } from './utils';
 import useInteractiveEvents from './useInteractiveEvents';
 import EventTooltip from './EventTooltip';
-import SelectedEvent from './SelectedEvent';
 import preprocessData from './preprocessData';
 import preprocessFlamechart from './preprocessFlamechart';
 import styles from './App.css';
