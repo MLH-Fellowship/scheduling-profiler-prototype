@@ -21,7 +21,7 @@ const TOOLTIP_OFFSET = 4;
 
 type Props = {|
   data: ReactProfilerData | null,
-  hoveredEvent: ReactHoverContextInfo,
+  hoveredEvent: ReactHoverContextInfo | null,
   state: PanAndZoomState,
 |};
 
@@ -101,9 +101,8 @@ export default function EventTooltip({ data, hoveredEvent, state }: Props) {
         tooltipRef={tooltipRef}
       />
     );
-  } else {
-    return null;
   }
+  return null;
 }
 
 declare function formatComponentStack(componentStack: null): null;

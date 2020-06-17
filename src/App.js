@@ -431,14 +431,14 @@ const renderReact = ({
 // TODO Passing "state" directly breaks memoization for e.g. mouse moves
 const renderCanvas = memoize(
   (
-    data,
-    flamechart,
-    canvas,
-    canvasWidth,
-    canvasHeight,
-    schedulerCanvasHeight,
-    state,
-    hoveredEvent
+    data: ReactProfilerData,
+    flamechart: FlamechartData | null,
+    canvas: HTMLCanvasElement | null,
+    canvasWidth: number,
+    canvasHeight: number,
+    schedulerCanvasHeight: number,
+    state: PanAndZoomState,
+    hoveredEvent: ReactHoverContextInfo | null
   ) => {
     const { offsetX, offsetY, zoomLevel } = state;
 
@@ -696,9 +696,10 @@ const cachedPriorityHeights = new Map();
 const getPriorityHeight = (
   data: ReactProfilerData,
   priority: ReactPriority
-) => {
+): number => {
   if (cachedPriorityHeights.has(priority)) {
-    return cachedPriorityHeights.get(priority);
+    // We know the value must be present because we've just checked.
+    return ((cachedPriorityHeights.get(priority): any): number);
   } else {
     const numMeasures = data[priority].maxNestedMeasures;
     const events = data[priority].events;
@@ -768,7 +769,7 @@ function App() {
   return (
     <div className={styles.App} style={{ backgroundColor: COLORS.PAGE_BG }}>
       <AutoSizer>
-        {({ height, width }) => (
+        {({ height, width }: { height: number, width: number }) => (
           <AutoSizedCanvas
             data={data}
             flamechart={flamechart}
@@ -826,7 +827,7 @@ function AutoSizedCanvas({
   schedulerCanvasHeight,
   width,
 }: AutoSizedCanvasProps) {
-  const canvasRef = useRef<?HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const state = usePanAndZoom({
     canvasRef,

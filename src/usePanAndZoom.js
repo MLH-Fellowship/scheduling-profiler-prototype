@@ -276,7 +276,7 @@ function clamp(min: number, max: number, value: number): number {
 }
 
 type Props = {|
-  canvasRef: {| current: ?HTMLCanvasElement |},
+  canvasRef: {| current: HTMLCanvasElement | null |},
   canvasHeight: number,
   canvasWidth: number,
   fixedColumnWidth: number,
