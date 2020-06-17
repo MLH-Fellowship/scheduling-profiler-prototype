@@ -42,6 +42,22 @@ import {
   MARKER_TEXT_PADDING,
   MARKER_HEIGHT,
   MARKER_TICK_HEIGHT,
+  REACT_PRIORITIES,
+  ROW_CSS_PIXELS_HEIGHT,
+  TEXT_CSS_PIXELS_OFFSET_START,
+  TEXT_CSS_PIXELS_OFFSET_TOP,
+  FONT_SIZE,
+  BORDER_OPACITY,
+  REACT_GUTTER_SIZE,
+  REACT_EVENT_SIZE,
+  REACT_WORK_SIZE,
+  REACT_EVENT_BORDER_SIZE,
+  REACT_PRIORITY_BORDER_SIZE,
+  FLAMECHART_FONT_SIZE,
+  FLAMECHART_FRAME_HEIGHT,
+  FLAMECHART_TEXT_PADDING,
+  LABEL_FIXED_WIDTH,
+  HEADER_HEIGHT_FIXED,
 } from './constants';
 import { ContextMenu, ContextMenuItem, useContextMenu } from './context';
 
@@ -65,27 +81,6 @@ type ContextMenuContextData = {|
   hoveredEvent: ReactHoverContextInfo | null,
   state: PanAndZoomState,
 |};
-
-const REACT_PRIORITIES = ['unscheduled', 'high', 'normal', 'low'];
-
-const ROW_CSS_PIXELS_HEIGHT = 16;
-const TEXT_CSS_PIXELS_OFFSET_START = 3;
-const TEXT_CSS_PIXELS_OFFSET_TOP = 11;
-const FONT_SIZE = 10;
-const BORDER_OPACITY = 0.4;
-
-const REACT_GUTTER_SIZE = 4;
-const REACT_EVENT_SIZE = 6;
-const REACT_WORK_SIZE = 12;
-const REACT_EVENT_BORDER_SIZE = 1;
-const REACT_PRIORITY_BORDER_SIZE = 1;
-
-const FLAMECHART_FONT_SIZE = 10;
-const FLAMECHART_FRAME_HEIGHT = 16;
-const FLAMECHART_TEXT_PADDING = 3;
-
-const LABEL_FIXED_WIDTH = LABEL_SIZE + REACT_PRIORITY_BORDER_SIZE;
-const HEADER_HEIGHT_FIXED = MARKER_HEIGHT + REACT_PRIORITY_BORDER_SIZE;
 
 // Time mark intervals vary based on the current zoom range and the time it represents.
 // In Chrome, these seem to range from 70-140 pixels wide.
