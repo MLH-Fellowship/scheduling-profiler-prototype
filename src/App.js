@@ -1,6 +1,7 @@
 // @flow
 
 import type { TimelineEvent } from './speedscope/import/chrome';
+import type { PanAndZoomState } from './usePanAndZoom';
 
 import { copy } from 'clipboard-js';
 import React, {
@@ -12,15 +13,14 @@ import React, {
 } from 'react';
 import { unstable_batchedUpdates } from 'react-dom';
 import memoize from 'memoize-one';
-import usePanAndZoom from './usePanAndZoom';
-import { getCanvasContext } from './canvasUtils';
-import prettyMilliseconds from 'pretty-ms';
-import { getBatchRange } from './utils';
-import {
+import usePanAndZoom, {
   durationToWidth,
   positionToTimestamp,
   timestampToPosition,
 } from './usePanAndZoom';
+import { getCanvasContext } from './canvasUtils';
+import prettyMilliseconds from 'pretty-ms';
+import { getBatchRange } from './utils';
 import useInteractiveEvents from './useInteractiveEvents';
 import EventTooltip from './EventTooltip';
 import SelectedEvent from './SelectedEvent';
@@ -44,12 +44,7 @@ import {
   MARKER_HEIGHT,
   MARKER_TICK_HEIGHT,
 } from './constants';
-import {
-  ContextMenu,
-  ContextMenuItem,
-  RegistryContext,
-  useContextMenu,
-} from './context';
+import { ContextMenu, ContextMenuItem, useContextMenu } from './context';
 
 import JSON_PATH from 'url:../static/small-devtools.json';
 //import JSON_PATH from 'url:../static/initial-render.json';
@@ -59,9 +54,18 @@ const CONTEXT_MENU_ID = 'canvas';
 import type {
   FlamechartData,
   ReactEvent,
+  ReactHoverContextInfo,
   ReactMeasure,
+  ReactPriority,
   ReactProfilerData,
 } from './types';
+
+type ContextMenuContextData = {|
+  data: ReactProfilerData | null,
+  flamechart: FlamechartData | null,
+  hoveredEvent: ReactHoverContextInfo | null,
+  state: PanAndZoomState,
+|};
 
 const REACT_PRIORITIES = ['unscheduled', 'high', 'normal', 'low'];
 
@@ -100,7 +104,12 @@ function getTimeTickInterval(zoomLevel) {
   return interval;
 }
 
-function getHoveredEvent(schedulerCanvasHeight, data, flamechart, state) {
+function getHoveredEvent(
+  schedulerCanvasHeight: number,
+  data: ReactProfilerData | null,
+  flamechart: FlamechartData | null,
+  state: PanAndZoomState
+): ReactHoverContextInfo | null {
   const { canvasMouseX, canvasMouseY, offsetY } = state;
 
   if (canvasMouseX < LABEL_FIXED_WIDTH || canvasMouseY < HEADER_HEIGHT_FIXED) {
@@ -112,7 +121,7 @@ function getHoveredEvent(schedulerCanvasHeight, data, flamechart, state) {
       let adjustedCanvasMouseY = canvasMouseY - HEADER_HEIGHT_FIXED + offsetY;
       let priorityMinY = HEADER_HEIGHT_FIXED;
       let priorityIndex = null;
-      let priority = null;
+      let priority: ReactPriority = 'unscheduled';
       for (let index = 0; index < REACT_PRIORITIES.length; index++) {
         priority = REACT_PRIORITIES[index];
 
@@ -684,7 +693,10 @@ const renderCanvas = memoize(
 );
 
 const cachedPriorityHeights = new Map();
-const getPriorityHeight = (data, priority) => {
+const getPriorityHeight = (
+  data: ReactProfilerData,
+  priority: ReactPriority
+) => {
   if (cachedPriorityHeights.has(priority)) {
     return cachedPriorityHeights.get(priority);
   } else {
@@ -770,7 +782,7 @@ function App() {
   );
 }
 
-const copySummary = (data, measure) => {
+const copySummary = (data: ReactProfilerData | null, measure: ReactMeasure) => {
   const { batchUID, duration, priority, timestamp, type } = measure;
 
   const [startTime, stopTime] = getBatchRange(batchUID, priority, data);
@@ -785,27 +797,35 @@ const copySummary = (data, measure) => {
   );
 };
 
-const zoomToBatch = (data, measure, state) => {
+const zoomToBatch = (
+  data: ReactProfilerData | null,
+  measure: ReactMeasure,
+  state: PanAndZoomState
+) => {
+  const { zoomTo } = state;
+  if (!data || !zoomTo) {
+    return;
+  }
   const { batchUID, priority } = measure;
   const [startTime, stopTime] = getBatchRange(batchUID, priority, data);
-
-  state.zoomTo(startTime, stopTime);
+  zoomTo(startTime, stopTime);
 };
 
-type Props = {|
+type AutoSizedCanvasProps = {|
   data: ReactProfilerData | null, // TODO: Fix
   flamechart: FlamechartData | null,
   height: number,
   schedulerCanvasHeight: number,
   width: number,
 |};
+
 function AutoSizedCanvas({
   data,
   flamechart,
   height,
   schedulerCanvasHeight,
   width,
-}: Props) {
+}: AutoSizedCanvasProps) {
   const canvasRef = useRef<?HTMLCanvasElement>(null);
 
   const state = usePanAndZoom({
@@ -830,7 +850,7 @@ function AutoSizedCanvas({
   );
   const [isContextMenuShown, setIsContextMenuShown] = useState<boolean>(false);
 
-  useContextMenu({
+  useContextMenu<ContextMenuContextData>({
     data: {
       data,
       flamechart,
@@ -866,7 +886,7 @@ function AutoSizedCanvas({
         width={width}
       />
       <ContextMenu id={CONTEXT_MENU_ID}>
-        {({ data, hoveredEvent }) => {
+        {({ data, hoveredEvent }: ContextMenuContextData) => {
           if (hoveredEvent == null) {
             return null;
           }
