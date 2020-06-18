@@ -1,4 +1,4 @@
-import {zeroPad} from './utils';
+import {zeroPad} from '../../utils/utils';
 
 export class RawValueFormatter {
     constructor() {

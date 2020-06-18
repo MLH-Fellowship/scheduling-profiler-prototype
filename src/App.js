@@ -1,7 +1,7 @@
 // @flow
 
 import type { TimelineEvent } from './speedscope/import/chrome';
-import type { PanAndZoomState } from './usePanAndZoom';
+import type { PanAndZoomState } from './utils/usePanAndZoom';
 
 import { copy } from 'clipboard-js';
 import React, {
@@ -12,63 +12,28 @@ import React, {
   useState,
 } from 'react';
 import { unstable_batchedUpdates } from 'react-dom';
-import memoize from 'memoize-one';
-import usePanAndZoom, {
-  durationToWidth,
-  positionToTimestamp,
-  timestampToPosition,
-} from './usePanAndZoom';
 
 import { 
-  getCanvasContext,
-  getTimeTickInterval,
-  cachedFlamegraphTextWidths,
-  trimFlamegraphText,
   getHoveredEvent,
   getPriorityHeight,
 } from './canvas/canvasUtils';
 import {
   renderCanvas,
-  renderReact,
 } from './canvas/renderCanvas';
 
 import prettyMilliseconds from 'pretty-ms';
-import { getBatchRange } from './utils';
-import useInteractiveEvents from './useInteractiveEvents';
+import { getBatchRange } from './utils/utils';
 import EventTooltip from './EventTooltip';
-import preprocessData from './preprocessData';
-import preprocessFlamechart from './preprocessFlamechart';
+import preprocessData from './utils/preprocessData';
+import preprocessFlamechart from './utils/preprocessFlamechart';
 import styles from './App.css';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import usePanAndZoom from './utils/usePanAndZoom';
+
 import {
-  BAR_SPACER_SIZE,
-  BAR_HEIGHT,
   COLORS,
-  SECTION_GUTTER_SIZE,
-  EVENT_SIZE,
-  INTERVAL_TIMES,
-  LABEL_SIZE,
-  LABEL_FONT_SIZE,
-  MARKER_GUTTER_SIZE,
-  MARKER_FONT_SIZE,
-  MAX_INTERVAL_SIZE_PX,
-  MARKER_TEXT_PADDING,
-  MARKER_HEIGHT,
-  MARKER_TICK_HEIGHT,
   REACT_PRIORITIES,
-  ROW_CSS_PIXELS_HEIGHT,
-  TEXT_CSS_PIXELS_OFFSET_START,
-  TEXT_CSS_PIXELS_OFFSET_TOP,
-  FONT_SIZE,
-  BORDER_OPACITY,
-  REACT_GUTTER_SIZE,
-  REACT_EVENT_SIZE,
-  REACT_WORK_SIZE,
-  REACT_EVENT_BORDER_SIZE,
-  REACT_PRIORITY_BORDER_SIZE,
-  FLAMECHART_FONT_SIZE,
   FLAMECHART_FRAME_HEIGHT,
-  FLAMECHART_TEXT_PADDING,
   LABEL_FIXED_WIDTH,
   HEADER_HEIGHT_FIXED,
 } from './constants';

@@ -2,7 +2,7 @@
 
 import type { Frame, CallTreeNode } from './profile'
 
-import { lastOf } from './utils';
+import { lastOf } from '../../utils/utils';
 import { clamp } from './math';
 
 export interface FlamechartFrame {

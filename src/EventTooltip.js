@@ -1,6 +1,6 @@
 // @flow
 
-import type { PanAndZoomState } from './usePanAndZoom';
+import type { PanAndZoomState } from './utils/usePanAndZoom';
 import type { FlamechartFrame } from './speedscope/lib/flamechart';
 import type {
   ReactEvent,
@@ -13,8 +13,8 @@ import type {
 import prettyMilliseconds from 'pretty-ms';
 import React, { Fragment, useLayoutEffect, useRef } from 'react';
 import { COLORS } from './constants';
-import { getBatchRange } from './utils';
-import useSmartTooltip from './useSmartTooltip';
+import { getBatchRange } from './utils/utils';
+import useSmartTooltip from './utils/useSmartTooltip';
 import styles from './EventTooltip.css';
 
 const TOOLTIP_OFFSET = 4;

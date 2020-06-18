@@ -1,6 +1,6 @@
 // @flow
 
-import { lastOf, KeyedSet } from './utils';
+import { lastOf, KeyedSet } from '../../utils/utils';
 import { ValueFormatter, RawValueFormatter } from './value-formatters';
 import { FileFormat } from './file-format-spec';
 const demangleCppModule = import('./demangle-cpp');
