@@ -13,12 +13,12 @@ import {
   REACT_WORK_SIZE,
   REACT_PRIORITY_BORDER_SIZE,
   FLAMECHART_FRAME_HEIGHT,
-} from './constants';
+} from '../constants';
 import usePanAndZoom, {
   durationToWidth,
   positionToTimestamp,
   timestampToPosition,
-} from './usePanAndZoom';
+} from '../usePanAndZoom';
 
 // hidpi canvas: https://www.html5rocks.com/en/tutorials/canvas/hidpi/
 export function configureRetinaCanvas(

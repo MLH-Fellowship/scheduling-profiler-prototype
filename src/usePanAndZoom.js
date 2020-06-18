@@ -1,7 +1,7 @@
 // @flow
 
 import { useEffect, useReducer } from 'react';
-import { getCanvasMousePos } from './canvasUtils';
+import { getCanvasMousePos } from './canvas/canvasUtils';
 import {
   BAR_HORIZONTAL_SPACING,
   MAX_ZOOM_LEVEL,
