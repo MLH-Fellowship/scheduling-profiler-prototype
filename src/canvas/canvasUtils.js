@@ -18,7 +18,7 @@ import usePanAndZoom, {
   durationToWidth,
   positionToTimestamp,
   timestampToPosition,
-} from '../utils/usePanAndZoom';
+} from '../usePanAndZoom';
 
 // hidpi canvas: https://www.html5rocks.com/en/tutorials/canvas/hidpi/
 export function configureRetinaCanvas(

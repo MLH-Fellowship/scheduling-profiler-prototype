@@ -1,7 +1,7 @@
 // @flow
 
 import { useEffect, useRef, useState } from 'react';
-import { durationToWidth, timestampToPosition } from './utils/usePanAndZoom';
+import { durationToWidth, timestampToPosition } from './usePanAndZoom';
 import { EVENT_SIZE } from './constants';
 
 function doesEventIntersectPosition(position, state, event) {

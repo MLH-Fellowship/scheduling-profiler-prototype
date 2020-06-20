@@ -7,7 +7,7 @@ import usePanAndZoom, {
   durationToWidth,
   positionToTimestamp,
   timestampToPosition,
-} from '../utils/usePanAndZoom';
+} from '../usePanAndZoom';
 
 import { 
   getCanvasContext,
@@ -214,7 +214,7 @@ export const renderReact = ({
     }
   };
   
-import type { PanAndZoomState } from '../utils/usePanAndZoom';
+import type { PanAndZoomState } from '../usePanAndZoom';
 
 export const renderCanvas = memoize(
     (
