@@ -1,7 +1,7 @@
 // @flow
 
 import type { TimelineEvent } from './speedscope/import/chrome';
-import type { PanAndZoomState } from './usePanAndZoom';
+import type { PanAndZoomState } from './util/usePanAndZoom';
 
 import { copy } from 'clipboard-js';
 import React, {
@@ -17,7 +17,7 @@ import usePanAndZoom, {
   durationToWidth,
   positionToTimestamp,
   timestampToPosition,
-} from './usePanAndZoom';
+} from './util/usePanAndZoom';
 
 import { 
   getCanvasContext,
@@ -33,11 +33,11 @@ import {
 } from './canvas/renderCanvas';
 
 import prettyMilliseconds from 'pretty-ms';
-import { getBatchRange } from './utils';
-import useInteractiveEvents from './useInteractiveEvents';
+import { getBatchRange } from './util/utils';
+import useInteractiveEvents from './util/useInteractiveEvents';
 import EventTooltip from './EventTooltip';
-import preprocessData from './preprocessData';
-import preprocessFlamechart from './preprocessFlamechart';
+import preprocessData from './util/preprocessData';
+import preprocessFlamechart from './util/preprocessFlamechart';
 import styles from './App.css';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {

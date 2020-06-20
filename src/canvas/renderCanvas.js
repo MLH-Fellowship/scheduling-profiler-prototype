@@ -7,7 +7,7 @@ import usePanAndZoom, {
   durationToWidth,
   positionToTimestamp,
   timestampToPosition,
-} from '../usePanAndZoom';
+} from '../util/usePanAndZoom';
 
 import { 
   getCanvasContext,
