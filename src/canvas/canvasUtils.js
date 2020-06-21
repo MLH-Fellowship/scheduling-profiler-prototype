@@ -2,7 +2,7 @@
 // Contains helper functions for rendering canvas elements
 
 import memoize from 'memoize-one';
-import { 
+import {
   INTERVAL_TIMES,
   MAX_INTERVAL_SIZE_PX,
   LABEL_FIXED_WIDTH,

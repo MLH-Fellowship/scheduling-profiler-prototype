@@ -19,7 +19,7 @@ import usePanAndZoom, {
   timestampToPosition,
 } from './util/usePanAndZoom';
 
-import { 
+import {
   getCanvasContext,
   getTimeTickInterval,
   cachedFlamegraphTextWidths,
@@ -27,10 +27,7 @@ import {
   getHoveredEvent,
   getPriorityHeight,
 } from './canvas/canvasUtils';
-import {
-  renderCanvas,
-  renderReact,
-} from './canvas/renderCanvas';
+import { renderCanvas, renderReact } from './canvas/renderCanvas';
 
 import prettyMilliseconds from 'pretty-ms';
 import { getBatchRange } from './util/utils';
