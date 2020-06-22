@@ -37,6 +37,8 @@ import {
   HEADER_HEIGHT_FIXED,
 } from '../constants';
 
+import type { PanAndZoomState } from '../util/usePanAndZoom';
+
 // The canvas we're rendering looks a little like the outline below.
 // Left labels mark different scheduler REACT_PRIORITIES,
 // and top labels mark different times (based on how long the data runs and how zoomed in we are).
@@ -210,8 +212,6 @@ export const renderReact = ({
       break;
   }
 };
-
-import type { PanAndZoomState } from '../util/usePanAndZoom';
 
 // TODO Passing "state" directly breaks memoization for e.g. mouse moves
 export const renderCanvas = memoize(
