@@ -13,11 +13,7 @@ import React, {
 } from 'react';
 import { unstable_batchedUpdates } from 'react-dom';
 import memoize from 'memoize-one';
-import usePanAndZoom, {
-  durationToWidth,
-  positionToTimestamp,
-  timestampToPosition,
-} from './util/usePanAndZoom';
+import usePanAndZoom from './util/usePanAndZoom';
 
 import {
   getCanvasContext,
@@ -30,42 +26,16 @@ import {
 import { renderCanvas, renderReact } from './canvas/renderCanvas';
 
 import prettyMilliseconds from 'pretty-ms';
-import { getBatchRange } from './util/utils';
-import useInteractiveEvents from './util/useInteractiveEvents';
+import { getBatchRange } from './util/getBatchRange';
 import EventTooltip from './EventTooltip';
 import preprocessData from './util/preprocessData';
 import preprocessFlamechart from './util/preprocessFlamechart';
 import styles from './App.css';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import {
-  BAR_SPACER_SIZE,
-  BAR_HEIGHT,
   COLORS,
-  SECTION_GUTTER_SIZE,
-  EVENT_SIZE,
-  INTERVAL_TIMES,
-  LABEL_SIZE,
-  LABEL_FONT_SIZE,
-  MARKER_GUTTER_SIZE,
-  MARKER_FONT_SIZE,
-  MAX_INTERVAL_SIZE_PX,
-  MARKER_TEXT_PADDING,
-  MARKER_HEIGHT,
-  MARKER_TICK_HEIGHT,
   REACT_PRIORITIES,
-  ROW_CSS_PIXELS_HEIGHT,
-  TEXT_CSS_PIXELS_OFFSET_START,
-  TEXT_CSS_PIXELS_OFFSET_TOP,
-  FONT_SIZE,
-  BORDER_OPACITY,
-  REACT_GUTTER_SIZE,
-  REACT_EVENT_SIZE,
-  REACT_WORK_SIZE,
-  REACT_EVENT_BORDER_SIZE,
-  REACT_PRIORITY_BORDER_SIZE,
-  FLAMECHART_FONT_SIZE,
   FLAMECHART_FRAME_HEIGHT,
-  FLAMECHART_TEXT_PADDING,
   LABEL_FIXED_WIDTH,
   HEADER_HEIGHT_FIXED,
 } from './constants';

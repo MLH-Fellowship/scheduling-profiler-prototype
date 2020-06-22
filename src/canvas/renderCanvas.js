@@ -25,7 +25,6 @@ import {
   MARKER_HEIGHT,
   MARKER_TICK_HEIGHT,
   REACT_PRIORITIES,
-  FONT_SIZE,
   REACT_GUTTER_SIZE,
   REACT_EVENT_SIZE,
   REACT_WORK_SIZE,
@@ -72,7 +71,6 @@ import {
 //                   /
 //                  '──────────────────────────
 //
-// TODO Passing "state" directly breaks memoization for e.g. mouse moves
 
 export const renderReact = ({
   baseY,
@@ -213,8 +211,9 @@ export const renderReact = ({
   }
 };
 
-import type { PanAndZoomState } from '../usePanAndZoom';
+import type { PanAndZoomState } from '../util/usePanAndZoom';
 
+// TODO Passing "state" directly breaks memoization for e.g. mouse moves
 export const renderCanvas = memoize(
   (
     data: ReactProfilerData,
