@@ -35,7 +35,7 @@ import {
   FLAMECHART_TEXT_PADDING,
   LABEL_FIXED_WIDTH,
   HEADER_HEIGHT_FIXED,
-} from '../constants';
+} from './constants';
 
 import type { PanAndZoomState } from '../util/usePanAndZoom';
 

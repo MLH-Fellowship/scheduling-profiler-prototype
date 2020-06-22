@@ -9,7 +9,7 @@ import {
   MIN_ZOOM_LEVEL,
   MOVE_WHEEL_DELTA_THRESHOLD,
   ZOOM_WHEEL_DELTA_THRESHOLD,
-} from '../constants';
+} from '../canvas/constants';
 
 export type PanAndZoomState = {|
   canvasHeight: number,

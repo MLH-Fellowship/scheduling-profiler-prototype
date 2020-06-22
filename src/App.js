@@ -38,7 +38,7 @@ import {
   FLAMECHART_FRAME_HEIGHT,
   LABEL_FIXED_WIDTH,
   HEADER_HEIGHT_FIXED,
-} from './constants';
+} from './canvas/constants';
 
 import { ContextMenu, ContextMenuItem, useContextMenu } from './context';
 
