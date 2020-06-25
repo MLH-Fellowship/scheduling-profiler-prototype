@@ -85,23 +85,21 @@ describe(preprocessData, () => {
   });
 
   it('should throw if events and measures are incomplete', () => {
-    // TODO: Figure out how we can expect console.error since preprocessData doesn't actually throw
-    expect(() =>
-      preprocessData([
-        // prettier-ignore
-        {"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--render-start-8","ph":"R","pid":1852,"tid":12484,"ts":42351664678,"tts":1512475},
-      ])
-    ).toThrow();
+    const error = jest.spyOn(console, 'error');
+    preprocessData([
+      // prettier-ignore
+      {"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--render-start-8","ph":"R","pid":1852,"tid":12484,"ts":42351664678,"tts":1512475},
+    ]);
+    expect(error).toHaveBeenCalled();
   });
 
   it('should throw if work is completed without being started', () => {
-    // TODO: Figure out how we can expect console.error since preprocessData doesn't actually throw
-    expect(() =>
-      preprocessData([
-        // prettier-ignore
-        {"args":{"data":{"navigationId":"E082C30FBDA3ACEE0E7B5FD75F8B7F0D"}},"cat":"blink.user_timing","name":"--render-yield","ph":"R","pid":17232,"tid":13628,"ts":264686513020,"tts":4082554},
-      ])
-    ).toThrow();
+    const error = jest.spyOn(console, 'error');
+    preprocessData([
+      // prettier-ignore
+      {"args":{"data":{"navigationId":"E082C30FBDA3ACEE0E7B5FD75F8B7F0D"}},"cat":"blink.user_timing","name":"--render-yield","ph":"R","pid":17232,"tid":13628,"ts":264686513020,"tts":4082554},
+    ]);
+    expect(error).toHaveBeenCalled();
 
     // TODO: add others
   });

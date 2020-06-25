@@ -106,6 +106,8 @@ function markWorkCompleted(
     console.error(
       `Unexpected type "${type}" completed at ${stopTime}ms while stack is empty.`
     );
+    // Ignore work "completion" user timing mark that doesn't complete anything
+    return;
   }
 
   const last = stack[stack.length - 1];
