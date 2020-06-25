@@ -75,18 +75,38 @@ describe(preprocessData, () => {
     });
   });
 
+  it('should throw if unrecognized React mark is encountered', () => {
+    expect(() =>
+      preprocessData([
+        // prettier-ignore
+        {"args":{"data":{"navigationId":"E082C30FBDA3ACEE0E7B5FD75F8B7F0D"}},"cat":"blink.user_timing","name":"--there-are-four-lights","ph":"R","pid":17232,"tid":13628,"ts":264686513020,"tts":4082554},
+      ])
+    ).toThrow();
+  });
+
+  it('should throw if events and measures are incomplete', () => {
+    // TODO: Figure out how we can expect console.error since preprocessData doesn't actually throw
+    expect(() =>
+      preprocessData([
+        // prettier-ignore
+        {"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--render-start-8","ph":"R","pid":1852,"tid":12484,"ts":42351664678,"tts":1512475},
+      ])
+    ).toThrow();
+  });
+
   it('should throw if work is completed without being started', () => {
+    // TODO: Figure out how we can expect console.error since preprocessData doesn't actually throw
     expect(() =>
       preprocessData([
         // prettier-ignore
         {"args":{"data":{"navigationId":"E082C30FBDA3ACEE0E7B5FD75F8B7F0D"}},"cat":"blink.user_timing","name":"--render-yield","ph":"R","pid":17232,"tid":13628,"ts":264686513020,"tts":4082554},
       ])
-    ).toThrow(); // TODO: Figure out how we can expect console.error since preprocessData doesn't actually throw
+    ).toThrow();
 
     // TODO: add others
   });
 
-  it('should process complete set of events', () => {
+  it('should process complete set of events (page load sample data)', () => {
     expect(
       // prettier-ignore
       preprocessData([
@@ -274,6 +294,21 @@ describe(preprocessData, () => {
         {"args":{"data":{"navigationId":"43BC238A4FB7548146D3CD739C9C9434"}},"cat":"blink.user_timing","name":"--layout-effects-start-16384","ph":"R","pid":9312,"tid":10252,"ts":8996364618,"tts":2273869},
         {"args":{"data":{"navigationId":"43BC238A4FB7548146D3CD739C9C9434"}},"cat":"blink.user_timing","name":"--layout-effects-stop","ph":"R","pid":9312,"tid":10252,"ts":8996364645,"tts":2273895},
         {"args":{"data":{"navigationId":"43BC238A4FB7548146D3CD739C9C9434"}},"cat":"blink.user_timing","name":"--commit-stop","ph":"R","pid":9312,"tid":10252,"ts":8996365391,"tts":2274547},
+      ])
+    ).toMatchSnapshot();
+  });
+
+  it('should process forced update event', () => {
+    expect(
+      // prettier-ignore
+      preprocessData([
+        {"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--schedule-forced-update-ForceUpdateDemo_ForceUpdateDemo-16-\n    at ForceUpdateDemo_ForceUpdateDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:18:98)\n    at App","ph":"R","pid":1852,"tid":12484,"ts":40806988231,"tts":1037762},
+        {"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--render-start-16","ph":"R","pid":1852,"tid":12484,"ts":40806990146,"tts":1038890},
+        {"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--render-stop","ph":"R","pid":1852,"tid":12484,"ts":40806991123,"tts":1039401},
+        {"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--commit-start-16","ph":"R","pid":1852,"tid":12484,"ts":40806991170,"tts":1039447},
+        {"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--layout-effects-start-16","ph":"R","pid":1852,"tid":12484,"ts":40806992201,"tts":1040023},
+        {"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--layout-effects-stop","ph":"R","pid":1852,"tid":12484,"ts":40806992219,"tts":1040041},
+        {"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--commit-stop","ph":"R","pid":1852,"tid":12484,"ts":40806992337,"tts":1040149},
       ])
     ).toMatchSnapshot();
   });

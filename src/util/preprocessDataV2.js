@@ -104,14 +104,14 @@ function markWorkCompleted(
 ) {
   if (stack.length === 0) {
     console.error(
-      `Unexpected type "${type}" completed at ${stopTime} while stack is empty.`
+      `Unexpected type "${type}" completed at ${stopTime}ms while stack is empty.`
     );
   }
 
   const last = stack[stack.length - 1];
   if (last.type !== type) {
     console.error(
-      `Unexpected type "${type}" completed at ${stopTime} before "${last.type}" completed.`
+      `Unexpected type "${type}" completed at ${stopTime}ms before "${last.type}" completed.`
     );
   }
 
@@ -205,9 +205,9 @@ function processTimelineEvent(
   }
 
   // React Events - suspense
-  else if (name.startsWith('--suspend-suspend-')) {
+  else if (name.startsWith('--suspense-suspend-')) {
     const [componentName, id, ...splitComponentStack] = name
-      .substr(18)
+      .substr(19)
       .split('-');
     currentProfilerData.events.push({
       type: 'suspense-suspend',
@@ -216,9 +216,9 @@ function processTimelineEvent(
       componentStack: splitComponentStack.join('-'),
       timestamp: startTime,
     });
-  } else if (name.startsWith('--suspend-resolved-')) {
+  } else if (name.startsWith('--suspense-resolved-')) {
     const [componentName, id, ...splitComponentStack] = name
-      .substr(19)
+      .substr(20)
       .split('-');
     currentProfilerData.events.push({
       type: 'suspense-resolved',
@@ -227,9 +227,9 @@ function processTimelineEvent(
       componentStack: splitComponentStack.join('-'),
       timestamp: startTime,
     });
-  } else if (name.startsWith('--suspend-rejected-')) {
+  } else if (name.startsWith('--suspense-rejected-')) {
     const [componentName, id, ...splitComponentStack] = name
-      .substr(19)
+      .substr(20)
       .split('-');
     currentProfilerData.events.push({
       type: 'suspense-rejected',
@@ -343,6 +343,13 @@ function processTimelineEvent(
       startTime,
       currentProfilerData,
       state.measureStack
+    );
+  }
+
+  // Unrecognized event
+  else {
+    throw new Error(
+      `Unrecognized event ${name}! This is likely a bug in this profiler tool.`
     );
   }
 }
