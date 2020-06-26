@@ -346,7 +346,7 @@ export const renderCanvas = memoize(
           const {end, node, start} = nodes[j];
           const {name} = node.frame;
 
-          let showHoverHighlight =
+          const showHoverHighlight =
             hoveredEvent && hoveredEvent.flamechartNode === nodes[j];
 
           const width = durationToWidth((end - start) / 1000, state);
