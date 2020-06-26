@@ -22,7 +22,7 @@ import {
   REACT_PRIORITY_BORDER_SIZE,
   FLAMECHART_FRAME_HEIGHT,
 } from './constants';
-import usePanAndZoom, {
+import {
   durationToWidth,
   positionToTimestamp,
   timestampToPosition,
