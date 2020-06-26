@@ -1,10 +1,10 @@
 // @flow
 
-import { createContext } from 'react';
+import {createContext} from 'react';
 
-export type ShowFn = ({| data: Object, pageX: number, pageY: number |}) => void;
+export type ShowFn = ({|data: Object, pageX: number, pageY: number|}) => void;
 export type HideFn = () => void;
-export type OnChangeFn = boolean => void;
+export type OnChangeFn = (boolean) => void;
 
 const idToShowFnMap = new Map<string, ShowFn>();
 const idToHideFnMap = new Map<string, HideFn>();
@@ -41,7 +41,7 @@ function showMenu({
   const showFn = idToShowFnMap.get(id);
   if (typeof showFn === 'function') {
     currentHideFn = idToHideFnMap.get(id);
-    showFn({ data, pageX, pageY });
+    showFn({data, pageX, pageY});
 
     if (typeof onChange === 'function') {
       currentOnChange = onChange;
