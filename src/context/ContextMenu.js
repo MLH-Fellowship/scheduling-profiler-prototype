@@ -94,7 +94,7 @@ export default function ContextMenu({children, id}: Props) {
 
     const hideUnlessContains: MouseEventHandler &
       TouchEventHandler &
-      KeyboardEventHandler = (event) => {
+      KeyboardEventHandler = event => {
       if (!menu.contains(event.target)) {
         hideMenu();
       }

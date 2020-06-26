@@ -63,7 +63,7 @@ function App() {
 
   useEffect(() => {
     fetch(JSON_PATH)
-      .then((data) => data.json())
+      .then(data => data.json())
       .then((data: TimelineEvent[]) => {
         // Filter null entries and sort by timestamp.
         // I would not expect to have to do either of this,
@@ -80,7 +80,7 @@ function App() {
 
             let height = 0;
 
-            REACT_PRIORITIES.forEach((priority) => {
+            REACT_PRIORITIES.forEach(priority => {
               height += getPriorityHeight(processedData, priority);
             });
 

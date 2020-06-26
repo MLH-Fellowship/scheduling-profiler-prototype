@@ -176,7 +176,7 @@ export default function reactProfilerProcessor(
     });
   };
 
-  const throwIfIncomplete = (type) => {
+  const throwIfIncomplete = type => {
     if (!currentMetadata) {
       return;
     }
@@ -316,7 +316,7 @@ export default function reactProfilerProcessor(
     }
   });
 
-  ['unscheduled', 'high', 'normal', 'low'].forEach((priority) => {
+  ['unscheduled', 'high', 'normal', 'low'].forEach(priority => {
     const {events, measures} = reactProfilerData[priority];
     if (events.length > 0) {
       const {timestamp} = (events[events.length - 1]: ReactEvent);

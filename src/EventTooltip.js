@@ -112,7 +112,7 @@ function formatComponentStack(componentStack: string | null): string | null {
     return null;
   }
 
-  const lines = componentStack.split('\n').map((line) => line.trim());
+  const lines = componentStack.split('\n').map(line => line.trim());
   lines.shift();
 
   if (lines.length > 5) {

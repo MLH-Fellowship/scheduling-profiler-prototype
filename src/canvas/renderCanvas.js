@@ -263,7 +263,7 @@ export const renderCanvas = memoize(
         let baseY = priorityMinY + REACT_GUTTER_SIZE;
 
         if (currentPriority.events.length > 0) {
-          currentPriority.events.forEach((event) => {
+          currentPriority.events.forEach(event => {
             const showHoverHighlight =
               hoveredEvent && hoveredEvent.event === event;
             renderReact({
@@ -296,7 +296,7 @@ export const renderCanvas = memoize(
           baseY += REACT_EVENT_SIZE + REACT_GUTTER_SIZE;
         }
 
-        currentPriority.measures.forEach((measure) => {
+        currentPriority.measures.forEach(measure => {
           const showHoverHighlight =
             hoveredEvent && hoveredEvent.measure === measure;
           const showGroupHighlight =

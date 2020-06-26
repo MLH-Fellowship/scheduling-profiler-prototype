@@ -347,11 +347,11 @@ export default function usePanAndZoom({
       return;
     }
 
-    const onCanvasMouseDown: MouseEventHandler = (event) => {
+    const onCanvasMouseDown: MouseEventHandler = event => {
       dispatch({type: 'mouse-down'});
     };
 
-    const onCanvasMouseMove: MouseEventHandler = (event) => {
+    const onCanvasMouseMove: MouseEventHandler = event => {
       dispatch({
         type: 'mouse-move',
         payload: {
@@ -361,11 +361,11 @@ export default function usePanAndZoom({
       });
     };
 
-    const onDocumentMouseUp: MouseEventHandler = (event) => {
+    const onDocumentMouseUp: MouseEventHandler = event => {
       dispatch({type: 'mouse-up'});
     };
 
-    const onCanvasWheel: WheelEventHandler = (event) => {
+    const onCanvasWheel: WheelEventHandler = event => {
       event.preventDefault();
       event.stopPropagation();
 

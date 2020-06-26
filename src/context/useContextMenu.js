@@ -22,7 +22,7 @@ export default function useContextMenu<T>({
 
   useEffect(() => {
     if (ref.current !== null) {
-      const handleContextMenu: MouseEventHandler = (event) => {
+      const handleContextMenu: MouseEventHandler = event => {
         event.preventDefault();
         event.stopPropagation();
 
