@@ -5,7 +5,7 @@
     "build": "parcel build index.html --no-cache",
     "prettier": "prettier --write \"**/*.{js,json,css}\"",
     "start": "parcel index.html --no-cache",
-    "lint": "eslint 'src/**/*.js'",
+    "lint": "eslint \"src/**/*.js\"",
     "test": "jest"
   },
   "author": "Brian Vaughn <bvaughn@fb.com>",
