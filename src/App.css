@@ -5,13 +5,3 @@
   left: 0.5rem;
   right: 0.5rem;
 }
-
-.Canvas {
-}
-
-.HighlightContainer {
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  overflow: hidden;
-}

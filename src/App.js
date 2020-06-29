@@ -200,12 +200,7 @@ function AutoSizedCanvas({
 
   return (
     <Fragment>
-      <canvas
-        ref={canvasRef}
-        className={styles.Canvas}
-        height={height}
-        width={width}
-      />
+      <canvas ref={canvasRef} height={height} width={width} />
       <ContextMenu id={CONTEXT_MENU_ID}>
         {(contextData: ContextMenuContextData) => {
           if (contextData.hoveredEvent == null) {
