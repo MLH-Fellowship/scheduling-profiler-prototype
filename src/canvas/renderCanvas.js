@@ -4,6 +4,8 @@ import type {
   ReactProfilerData,
   FlamechartData,
   ReactHoverContextInfo,
+  ReactEvent,
+  ReactMeasure,
 } from '../types';
 import type {PanAndZoomState} from '../util/usePanAndZoom';
 
@@ -217,14 +219,14 @@ const renderReact = ({
 // TODO Passing "state" directly breaks memoization for e.g. mouse moves
 export const renderCanvas = memoize(
   (
-    data: ReactProfilerData,
-    flamechart: FlamechartData | null,
-    canvas: HTMLCanvasElement | null,
+    data: $ReadOnly<ReactProfilerData>,
+    flamechart: $ReadOnly<FlamechartData> | null,
+    canvas: HTMLCanvasElement,
     canvasWidth: number,
     canvasHeight: number,
     schedulerCanvasHeight: number,
-    state: PanAndZoomState,
-    hoveredEvent: ReactHoverContextInfo | null,
+    state: $ReadOnly<PanAndZoomState>,
+    hoveredEvent: $ReadOnly<ReactHoverContextInfo> | null,
   ) => {
     const {offsetX, offsetY, zoomLevel} = state;
 
