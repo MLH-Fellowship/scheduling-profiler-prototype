@@ -55,8 +55,6 @@ export function getLanesFromTransportDecimalBitmask(
   return lanes;
 }
 
-// function timelineEventType(event: TimelineEvent): ProfilerTimelineEventTime
-
 function getLastType(stack: $PropertyType<ProcessorState, 'measureStack'>) {
   if (stack.length > 0) {
     const { type } = stack[stack.length - 1];
