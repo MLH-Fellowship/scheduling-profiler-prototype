@@ -6,7 +6,7 @@
     "prettier": "prettier --write \"**/*.{js,json,css}\"",
     "start": "parcel index.html --no-cache",
     "lint": "eslint \"src/**/*.js\"",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "author": "Brian Vaughn <bvaughn@fb.com>",
   "license": "MIT",
