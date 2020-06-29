@@ -29,11 +29,7 @@ import {
 } from '../util/usePanAndZoom';
 
 // hidpi canvas: https://www.html5rocks.com/en/tutorials/canvas/hidpi/
-export function configureRetinaCanvas(
-  canvas: HTMLCanvasElement,
-  height: number,
-  width: number,
-): number {
+function configureRetinaCanvas(canvas, height, width) {
   const dpr: number = window.devicePixelRatio || 1;
   canvas.width = width * dpr;
   canvas.height = height * dpr;
@@ -89,7 +85,7 @@ export function getTimeTickInterval(zoomLevel: number) {
   return interval;
 }
 
-export const cachedFlamegraphTextWidths = new Map();
+const cachedFlamegraphTextWidths = new Map();
 export const trimFlamegraphText = (
   context: CanvasRenderingContext2D,
   text: string,
