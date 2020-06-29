@@ -3,11 +3,12 @@
 import type {FlamechartData, ReactProfilerData} from './types';
 
 import React, {useState, useCallback} from 'react';
-import CanvasPage from './CanvasPage';
+import {unstable_batchedUpdates} from 'react-dom';
 
 import {getPriorityHeight} from './canvas/canvasUtils';
-import ImportPage from './ImportPage';
 import {REACT_PRIORITIES} from './canvas/constants';
+import ImportPage from './ImportPage';
+import CanvasPage from './CanvasPage';
 
 export default function App() {
   const [profilerData, setProfilerData] = useState<ReactProfilerData | null>(
@@ -21,13 +22,15 @@ export default function App() {
       importedProfilerData: ReactProfilerData,
       importedFlamechart: FlamechartData,
     ) => {
-      setSchedulerCanvasHeight(
-        REACT_PRIORITIES.reduce((height, priority) => {
-          return height + getPriorityHeight(importedProfilerData, priority);
-        }, 0),
-      );
-      setProfilerData(importedProfilerData);
-      setFlamechart(importedFlamechart);
+      unstable_batchedUpdates(() => {
+        setSchedulerCanvasHeight(
+          REACT_PRIORITIES.reduce((height, priority) => {
+            return height + getPriorityHeight(importedProfilerData, priority);
+          }, 0),
+        );
+        setProfilerData(importedProfilerData);
+        setFlamechart(importedFlamechart);
+      });
     },
   );
 

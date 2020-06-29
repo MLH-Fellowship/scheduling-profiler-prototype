@@ -4,7 +4,6 @@ import type {TimelineEvent} from './speedscope/import/chrome';
 import type {FlamechartData, ReactProfilerData} from './types';
 
 import React, {useEffect} from 'react';
-import {unstable_batchedUpdates} from 'react-dom';
 
 import preprocessData from './util/preprocessData';
 import preprocessFlamechart from './util/preprocessFlamechart';
@@ -30,11 +29,9 @@ export default function ImportPage({onDataImported}: Props) {
         events = events.filter(Boolean).sort((a, b) => (a.ts > b.ts ? 1 : -1));
 
         if (events.length > 0) {
-          unstable_batchedUpdates(() => {
-            const processedData = preprocessData(events);
-            const processedFlamechart = preprocessFlamechart(events);
-            onDataImported(processedData, processedFlamechart);
-          });
+          const processedData = preprocessData(events);
+          const processedFlamechart = preprocessFlamechart(events);
+          onDataImported(processedData, processedFlamechart);
         }
       });
   }, []);
