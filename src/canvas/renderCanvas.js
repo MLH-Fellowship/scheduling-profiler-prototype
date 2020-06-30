@@ -473,7 +473,7 @@ function renderAxisMarkers(
 export const renderCanvas = memoize(
   (
     data: $ReadOnly<ReactProfilerData>,
-    flamechart: $ReadOnly<FlamechartData> | null,
+    flamechart: $ReadOnly<FlamechartData>,
     canvas: HTMLCanvasElement,
     canvasWidth: number,
     canvasHeight: number,
@@ -502,17 +502,15 @@ export const renderCanvas = memoize(
 
     // Flame graph data renders below the prioritized React data.
     // TODO Timestamp alignment is off by a few hundred me from our user timing marks; why?
-    if (flamechart !== null) {
-      renderFlamechart(
-        context,
-        flamechart,
-        state,
-        hoveredEvent,
-        canvasWidth,
-        canvasHeight,
-        HEADER_HEIGHT_FIXED + schedulerCanvasHeight - offsetY,
-      );
-    }
+    renderFlamechart(
+      context,
+      flamechart,
+      state,
+      hoveredEvent,
+      canvasWidth,
+      canvasHeight,
+      HEADER_HEIGHT_FIXED + schedulerCanvasHeight - offsetY,
+    );
 
     // LEFT: Priority labels
     // Render them last, on top of everything else, to account for things scrolled beneath them.
