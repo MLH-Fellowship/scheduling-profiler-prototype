@@ -38,16 +38,16 @@ export default function App() {
       });
     },
   );
-
-  if (profilerData && flamechart) {
-    return (
-      <CanvasPage
-        profilerData={profilerData}
-        flamechart={flamechart}
-        schedulerCanvasHeight={schedulerCanvasHeight}
-      />
-    );
-  } else {
+  // Temporarily removed to test import page
+  // if (profilerData && flamechart) {
+  //   return (
+  //     <CanvasPage
+  //       profilerData={profilerData}
+  //       flamechart={flamechart}
+  //       schedulerCanvasHeight={schedulerCanvasHeight}
+  //     />
+  //   );
+  // } else {
     return <ImportPage onDataImported={handleDataImported} />;
-  }
+  // }
 }

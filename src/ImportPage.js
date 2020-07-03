@@ -4,6 +4,8 @@ import type {TimelineEvent} from './speedscope/import/chrome';
 import type {FlamechartData, ReactProfilerData} from './types';
 
 import React, {useEffect} from 'react';
+import logo from './logo.svg';
+import './ImportPage.css';
 
 import preprocessData from './util/preprocessData';
 import preprocessFlamechart from './util/preprocessFlamechart';
@@ -37,9 +39,31 @@ export default function ImportPage({onDataImported}: Props) {
   }, []);
 
   return (
-    <div>
-      LOADING. TODO: Turn this into an import page. This page currently just
-      immediately loads a JSON file.
+    <div className="App">
+      <div className="container">
+        <div className="card">
+          <div className="card-container">
+            <div className="row">
+              
+              <div className="column">
+                <img src={logo} className="react-logo" alt="logo" />
+              </div>
+              <div className="column column-content">
+                <h2>React Concurrent Mode Profiler</h2>
+                <hr />
+                <p>To use the scheduler-profiler, load a pre-captured <a className="Link" href="https://developers.google.com/web/tools/chrome-devtools/evaluate-performance">performance profile</a> from 
+                browser devtools.</p>
+
+                <div className="button-grp">
+                  <a href="#"><button className="button">Import</button></a>
+                  <a href="https://github.com/MLH-Fellowship/scheduling-profiler-prototype"><button className="btn-doc button"><span>Source </span></button></a>
+                </div>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
