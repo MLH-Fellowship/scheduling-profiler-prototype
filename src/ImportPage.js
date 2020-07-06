@@ -3,9 +3,9 @@
 import type {TimelineEvent} from './speedscope/import/chrome';
 import type {FlamechartData, ReactProfilerData} from './types';
 
-import React, {useEffect} from 'react';
-import logo from './logo.svg';
-import './ImportPage.css';
+import React, {useEffect, useState, useCallback} from 'react';
+import logo from './reactlogo.svg';
+import style from './ImportPage.css';
 
 import preprocessData from './util/preprocessData';
 import preprocessFlamechart from './util/preprocessFlamechart';
@@ -38,28 +38,63 @@ export default function ImportPage({onDataImported}: Props) {
       });
   }, []);
 
+  const [importProfile, setImportProfile] = useState<null>(null);
+
+  const inputProfilerData = useCallback(event => {
+    const file = event.target.files[0];
+    const regex = /^.*\.json$/g;
+    if (file.name.match(regex)) {
+      setImportProfile(file);
+      console.log(JSON_PATH);
+      console.log(JSON.parse(file));
+    } else {
+      console.error('Not valid file type, insert a profiler json type');
+    }
+  });
+
   return (
-    <div className="App">
-      <div className="container">
-        <div className="card">
-          <div className="card-container">
-            <div className="row">
-              
-              <div className="column">
-                <img src={logo} className="react-logo" alt="logo" />
+    <div className={style.App}>
+      <div className={style.container}>
+        <div className={style.card}>
+          <div className={style.cardcontainer}>
+            <div className={style.row}>
+              <div className={style.column}>
+                <img src={logo} className={style.reactlogo} alt="logo" />
               </div>
-              <div className="column column-content">
+              <div className={style.columncontent}>
                 <h2>React Concurrent Mode Profiler</h2>
                 <hr />
-                <p>To use the scheduler-profiler, load a pre-captured <a className="Link" href="https://developers.google.com/web/tools/chrome-devtools/evaluate-performance">performance profile</a> from 
-                browser devtools.</p>
+                <p>
+                  To use the scheduler-profiler, load a pre-captured{' '}
+                  <a
+                    className={style.Link}
+                    href="https://developers.google.com/web/tools/chrome-devtools/evaluate-performance">
+                    performance profile
+                  </a>{' '}
+                  from browser devtools.
+                </p>
 
-                <div className="button-grp">
-                  <a href="#"><button className="button">Import</button></a>
-                  <a href="https://github.com/MLH-Fellowship/scheduling-profiler-prototype"><button className="btn-doc button"><span>Source </span></button></a>
+                <div className={style.buttongrp}>
+                  <label htmlFor="upload">
+                    <button
+                      className={style.button}
+                      onClick={e => document.getElementById('upload').click()}>
+                      Import
+                    </button>
+                    <input
+                      type="file"
+                      id="upload"
+                      className={style.inputbtn}
+                      onChange={inputProfilerData}
+                    />
+                  </label>
+                  <a href="https://github.com/MLH-Fellowship/scheduling-profiler-prototype">
+                    <button className={style.btndoc}>
+                      <span>Source </span>
+                    </button>
+                  </a>
                 </div>
               </div>
-            
             </div>
           </div>
         </div>
