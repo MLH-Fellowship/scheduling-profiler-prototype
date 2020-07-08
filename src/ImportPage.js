@@ -10,7 +10,7 @@ import style from './ImportPage.css';
 import preprocessData from './util/preprocessData';
 import preprocessFlamechart from './util/preprocessFlamechart';
 
-// TODO: Add import button but keep a static path until canvas layout is ready
+// TODO: Use for dev only, switch to import file after
 import JSON_PATH from 'url:../static/Profile-20200625T133129.json';
 
 type Props = {|
@@ -21,6 +21,7 @@ type Props = {|
 |};
 
 export default function ImportPage({onDataImported}: Props) {
+  // TODO: Use for dev only
   useEffect(() => {
     fetch(JSON_PATH)
       .then(res => res.json())
@@ -38,18 +39,21 @@ export default function ImportPage({onDataImported}: Props) {
       });
   }, []);
 
-  const [importProfile, setImportProfile] = useState<null>(null);
+	// Initialize file reader
+	const fileReader = new FileReader();
 
   const inputProfilerData = useCallback(event => {
-    const file = event.target.files[0];
     const regex = /^.*\.json$/g;
-    if (file.name.match(regex)) {
-      setImportProfile(file);
-      console.log(JSON_PATH);
-      console.log(JSON.parse(file));
-    } else {
-      console.error('Not valid file type, insert a profiler json type');
+    if (!event.target.files[0].name.match(regex)) {
+      console.error('Invalid file type, insert a captured performance profile JSON');
+      return;
     }
+      // const file = fileReader.readAsText(event.target.files[0]);
+      fileReader.addEventListener('load', () => {
+        const data = fileReader.result;
+        console.log(data);
+      });
+      console.log(JSON_PATH);
   });
 
   return (
@@ -86,6 +90,7 @@ export default function ImportPage({onDataImported}: Props) {
                       id="upload"
                       className={style.inputbtn}
                       onChange={inputProfilerData}
+                      accept="application/JSON"
                     />
                   </label>
                   <a href="https://github.com/MLH-Fellowship/scheduling-profiler-prototype">
