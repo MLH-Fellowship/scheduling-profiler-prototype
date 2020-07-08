@@ -1730,7 +1730,7 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@elg/speedscope@^1.6.0-787837d":
+"@elg/speedscope@1.6.0-787837d":
   version "1.6.0-787837d"
   resolved "https://registry.yarnpkg.com/@elg/speedscope/-/speedscope-1.6.0-787837d.tgz#2b9bcd8a5d5e7eb53e3db838456eb2e745def1bf"
   integrity sha512-LrPUHP9C06eLcXkKXg0PrkRIteYe75IUxJ21dBpUohWoEMMa4ET056Ycj/zj/ChxcCemHnorloH/jSS2db8M1A==
