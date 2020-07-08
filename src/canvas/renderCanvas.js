@@ -145,7 +145,7 @@ function renderReactEventRow(
     Math.floor(
       canvasStartY + EVENT_ROW_HEIGHT_FIXED - offsetY - REACT_WORK_BORDER_SIZE,
     ),
-    canvasWidth,
+    Math.floor(canvasWidth),
     REACT_WORK_BORDER_SIZE,
   );
 
@@ -207,7 +207,13 @@ function renderSingleReactEvent(
 
     context.beginPath();
     context.fillStyle = fillStyle;
-    context.arc(x, y, circumference / 2, 0, 2 * Math.PI);
+    context.arc(
+      Math.floor(x),
+      Math.floor(y),
+      Math.floor(circumference / 2),
+      0,
+      Math.floor(2 * Math.PI),
+    );
     context.fill();
   }
 }
@@ -250,8 +256,8 @@ function renderReactMeasures(
   context.fillRect(
     0,
     Math.floor(canvasStartY - offsetY),
-    canvasWidth,
-    schedulerAreaHeight,
+    Math.floor(canvasWidth),
+    Math.floor(schedulerAreaHeight),
   );
 
   lanesToRender.forEach(lane => {
@@ -285,7 +291,7 @@ function renderReactMeasures(
     context.fillRect(
       0,
       Math.floor(laneMinY - offsetY - REACT_WORK_BORDER_SIZE),
-      canvasWidth,
+      Math.floor(canvasWidth),
       REACT_WORK_BORDER_SIZE,
     );
   });
@@ -422,8 +428,8 @@ function renderFlamechart(
         : COLORS.FLAME_GRAPH;
 
       context.fillRect(
-        x,
-        layerY,
+        Math.floor(x),
+        Math.floor(layerY),
         Math.floor(width - REACT_WORK_BORDER_SIZE),
         Math.floor(FLAMECHART_FRAME_HEIGHT - REACT_WORK_BORDER_SIZE),
       );
@@ -438,8 +444,8 @@ function renderFlamechart(
           context.fillStyle = COLORS.PRIORITY_LABEL;
           context.fillText(
             trimmedName,
-            x + FLAMECHART_TEXT_PADDING - (x < 0 ? x : 0),
-            layerY + FLAMECHART_FRAME_HEIGHT / 2,
+            Math.floor(x + FLAMECHART_TEXT_PADDING - (x < 0 ? x : 0)),
+            Math.floor(layerY + FLAMECHART_FRAME_HEIGHT / 2),
           );
         }
       }
@@ -455,10 +461,15 @@ function renderAxisMarkers(
   panZoomLevel,
 ) {
   context.fillStyle = COLORS.BACKGROUND;
-  context.fillRect(0, 0, canvasWidth, HEADER_HEIGHT_FIXED);
+  context.fillRect(0, 0, Math.floor(canvasWidth), HEADER_HEIGHT_FIXED);
 
   context.fillStyle = COLORS.PRIORITY_BORDER;
-  context.fillRect(0, MARKER_HEIGHT, canvasWidth, REACT_WORK_BORDER_SIZE);
+  context.fillRect(
+    0,
+    MARKER_HEIGHT,
+    Math.floor(canvasWidth),
+    REACT_WORK_BORDER_SIZE,
+  );
 
   // Charting data renders within this region of pixels as "scrollable" content.
   // Time markers (top) and priority labels (left) are fixed content.
@@ -494,8 +505,8 @@ function renderAxisMarkers(
       context.font = `${MARKER_FONT_SIZE}px sans-serif`;
       context.fillText(
         `${markerLabel}ms`,
-        x - MARKER_TEXT_PADDING,
-        MARKER_HEIGHT / 2,
+        Math.floor(x - MARKER_TEXT_PADDING),
+        Math.floor(MARKER_HEIGHT / 2),
       );
     }
   }
