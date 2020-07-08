@@ -1,7 +1,0 @@
-{"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--schedule-forced-update-ForceUpdateDemo_ForceUpdateDemo-16-\n    at ForceUpdateDemo_ForceUpdateDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:18:98)\n    at App","ph":"R","pid":1852,"tid":12484,"ts":40806988231,"tts":1037762},
-{"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--render-start-16","ph":"R","pid":1852,"tid":12484,"ts":40806990146,"tts":1038890},
-{"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--render-stop","ph":"R","pid":1852,"tid":12484,"ts":40806991123,"tts":1039401},
-{"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--commit-start-16","ph":"R","pid":1852,"tid":12484,"ts":40806991170,"tts":1039447},
-{"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--layout-effects-start-16","ph":"R","pid":1852,"tid":12484,"ts":40806992201,"tts":1040023},
-{"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--layout-effects-stop","ph":"R","pid":1852,"tid":12484,"ts":40806992219,"tts":1040041},
-{"args":{"data":{"navigationId":"1065756F5FDAD64BE45CA86B0BBC1F8B"}},"cat":"blink.user_timing","name":"--commit-stop","ph":"R","pid":1852,"tid":12484,"ts":40806992337,"tts":1040149},
