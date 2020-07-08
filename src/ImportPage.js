@@ -3,12 +3,13 @@
 import type {TimelineEvent} from './speedscope/import/chrome';
 import type {FlamechartData, ReactProfilerData} from './types';
 
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from './reactlogo.svg';
 import style from './ImportPage.css';
 
 import preprocessData from './util/preprocessData';
 import preprocessFlamechart from './util/preprocessFlamechart';
+import {readInputData} from './util/readInputData';
 
 // TODO: Use for dev only, switch to import file after
 import JSON_PATH from 'url:../static/Profile-20200625T133129.json';
@@ -21,9 +22,10 @@ type Props = {|
 |};
 
 export default function ImportPage({onDataImported}: Props) {
+  const [inputData, setInputData] = useState();
   // TODO: Use for dev only
   useEffect(() => {
-    fetch(JSON_PATH)
+    fetch(inputData) //Fires early
       .then(res => res.json())
       .then((events: TimelineEvent[]) => {
         // Filter null entries and sort by timestamp.
@@ -32,6 +34,7 @@ export default function ImportPage({onDataImported}: Props) {
         events = events.filter(Boolean).sort((a, b) => (a.ts > b.ts ? 1 : -1));
 
         if (events.length > 0) {
+          console.log(inputData); //Never reaches here
           const processedData = preprocessData(events);
           const processedFlamechart = preprocessFlamechart(events);
           onDataImported(processedData, processedFlamechart);
@@ -39,22 +42,19 @@ export default function ImportPage({onDataImported}: Props) {
       });
   }, []);
 
-	// Initialize file reader
-	const fileReader = new FileReader();
-
-  const inputProfilerData = useCallback(event => {
+  const inputProfilerData = async event => {
     const regex = /^.*\.json$/g;
-    if (!event.target.files[0].name.match(regex)) {
-      console.error('Invalid file type, insert a captured performance profile JSON');
+    const inputFile = event.target.files[0];
+    if (!inputFile.name.match(regex)) {
+      console.error(
+        'Invalid file type, insert a captured performance profile JSON',
+      );
       return;
     }
-      // const file = fileReader.readAsText(event.target.files[0]);
-      fileReader.addEventListener('load', () => {
-        const data = fileReader.result;
-        console.log(data);
-      });
-      console.log(JSON_PATH);
-  });
+    const readFile = await readInputData(inputFile);
+    setInputData(readFile);
+    console.log(readFile); // json read successfully
+  };
 
   return (
     <div className={style.App}>
