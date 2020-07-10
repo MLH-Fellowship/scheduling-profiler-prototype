@@ -3,7 +3,7 @@
 import type {TimelineEvent} from './speedscope/import/chrome';
 import type {FlamechartData, ReactProfilerData} from './types';
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import logo from './reactlogo.svg';
 import style from './ImportPage.css';
 
@@ -22,39 +22,43 @@ type Props = {|
 |};
 
 export default function ImportPage({onDataImported}: Props) {
-  const [inputData, setInputData] = useState();
-  // TODO: Use for dev only
-  useEffect(() => {
-    fetch(inputData) //Fires early
-      .then(res => res.json())
-      .then((events: TimelineEvent[]) => {
-        // Filter null entries and sort by timestamp.
-        // I would not expect to have to do either of this,
-        // but some of the data being passed in requires it.
-        events = events.filter(Boolean).sort((a, b) => (a.ts > b.ts ? 1 : -1));
 
-        if (events.length > 0) {
-          console.log(inputData); //Never reaches here
-          const processedData = preprocessData(events);
-          const processedFlamechart = preprocessFlamechart(events);
-          onDataImported(processedData, processedFlamechart);
-        }
-      });
-  }, []);
+  const processTimeline = useCallback((events: TimelineEvent[]) => {
+    // Filter null entries and sort by timestamp.
+    // I would not expect to have to do either of this,
+    // but some of the data being passed in requires it.
+    events = events.filter(Boolean).sort((a, b) => (a.ts > b.ts ? 1 : -1));
 
-  const inputProfilerData = async event => {
-    const regex = /^.*\.json$/g;
-    const inputFile = event.target.files[0];
-    if (!inputFile.name.match(regex)) {
-      console.error(
-        'Invalid file type, insert a captured performance profile JSON',
-      );
-      return;
+    if (events.length > 0) {
+      const processedData = preprocessData(events);
+      const processedFlamechart = preprocessFlamechart(events);
+      onDataImported(processedData, processedFlamechart);
     }
-    const readFile = await readInputData(inputFile);
-    setInputData(readFile);
-    console.log(readFile); // json read successfully
-  };
+  },[onDataImported]);
+
+  // ImportPage is show in production build only
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    fetch(JSON_PATH)
+      .then(res => res.json())
+      .then(processTimeline);
+  }, [onDataImported, processTimeline]);
+
+  const inputProfilerData = useCallback(
+    async event => {
+      const regex = /^.*\.json$/g;
+      const inputFile = event.target.files[0];
+      if (!inputFile.name.match(regex)) {
+        console.error(
+          'Invalid file type, insert a captured performance profile JSON',
+        );
+        return;
+      }
+
+      const readFile = await readInputData(inputFile);
+      processTimeline(JSON.parse(readFile)); // json read successfully
+    },
+  );
 
   return (
     <div className={style.App}>
