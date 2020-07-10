@@ -150,15 +150,12 @@ function processTimelineEvent(
 
   // React Events - schedule
   if (name.startsWith('--schedule-render-')) {
-    const [
-      componentName,
-      laneBitmaskString,
-      ...splitComponentStack
-    ] = name.substr(18).split('-');
+    const [laneBitmaskString, ...splitComponentStack] = name
+      .substr(18)
+      .split('-');
     currentProfilerData.events.push({
       type: 'schedule-render',
       lanes: getLanesFromTransportDecimalBitmask(laneBitmaskString),
-      componentName,
       componentStack: splitComponentStack.join('-'),
       timestamp: startTime,
     });

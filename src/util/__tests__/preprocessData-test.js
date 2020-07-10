@@ -63,7 +63,7 @@ describe(preprocessData, () => {
     expect(
       // prettier-ignore
       preprocessData([
-        {"args":{"data":{"navigationId":"43BC238A4FB7548146D3CD739C9C9434"}},"cat":"blink.user_timing","name":"--schedule-render-Unknown-512-","ph":"R","pid":9312,"tid":10252,"ts":8994056569,"tts":1816966},
+        {"args":{"data":{"navigationId":"43BC238A4FB7548146D3CD739C9C9434"}},"cat":"blink.user_timing","name":"--schedule-render-512-","ph":"R","pid":9312,"tid":10252,"ts":8994056569,"tts":1816966},
       ]),
     ).toEqual({
       startTime: 0,
@@ -139,7 +139,7 @@ describe(preprocessData, () => {
         {"args":{"frame":"FD65D9AFD04B1295CEA36B883F0FA82F"},"cat":"blink.user_timing,rail","name":"domLoading","ph":"R","pid":9312,"tid":10252,"ts":8993820215,"tts":1647488},
         {"args":{},"cat":"blink.user_timing","name":"requestStart","ph":"R","pid":9312,"tid":10252,"ts":8993886145,"tts":1771277},
         {"args":{},"cat":"blink.user_timing","name":"requestStart","ph":"R","pid":9312,"tid":10252,"ts":8993886881,"tts":1778953},
-        {"args":{"data":{"navigationId":"43BC238A4FB7548146D3CD739C9C9434"}},"cat":"blink.user_timing","name":"--schedule-render-Unknown-512-","ph":"R","pid":9312,"tid":10252,"ts":8994056569,"tts":1816966},
+        {"args":{"data":{"navigationId":"43BC238A4FB7548146D3CD739C9C9434"}},"cat":"blink.user_timing","name":"--schedule-render-512-","ph":"R","pid":9312,"tid":10252,"ts":8994056569,"tts":1816966},
         {"args":{"frame":"FD65D9AFD04B1295CEA36B883F0FA82F"},"cat":"blink.user_timing,rail","name":"domInteractive","ph":"R","pid":9312,"tid":10252,"ts":8994058638,"tts":1818851},
         {"args":{"frame":"FD65D9AFD04B1295CEA36B883F0FA82F"},"cat":"blink.user_timing,rail","name":"domContentLoadedEventStart","ph":"R","pid":9312,"tid":10252,"ts":8994058898,"tts":1819078},
         {"args":{"frame":"FD65D9AFD04B1295CEA36B883F0FA82F"},"cat":"blink.user_timing,rail","name":"domContentLoadedEventEnd","ph":"R","pid":9312,"tid":10252,"ts":8994060045,"tts":1820100},

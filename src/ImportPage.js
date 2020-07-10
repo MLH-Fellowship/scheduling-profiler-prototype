@@ -9,7 +9,7 @@ import preprocessData from './util/preprocessData';
 import preprocessFlamechart from './util/preprocessFlamechart';
 
 // TODO: Add import button but keep a static path until canvas layout is ready
-import JSON_PATH from 'url:../static/Profile-20200625T133129.json';
+import JSON_PATH from 'url:../static/perfprofilev2.json';
 
 type Props = {|
   onDataImported: (
