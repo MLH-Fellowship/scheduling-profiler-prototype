@@ -57,7 +57,7 @@ export default function ImportPage({onDataImported}: Props) {
     }
 
     const readFile = await readInputData(inputFile);
-    processTimeline(JSON.parse(readFile)); // json read successfully
+    processTimeline(JSON.parse(readFile));
   });
 
   return (
