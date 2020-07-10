@@ -38,7 +38,6 @@ export default function App() {
       });
     },
   );
-  // Temporarily removed to test import page
   if (profilerData && flamechart) {
     return (
       <CanvasPage

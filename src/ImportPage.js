@@ -22,19 +22,21 @@ type Props = {|
 |};
 
 export default function ImportPage({onDataImported}: Props) {
+  const processTimeline = useCallback(
+    (events: TimelineEvent[]) => {
+      // Filter null entries and sort by timestamp.
+      // I would not expect to have to do either of this,
+      // but some of the data being passed in requires it.
+      events = events.filter(Boolean).sort((a, b) => (a.ts > b.ts ? 1 : -1));
 
-  const processTimeline = useCallback((events: TimelineEvent[]) => {
-    // Filter null entries and sort by timestamp.
-    // I would not expect to have to do either of this,
-    // but some of the data being passed in requires it.
-    events = events.filter(Boolean).sort((a, b) => (a.ts > b.ts ? 1 : -1));
-
-    if (events.length > 0) {
-      const processedData = preprocessData(events);
-      const processedFlamechart = preprocessFlamechart(events);
-      onDataImported(processedData, processedFlamechart);
-    }
-  },[onDataImported]);
+      if (events.length > 0) {
+        const processedData = preprocessData(events);
+        const processedFlamechart = preprocessFlamechart(events);
+        onDataImported(processedData, processedFlamechart);
+      }
+    },
+    [onDataImported],
+  );
 
   // ImportPage is show in production build only
   useEffect(() => {
@@ -44,21 +46,19 @@ export default function ImportPage({onDataImported}: Props) {
       .then(processTimeline);
   }, [onDataImported, processTimeline]);
 
-  const inputProfilerData = useCallback(
-    async event => {
-      const regex = /^.*\.json$/g;
-      const inputFile = event.target.files[0];
-      if (!inputFile.name.match(regex)) {
-        console.error(
-          'Invalid file type, insert a captured performance profile JSON',
-        );
-        return;
-      }
+  const inputProfilerData = useCallback(async event => {
+    const regex = /^.*\.json$/g;
+    const inputFile = event.target.files[0];
+    if (!inputFile.name.match(regex)) {
+      console.error(
+        'Invalid file type, insert a captured performance profile JSON',
+      );
+      return;
+    }
 
-      const readFile = await readInputData(inputFile);
-      processTimeline(JSON.parse(readFile)); // json read successfully
-    },
-  );
+    const readFile = await readInputData(inputFile);
+    processTimeline(JSON.parse(readFile)); // json read successfully
+  });
 
   return (
     <div className={style.App}>
