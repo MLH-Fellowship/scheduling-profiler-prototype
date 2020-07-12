@@ -1,6 +1,12 @@
 // @flow
 
-export const readInputData = file => {
+export const readInputData = (file: File) => {
+  if (!file.name.endsWith('.json')) {
+    console.error(
+      'Invalid file type, insert a captured performance profile JSON',
+    );
+    return;
+  }
   // Initialize file reader
   const fileReader = new FileReader();
 

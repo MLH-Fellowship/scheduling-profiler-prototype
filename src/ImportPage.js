@@ -3,7 +3,7 @@
 import type {TimelineEvent} from '@elg/speedscope';
 import type {FlamechartData, ReactProfilerData} from './types';
 
-import React, {useEffect, useCallback} from 'react';
+import React, {useEffect, useCallback, useRef} from 'react';
 import logo from './reactlogo.svg';
 import style from './ImportPage.css';
 
@@ -38,27 +38,23 @@ export default function ImportPage({onDataImported}: Props) {
     [onDataImported],
   );
 
-  // ImportPage is show in production build only
+  // DEV only: auto-import a demo profile on component mount (i.e. page load)
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') return;
     fetch(JSON_PATH)
       .then(res => res.json())
       .then(processTimeline);
-  }, [onDataImported, processTimeline]);
+  }, [processTimeline]);
 
-  const inputProfilerData = useCallback(async event => {
-    const regex = /^.*\.json$/g;
-    const inputFile = event.target.files[0];
-    if (!inputFile.name.match(regex)) {
-      console.error(
-        'Invalid file type, insert a captured performance profile JSON',
-      );
-      return;
-    }
+  const handleProfilerInput = useCallback(
+    async (event: File) => {
+      const readFile = await readInputData(event.target.files[0]);
+      processTimeline(JSON.parse(readFile));
+    },
+    [processTimeline],
+  );
 
-    const readFile = await readInputData(inputFile);
-    processTimeline(JSON.parse(readFile));
-  });
+  const upload = useRef(null);
 
   return (
     <div className={style.App}>
@@ -73,28 +69,28 @@ export default function ImportPage({onDataImported}: Props) {
                 <h2>React Concurrent Mode Profiler</h2>
                 <hr />
                 <p>
-                  To use the scheduler-profiler, load a pre-captured{' '}
+                  Import a captured{' '}
                   <a
-                    className={style.Link}
+                    className={style.link}
                     href="https://developers.google.com/web/tools/chrome-devtools/evaluate-performance">
                     performance profile
                   </a>{' '}
-                  from browser devtools.
+                  from Chrome Devtools.
                 </p>
 
                 <div className={style.buttongrp}>
                   <label htmlFor="upload">
                     <button
                       className={style.button}
-                      onClick={e => document.getElementById('upload').click()}>
+                      onClick={e => upload.current.click()}>
                       Import
                     </button>
                     <input
                       type="file"
-                      id="upload"
+                      ref={upload}
                       className={style.inputbtn}
-                      onChange={inputProfilerData}
-                      accept="application/JSON"
+                      onChange={handleProfilerInput}
+                      accept="application/json"
                     />
                   </label>
                   <a href="https://github.com/MLH-Fellowship/scheduling-profiler-prototype">
