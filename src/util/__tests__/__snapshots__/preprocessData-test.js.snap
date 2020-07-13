@@ -13,7 +13,7 @@ Object {
       "type": "schedule-render",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -21,12 +21,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 658.345,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "1",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -34,12 +34,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "1",
       "timestamp": 660.739,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "2",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -47,12 +47,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "2",
       "timestamp": 662.554,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "3",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -60,12 +60,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "3",
       "timestamp": 663.455,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "4",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -73,12 +73,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "4",
       "timestamp": 664.202,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -86,12 +86,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 666.68,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "1",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -99,12 +99,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "1",
       "timestamp": 667.201,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "2",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -112,12 +112,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "2",
       "timestamp": 667.74,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "3",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -125,12 +125,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "3",
       "timestamp": 668.282,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "4",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -138,12 +138,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "4",
       "timestamp": 668.848,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -152,22 +152,24 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 671.335,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "1",
+      "componentName": "ForceUpdateDemo_ForceUpdateDemo",
       "componentStack": "
     at ForceUpdateDemo_ForceUpdateDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:18:98)
     at App",
       "isCascading": true,
-      "lanes": Array [],
+      "lanes": Array [
+        0,
+      ],
       "timestamp": 679.438,
       "type": "schedule-state-update",
     },
     Object {
-      "componentName": "1",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -175,12 +177,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "1",
       "timestamp": 1794.922,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "1",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -188,12 +190,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "1",
       "timestamp": 1795.374,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -201,12 +203,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 1797.166,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "2",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -214,12 +216,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "2",
       "timestamp": 1797.811,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "3",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -227,12 +229,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "3",
       "timestamp": 1798.163,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "4",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -240,12 +242,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "4",
       "timestamp": 1798.505,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "2",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -253,12 +255,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "2",
       "timestamp": 1866.249,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "2",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -266,12 +268,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "2",
       "timestamp": 1866.542,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "2",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -279,12 +281,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "2",
       "timestamp": 1866.858,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -292,12 +294,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 1867.816,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "3",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -305,12 +307,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "3",
       "timestamp": 1868.638,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "4",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -318,12 +320,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "4",
       "timestamp": 1868.966,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "3",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -331,12 +333,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "3",
       "timestamp": 1980.273,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "3",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -344,12 +346,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "3",
       "timestamp": 1980.522,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "3",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -357,12 +359,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "3",
       "timestamp": 1980.946,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "3",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -370,12 +372,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "3",
       "timestamp": 1981.164,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -383,12 +385,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 1982.079,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "4",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -396,12 +398,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "4",
       "timestamp": 1983.17,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "4",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -409,12 +411,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "4",
       "timestamp": 2379.587,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "4",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -422,12 +424,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "4",
       "timestamp": 2379.895,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "4",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -435,12 +437,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "4",
       "timestamp": 2380.242,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "4",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -448,12 +450,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "4",
       "timestamp": 2380.487,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "4",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -461,12 +463,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "4",
       "timestamp": 2380.735,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -474,12 +476,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 2381.772,
       "type": "suspense-suspend",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -487,12 +489,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 2579.186,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -500,12 +502,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 2579.487,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -514,12 +516,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 2579.735,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -527,12 +529,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 2580.042,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -540,12 +542,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 2580.29,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -553,12 +555,12 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 2580.546,
       "type": "suspense-resolved",
     },
     Object {
-      "componentName": "0",
+      "componentName": "ResourceButton",
       "componentStack": "
     at ResourceButton (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:295)
     at Suspense
@@ -566,7 +568,7 @@ Object {
     at div
     at SuspenseDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:36:713)
     at App",
-      "id": "ResourceButton",
+      "id": "0",
       "timestamp": 2580.8,
       "type": "suspense-resolved",
     },
@@ -1262,12 +1264,14 @@ Object {
   "duration": 67.461,
   "events": Array [
     Object {
-      "componentName": "16",
+      "componentName": "ForceUpdateDemo_ForceUpdateDemo",
       "componentStack": "
     at ForceUpdateDemo_ForceUpdateDemo (https://concurrent-demo.now.sh/static/js/main.c9f122eb.chunk.js:18:98)
     at App",
       "isCascading": false,
-      "lanes": Array [],
+      "lanes": Array [
+        4,
+      ],
       "timestamp": 63.355,
       "type": "schedule-force-update",
     },
