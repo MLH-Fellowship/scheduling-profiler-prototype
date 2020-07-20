@@ -1,8 +1,10 @@
 {
   "presets": [
+    "@babel/preset-flow",
+    "@babel/preset-react",
     [
-      "react-app",
-      { "absoluteRuntime": false, "flow": true, "typescript": false }
+      "@babel/preset-env",
+      {"targets": "last 1 Chrome version, last 1 Firefox versions"}
     ]
   ]
 }
