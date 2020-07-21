@@ -29,14 +29,11 @@
   color: #666;
   text-align: right;
   white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .ComponentName {
   font-weight: bold;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .ComponentStack {
