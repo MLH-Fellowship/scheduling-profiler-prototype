@@ -22,6 +22,7 @@ import {
   StaticLayoutView,
   layeredLayout,
   zeroPoint,
+  verticallyStackedLayout,
 } from './layout';
 
 import prettyMilliseconds from 'pretty-ms';
@@ -46,7 +47,7 @@ import type {
   ReactProfilerData,
 } from './types';
 import {useCanvasInteraction} from './useCanvasInteraction';
-import {FlamegraphView} from './canvas/views';
+import {FlamegraphView, ReactEventsView} from './canvas/views';
 
 type ContextMenuContextData = {|
   data: ReactProfilerData,
@@ -136,26 +137,41 @@ function AutoSizedCanvas({
   // });
 
   const surfaceRef = useRef(new Surface());
-  const flamegraphView = useRef(null);
-  // const ticksView = useRef(null);
-  // const reactEventsView = useRef(null);
+  const flamegraphViewRef = useRef(null);
+  // const ticksViewRef = useRef(null);
+  const reactEventsViewRef = useRef(null);
   // const reactMeasuresView = useRef(null);
   const rootViewRef = useRef(null);
 
   useLayoutEffect(() => {
     // TODO: Build more of the heirarchy
-    flamegraphView.current = new FlamegraphView(
+    const flamegraphView = new FlamegraphView(
       surfaceRef.current,
       {origin: zeroPoint, size: {width, height}},
       flamechart,
       data,
     );
+    flamegraphViewRef.current = flamegraphView;
+
+    const reactEventsView = new ReactEventsView(
+      surfaceRef.current,
+      {origin: zeroPoint, size: {width, height}},
+      data,
+    );
+    reactEventsViewRef.current = reactEventsView;
+
+    const stackedZoomables = new StaticLayoutView(
+      surfaceRef.current,
+      {origin: zeroPoint, size: {width, height}},
+      verticallyStackedLayout,
+      [reactEventsView, flamegraphView],
+    );
 
     const flamegraphZoomWrapper = new HorizontalPanAndZoomView(
       surfaceRef.current,
       {origin: zeroPoint, size: {width, height}},
-      flamegraphView.current,
-      flamegraphView.current.intrinsicSize.width,
+      stackedZoomables,
+      flamegraphView.intrinsicSize.width,
     );
 
     rootViewRef.current = new StaticLayoutView(

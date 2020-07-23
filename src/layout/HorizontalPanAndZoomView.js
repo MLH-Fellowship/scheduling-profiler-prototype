@@ -10,7 +10,7 @@ import type {Rect, Point} from './geometry';
 
 import {Surface} from './Surface';
 import {View} from './View';
-import {rectEqualToRect, rectContainsPoint} from './geometry';
+import {rectContainsPoint} from './geometry';
 
 type HorizontalPanAndZoomState = {
   offsetX: number,
@@ -62,10 +62,7 @@ export class HorizontalPanAndZoomView extends View {
         height: this.contentView.frame.size.height,
       },
     };
-    if (!rectEqualToRect(this.contentView.frame, proposedFrame)) {
-      this.contentView.frame = proposedFrame;
-      this.contentView.setNeedsDisplay();
-    }
+    this.contentView.setFrame(proposedFrame);
   }
 
   drawRect(context: CanvasRenderingContext2D, rect: Rect) {

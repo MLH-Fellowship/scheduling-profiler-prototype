@@ -4,38 +4,28 @@ import type {Rect, Point} from './geometry';
 
 import {Surface} from './Surface';
 import {View} from './View';
-import {
-  rectEqualToRect,
-  rectIntersectsRect,
-  rectIntersectionWithRect,
-} from './geometry';
+import {rectIntersectsRect, rectIntersectionWithRect} from './geometry';
 
 export type Layouter = (views: View[], containingFrame: Rect) => void;
 
 export const layeredLayout: Layouter = (views, frame) =>
   views.forEach(subview => {
-    if (!rectEqualToRect(subview.frame, frame)) {
-      subview.frame = frame;
-      subview.setNeedsDisplay();
-    }
+    subview.setFrame(frame);
   });
 
 export const verticallyStackedLayout: Layouter = (views, frame) => {
   let currentY = 0;
   views.forEach(view => {
     const desiredSize = view.desiredSize();
-    const size = desiredSize
-      ? desiredSize
-      : {width: frame.size.width, height: frame.size.height - currentY};
+    const height = desiredSize
+      ? desiredSize.height
+      : frame.size.height - currentY;
     const proposedFrame = {
       origin: {x: frame.origin.x, y: currentY},
-      size,
+      size: {width: frame.size.width, height},
     };
-    if (!rectEqualToRect(view.frame, proposedFrame)) {
-      view.frame = proposedFrame;
-      view.setNeedsDisplay();
-    }
-    currentY += size.height;
+    view.setFrame(proposedFrame);
+    currentY += height;
   });
 };
 

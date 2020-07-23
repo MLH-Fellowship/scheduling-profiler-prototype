@@ -4,7 +4,11 @@ import type {Interaction} from '../useCanvasInteraction';
 import type {Rect, Size, Point} from './geometry';
 
 import {Surface} from './Surface';
-import {rectContainsPoint} from './geometry';
+import {
+  rectIntersectsRect,
+  rectEqualToRect,
+  rectContainsPoint,
+} from './geometry';
 
 export class View {
   surface: Surface;
@@ -28,6 +32,13 @@ export class View {
     }
   }
 
+  setFrame(newFrame: Rect) {
+    if (!rectEqualToRect(this.frame, newFrame)) {
+      this.frame = newFrame;
+      this.setNeedsDisplay();
+    }
+  }
+
   desiredSize(): ?Size {}
 
   /**
@@ -40,7 +51,7 @@ export class View {
   layoutSubviews() {}
 
   displayIfNeeded(context: CanvasRenderingContext2D, rect: Rect) {
-    if (this.needsDisplay) {
+    if (this.needsDisplay && rectIntersectsRect(this.frame, rect)) {
       this.layoutSubviews();
       this.drawRect(context, rect);
       this.needsDisplay = false;
