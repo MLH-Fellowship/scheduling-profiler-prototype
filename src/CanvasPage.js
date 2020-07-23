@@ -50,6 +50,7 @@ import {useCanvasInteraction} from './useCanvasInteraction';
 import {
   FlamegraphView,
   ReactEventsView,
+  ReactMeasuresView,
   TimeAxisMarkersView,
 } from './canvas/views';
 
@@ -144,18 +145,11 @@ function AutoSizedCanvas({
   const flamegraphViewRef = useRef(null);
   const axisMarkersViewRef = useRef(null);
   const reactEventsViewRef = useRef(null);
-  // const reactMeasuresView = useRef(null);
+  const reactMeasuresViewRef = useRef(null);
   const rootViewRef = useRef(null);
 
   useLayoutEffect(() => {
     // TODO: Build more of the heirarchy
-    const flamegraphView = new FlamegraphView(
-      surfaceRef.current,
-      {origin: zeroPoint, size: {width, height}},
-      flamechart,
-      data,
-    );
-    flamegraphViewRef.current = flamegraphView;
 
     const axisMarkersView = new TimeAxisMarkersView(
       surfaceRef.current,
@@ -171,11 +165,26 @@ function AutoSizedCanvas({
     );
     reactEventsViewRef.current = reactEventsView;
 
+    const reactMeasuresView = new ReactMeasuresView(
+      surfaceRef.current,
+      {origin: zeroPoint, size: {width, height}},
+      data,
+    );
+    reactMeasuresViewRef.current = reactMeasuresView;
+
+    const flamegraphView = new FlamegraphView(
+      surfaceRef.current,
+      {origin: zeroPoint, size: {width, height}},
+      flamechart,
+      data,
+    );
+    flamegraphViewRef.current = flamegraphView;
+
     const stackedZoomables = new StaticLayoutView(
       surfaceRef.current,
       {origin: zeroPoint, size: {width, height}},
       verticallyStackedLayout,
-      [axisMarkersView, reactEventsView, flamegraphView],
+      [axisMarkersView, reactEventsView, reactMeasuresView, flamegraphView],
     );
 
     const flamegraphZoomWrapper = new HorizontalPanAndZoomView(
