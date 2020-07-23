@@ -32,17 +32,10 @@ function formatDuration(ms) {
 }
 
 function trimComponentName(name) {
-  if (name.length > 32) {
-    return name.substring(0, 31) + '...';
+  if (name.length > 128) {
+    return name.substring(0, 127) + '...';
   }
   return name;
-}
-
-function trimURL(label) {
-  if (label.length > 64) {
-    return label.substring(0, 63) + '...';
-  }
-  return label;
 }
 
 export default function EventTooltip({data, hoveredEvent, state}: Props) {
@@ -161,7 +154,7 @@ const TooltipFlamechartNode = ({
         {file && (
           <>
             <div className={styles.DetailsGridLabel}>Script URL:</div>
-            <div>{trimURL(file)}</div>
+            <div className={styles.DetailsGridURL}>{file}</div>
           </>
         )}
         {(line !== undefined || col !== undefined) && (

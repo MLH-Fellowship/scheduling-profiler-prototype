@@ -28,12 +28,15 @@
 .DetailsGridLabel {
   color: #666;
   text-align: right;
-  white-space: nowrap;
+}
+
+.DetailsGridURL{
+  overflow: hidden;
 }
 
 .ComponentName {
   font-weight: bold;
-  white-space: nowrap;
+  word-wrap: break-word;
 }
 
 .ComponentStack {
