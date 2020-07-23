@@ -2,6 +2,7 @@
 // Contains helper functions for rendering canvas elements
 
 import type {ReactLane, ReactProfilerData} from '../types';
+import type {Rect} from '../layout';
 
 import memoize from 'memoize-one';
 import {
@@ -104,3 +105,30 @@ export const getLaneHeight = (
     REACT_WORK_BORDER_SIZE
   );
 };
+
+export function positioningScaleFactor(
+  intrinsicWidth: number,
+  frame: Rect,
+): number {
+  return frame.size.width / intrinsicWidth;
+}
+
+export function timestampToPosition(
+  timestamp: number,
+  scaleFactor: number,
+  frame: Rect,
+): number {
+  return frame.origin.x + timestamp * scaleFactor;
+}
+
+export function positionToTimestamp(
+  position: number,
+  scaleFactor: number,
+  frame: Rect,
+): number {
+  return (position - frame.origin.x) / scaleFactor;
+}
+
+export function durationToWidth(duration: number, scaleFactor: number): number {
+  return duration * scaleFactor;
+}
