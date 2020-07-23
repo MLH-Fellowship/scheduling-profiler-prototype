@@ -10,11 +10,7 @@ import {
 
 import {View, Surface} from '../layout';
 
-import {
-  getTimeTickInterval,
-  trimFlamegraphText,
-  getLaneHeight,
-} from './canvasUtils';
+import {trimFlamegraphText, getLaneHeight} from './canvasUtils';
 
 import {
   COLORS,
@@ -31,9 +27,10 @@ import {
   LABEL_FIXED_WIDTH,
   HEADER_HEIGHT_FIXED,
   REACT_EVENT_SIZE,
-  EVENT_SIZE,
   REACT_EVENT_ROW_PADDING,
   EVENT_ROW_HEIGHT_FIXED,
+  INTERVAL_TIMES,
+  MIN_INTERVAL_SIZE_PX,
 } from './constants';
 
 function positioningScaleFactor(intrinsicWidth: number, frame: Rect) {
@@ -46,6 +43,15 @@ function timestampToPosition(
   frame: Rect,
 ) {
   return frame.origin.x + timestamp * scaleFactor;
+}
+
+// TODO Account for fixed label width
+function positionToTimestamp(
+  position: number,
+  scaleFactor: number,
+  frame: Rect,
+) {
+  return (position - frame.origin.x) / scaleFactor;
 }
 
 function durationToWidth(duration: number, scaleFactor: number) {
@@ -112,7 +118,7 @@ export class FlamegraphView extends View {
         //   hoveredEvent && hoveredEvent.flamechartNode === nodes[j];
 
         const width = durationToWidth((end - start) / 1000, scaleFactor);
-        if (width <= 0) {
+        if (width < 1) {
           continue; // Too small to render at this zoom level
         }
 
@@ -154,11 +160,129 @@ export class FlamegraphView extends View {
   }
 }
 
-// class TicksView extends View {
+export class TimeAxisMarkersView extends View {
+  totalDuration: number;
+  intrinsicSize: Size;
 
-//   drawRect(context: CanvasRenderingContext2D, rect: Rect) {
-//   }
-// }
+  constructor(surface: Surface, frame: Rect, totalDuration: number) {
+    super(surface, frame);
+    this.totalDuration = totalDuration;
+    this.intrinsicSize = {
+      width: this.totalDuration,
+      height: HEADER_HEIGHT_FIXED,
+    };
+  }
+
+  desiredSize() {
+    return this.intrinsicSize;
+  }
+
+  // Time mark intervals vary based on the current zoom range and the time it represents.
+  // In Chrome, these seem to range from 70-140 pixels wide.
+  // Time wise, they represent intervals of e.g. 1s, 500ms, 200ms, 100ms, 50ms, 20ms.
+  // Based on zoom, we should determine which amount to actually show.
+  getTimeTickInterval(scaleFactor: number): number {
+    for (let i = 0; i < INTERVAL_TIMES.length; i++) {
+      const currentInterval = INTERVAL_TIMES[i];
+      const intervalWidth = durationToWidth(currentInterval, scaleFactor);
+      if (intervalWidth > MIN_INTERVAL_SIZE_PX) {
+        return currentInterval;
+      }
+    }
+    return INTERVAL_TIMES[0];
+  }
+
+  drawRect(context: CanvasRenderingContext2D, rect: Rect) {
+    const clippedFrame = {
+      origin: this.frame.origin,
+      size: {
+        width: this.frame.size.width,
+        height: this.intrinsicSize.height,
+      },
+    };
+    const drawableRect = rectIntersectionWithRect(clippedFrame, rect);
+
+    // Clear background
+    context.fillStyle = COLORS.BACKGROUND;
+    context.fillRect(
+      drawableRect.origin.x,
+      drawableRect.origin.y,
+      drawableRect.size.width,
+      drawableRect.size.height,
+    );
+
+    const scaleFactor = positioningScaleFactor(
+      this.intrinsicSize.width,
+      clippedFrame,
+    );
+    const interval = this.getTimeTickInterval(scaleFactor);
+    const firstIntervalTimestamp =
+      Math.ceil(
+        positionToTimestamp(
+          drawableRect.origin.x - LABEL_FIXED_WIDTH,
+          scaleFactor,
+          clippedFrame,
+        ) / interval,
+      ) * interval;
+
+    for (
+      let markerTimestamp = firstIntervalTimestamp;
+      true;
+      markerTimestamp += interval
+    ) {
+      const x = timestampToPosition(markerTimestamp, scaleFactor, clippedFrame);
+      if (x > drawableRect.origin.x + drawableRect.size.width) {
+        break; // Not in view
+      }
+
+      const markerLabel = Math.round(markerTimestamp);
+
+      context.fillStyle = COLORS.PRIORITY_BORDER;
+      context.fillRect(
+        x,
+        drawableRect.origin.y + MARKER_HEIGHT - MARKER_TICK_HEIGHT,
+        REACT_WORK_BORDER_SIZE,
+        MARKER_TICK_HEIGHT,
+      );
+
+      context.fillStyle = COLORS.TIME_MARKER_LABEL;
+      context.textAlign = 'right';
+      context.textBaseline = 'middle';
+      context.font = `${MARKER_FONT_SIZE}px sans-serif`;
+      context.fillText(
+        `${markerLabel}ms`,
+        x - MARKER_TEXT_PADDING,
+        MARKER_HEIGHT / 2,
+      );
+    }
+
+    // Render bottom border.
+    // Propose border rect, check if intersects with `rect`, draw intersection.
+    const borderFrame: Rect = {
+      origin: {
+        x: clippedFrame.origin.x,
+        y:
+          clippedFrame.origin.y +
+          clippedFrame.size.height -
+          REACT_WORK_BORDER_SIZE,
+      },
+      size: {
+        width: clippedFrame.size.width,
+        height: REACT_WORK_BORDER_SIZE,
+      },
+    };
+    if (rectIntersectsRect(borderFrame, rect)) {
+      const borderDrawableRect = rectIntersectionWithRect(borderFrame, rect);
+      context.fillStyle = COLORS.PRIORITY_BORDER;
+      context.fillRect(
+        borderDrawableRect.origin.x,
+        borderDrawableRect.origin.y,
+        borderDrawableRect.size.width,
+        borderDrawableRect.size.height,
+      );
+    }
+  }
+}
 
 export class ReactEventsView extends View {
   profilerData: ReactProfilerData;

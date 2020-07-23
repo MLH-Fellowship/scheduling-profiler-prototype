@@ -47,7 +47,11 @@ import type {
   ReactProfilerData,
 } from './types';
 import {useCanvasInteraction} from './useCanvasInteraction';
-import {FlamegraphView, ReactEventsView} from './canvas/views';
+import {
+  FlamegraphView,
+  ReactEventsView,
+  TimeAxisMarkersView,
+} from './canvas/views';
 
 type ContextMenuContextData = {|
   data: ReactProfilerData,
@@ -138,7 +142,7 @@ function AutoSizedCanvas({
 
   const surfaceRef = useRef(new Surface());
   const flamegraphViewRef = useRef(null);
-  // const ticksViewRef = useRef(null);
+  const axisMarkersViewRef = useRef(null);
   const reactEventsViewRef = useRef(null);
   // const reactMeasuresView = useRef(null);
   const rootViewRef = useRef(null);
@@ -153,6 +157,13 @@ function AutoSizedCanvas({
     );
     flamegraphViewRef.current = flamegraphView;
 
+    const axisMarkersView = new TimeAxisMarkersView(
+      surfaceRef.current,
+      {origin: zeroPoint, size: {width, height}},
+      data.duration,
+    );
+    axisMarkersViewRef.current = axisMarkersView;
+
     const reactEventsView = new ReactEventsView(
       surfaceRef.current,
       {origin: zeroPoint, size: {width, height}},
@@ -164,7 +175,7 @@ function AutoSizedCanvas({
       surfaceRef.current,
       {origin: zeroPoint, size: {width, height}},
       verticallyStackedLayout,
-      [reactEventsView, flamegraphView],
+      [axisMarkersView, reactEventsView, flamegraphView],
     );
 
     const flamegraphZoomWrapper = new HorizontalPanAndZoomView(
