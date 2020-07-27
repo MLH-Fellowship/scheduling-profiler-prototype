@@ -21,11 +21,20 @@ import {
   MOVE_WHEEL_DELTA_THRESHOLD,
 } from '../canvas/constants'; // TODO: Remove external dependency
 
-type HorizontalPanAndZoomState = {
+type HorizontalPanAndZoomState = {|
   /** Horizontal offset; positive in the left direction */
   offsetX: number,
   zoomLevel: number,
-};
+|};
+
+function panAndZoomStatesAreEqual(
+  state1: HorizontalPanAndZoomState,
+  state2: HorizontalPanAndZoomState,
+): boolean {
+  return (
+    state1.offsetX === state2.offsetX && state1.zoomLevel === state2.zoomLevel
+  );
+}
 
 function clamp(min: number, max: number, value: number): number {
   if (Number.isNaN(min) || Number.isNaN(max) || Number.isNaN(value)) {
@@ -76,8 +85,15 @@ export class HorizontalPanAndZoomView extends View {
     if (onStateChange) this.onStateChange = onStateChange;
   }
 
+  setNeedsDisplay() {
+    super.setNeedsDisplay();
+    this.contentView.setNeedsDisplay();
+  }
+
   setFrame(newFrame: Rect) {
     super.setFrame(newFrame);
+
+    // Revalidate panAndZoomState
     this.updateState(this.panAndZoomState);
   }
 
@@ -200,9 +216,11 @@ export class HorizontalPanAndZoomView extends View {
       newContentWidth,
     );
 
-    this.panAndZoomState = this.stateDeriver(adjustedState);
-    this.onStateChange(this.panAndZoomState);
-    this.setNeedsDisplay();
+    if (!panAndZoomStatesAreEqual(adjustedState, this.panAndZoomState)) {
+      this.panAndZoomState = this.stateDeriver(adjustedState);
+      this.onStateChange(this.panAndZoomState);
+      this.setNeedsDisplay();
+    }
   }
 
   handleInteractionAndPropagateToSubviews(interaction: Interaction) {
@@ -232,10 +250,14 @@ export class HorizontalPanAndZoomView extends View {
    * @private
    */
   updateState(proposedState: HorizontalPanAndZoomState) {
-    const clampedState = this.clampedProposedState(proposedState);
-    this.panAndZoomState = this.stateDeriver(clampedState);
-    this.onStateChange(this.panAndZoomState);
-    this.setNeedsDisplay();
+    const clampedState = this.stateDeriver(
+      this.clampedProposedState(proposedState),
+    );
+    if (!panAndZoomStatesAreEqual(clampedState, this.panAndZoomState)) {
+      this.panAndZoomState = clampedState;
+      this.onStateChange(this.panAndZoomState);
+      this.setNeedsDisplay();
+    }
   }
 
   /**

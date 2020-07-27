@@ -49,6 +49,11 @@ export class StaticLayoutView extends View {
     subviews.forEach(subview => this.addSubview(subview));
   }
 
+  setNeedsDisplay() {
+    super.setNeedsDisplay();
+    this.subviews.forEach(subview => subview.setNeedsDisplay());
+  }
+
   addSubview(view: View) {
     this.subviews.push(view);
     view.superview = this;

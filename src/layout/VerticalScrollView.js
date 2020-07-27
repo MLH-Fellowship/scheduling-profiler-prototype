@@ -18,6 +18,13 @@ type VerticalScrollState = {|
   offsetY: number,
 |};
 
+function scrollStatesAreEqual(
+  state1: VerticalScrollState,
+  state2: VerticalScrollState,
+): boolean {
+  return state1.offsetY === state2.offsetY;
+}
+
 // TODO: Deduplicate
 function clamp(min: number, max: number, value: number): number {
   if (Number.isNaN(min) || Number.isNaN(max) || Number.isNaN(value)) {
@@ -57,8 +64,15 @@ export class VerticalScrollView extends View {
     if (onStateChange) this.onStateChange = onStateChange;
   }
 
+  setNeedsDisplay() {
+    super.setNeedsDisplay();
+    this.contentView.setNeedsDisplay();
+  }
+
   setFrame(newFrame: Rect) {
     super.setFrame(newFrame);
+
+    // Revalidate scrollState
     this.updateState(this.scrollState);
   }
 
@@ -155,10 +169,14 @@ export class VerticalScrollView extends View {
    * @private
    */
   updateState(proposedState: VerticalScrollState) {
-    const clampedState = this.clampedProposedState(proposedState);
-    this.scrollState = this.stateDeriver(clampedState);
-    this.onStateChange(this.scrollState);
-    this.setNeedsDisplay();
+    const clampedState = this.stateDeriver(
+      this.clampedProposedState(proposedState),
+    );
+    if (!scrollStatesAreEqual(clampedState, this.scrollState)) {
+      this.scrollState = clampedState;
+      this.onStateChange(this.scrollState);
+      this.setNeedsDisplay();
+    }
   }
 
   /**
