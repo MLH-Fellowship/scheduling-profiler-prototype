@@ -11,11 +11,22 @@ import type {Rect, Point} from './geometry';
 import {Surface} from './Surface';
 import {View} from './View';
 import {rectContainsPoint} from './geometry';
+import {MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL} from '../canvas/constants'; // TODO: Remove external dependency
 
 type HorizontalPanAndZoomState = {
+  /** Horizontal offset; positive in the left direction */
   offsetX: number,
   zoomLevel: number,
 };
+
+function clamp(min: number, max: number, value: number): number {
+  if (Number.isNaN(min) || Number.isNaN(max) || Number.isNaN(value)) {
+    throw new Error(
+      `Clamp was called with NaN. Args: min: ${min}, max: ${max}, value: ${value}.`,
+    );
+  }
+  return Math.max(min, Math.min(max, value));
+}
 
 export class HorizontalPanAndZoomView extends View {
   contentView: View;
@@ -28,7 +39,7 @@ export class HorizontalPanAndZoomView extends View {
 
   stateDeriver: (
     state: HorizontalPanAndZoomState,
-  ) => HorizontalPanAndZoomState = state => state; // TODO: Clamp
+  ) => HorizontalPanAndZoomState = state => state;
 
   onStateChange: (state: HorizontalPanAndZoomState) => void = () => {};
 
@@ -93,10 +104,10 @@ export class HorizontalPanAndZoomView extends View {
     }
     const {offsetX} = this.panAndZoomState;
     const {movementX} = interaction.payload.event;
-    const proposedNewState = {
+    const proposedNewState = this.clampedProposedState({
       ...this.panAndZoomState,
       offsetX: offsetX + movementX,
-    };
+    });
     this.panAndZoomState = this.stateDeriver(proposedNewState);
     this.onStateChange(this.panAndZoomState);
     this.setNeedsDisplay();
@@ -123,5 +134,21 @@ export class HorizontalPanAndZoomView extends View {
       case 'horizontal-pan-end':
         return this.handleHorizontalPanEnd(interaction);
     }
+  }
+
+  /**
+   * @private
+   */
+  clampedProposedState(
+    proposedState: HorizontalPanAndZoomState,
+  ): HorizontalPanAndZoomState {
+    return {
+      offsetX: clamp(
+        -(this.contentView.frame.size.width - this.frame.size.width),
+        0,
+        proposedState.offsetX,
+      ),
+      zoomLevel: clamp(MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL, proposedState.zoomLevel),
+    };
   }
 }
