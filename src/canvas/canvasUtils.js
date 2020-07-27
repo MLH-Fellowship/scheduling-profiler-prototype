@@ -1,17 +1,10 @@
 // @flow
 // Contains helper functions for rendering canvas elements
 
-import type {ReactLane, ReactProfilerData} from '../types';
 import type {Rect} from '../layout';
 
 import memoize from 'memoize-one';
-import {
-  INTERVAL_TIMES,
-  MAX_INTERVAL_SIZE_PX,
-  REACT_GUTTER_SIZE,
-  REACT_WORK_SIZE,
-  REACT_WORK_BORDER_SIZE,
-} from './constants';
+import {INTERVAL_TIMES, MAX_INTERVAL_SIZE_PX} from './constants';
 
 // hidpi canvas: https://www.html5rocks.com/en/tutorials/canvas/hidpi/
 function configureRetinaCanvas(canvas, height, width) {

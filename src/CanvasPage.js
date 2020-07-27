@@ -61,7 +61,7 @@ function CanvasPage({profilerData, flamechart}: Props) {
   return (
     <div
       className={styles.CanvasPage}
-      style={{backgroundColor: COLORS.PAGE_BG}}>
+      style={{backgroundColor: COLORS.BACKGROUND}}>
       <AutoSizer>
         {({height, width}: {height: number, width: number}) => (
           <AutoSizedCanvas
