@@ -141,16 +141,17 @@ export class ReactMeasuresView extends View {
     );
   }
 
-  drawRect(context: CanvasRenderingContext2D, rect: Rect) {
+  draw(context: CanvasRenderingContext2D) {
+    const {frame, lanesToRender, laneToMeasures, visibleArea} = this;
+
     context.fillStyle = COLORS.PRIORITY_BACKGROUND;
     context.fillRect(
-      rect.origin.x,
-      rect.origin.y,
-      rect.size.width,
-      rect.size.height,
+      visibleArea.origin.x,
+      visibleArea.origin.y,
+      visibleArea.size.width,
+      visibleArea.size.height,
     );
 
-    const {frame, lanesToRender, laneToMeasures} = this;
     const scaleFactor = positioningScaleFactor(this.intrinsicSize.width, frame);
 
     for (let i = 0; i < lanesToRender.length; i++) {
@@ -179,7 +180,7 @@ export class ReactMeasuresView extends View {
 
         this.drawSingleReactMeasure(
           context,
-          rect,
+          visibleArea,
           measure,
           baseY,
           scaleFactor,
@@ -202,8 +203,11 @@ export class ReactMeasuresView extends View {
           height: REACT_WORK_BORDER_SIZE,
         },
       };
-      if (rectIntersectsRect(borderFrame, rect)) {
-        const borderDrawableRect = rectIntersectionWithRect(borderFrame, rect);
+      if (rectIntersectsRect(borderFrame, visibleArea)) {
+        const borderDrawableRect = rectIntersectionWithRect(
+          borderFrame,
+          visibleArea,
+        );
         context.fillStyle = COLORS.PRIORITY_BORDER;
         context.fillRect(
           borderDrawableRect.origin.x,

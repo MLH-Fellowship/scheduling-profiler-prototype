@@ -42,29 +42,30 @@ export class FlamegraphView extends View {
     return this.intrinsicSize;
   }
 
-  drawRect(context: CanvasRenderingContext2D, rect: Rect) {
+  draw(context: CanvasRenderingContext2D) {
+    const {frame, flamechart, intrinsicSize, visibleArea} = this;
+
     context.fillStyle = COLORS.BACKGROUND;
     context.fillRect(
-      rect.origin.x,
-      rect.origin.y,
-      rect.size.width,
-      rect.size.height,
+      visibleArea.origin.x,
+      visibleArea.origin.y,
+      visibleArea.size.width,
+      visibleArea.size.height,
     );
 
     context.textAlign = 'left';
     context.textBaseline = 'middle';
     context.font = `${FLAMECHART_FONT_SIZE}px sans-serif`;
-    const {frame, flamechart} = this;
 
-    const scaleFactor = positioningScaleFactor(this.intrinsicSize.width, frame);
+    const scaleFactor = positioningScaleFactor(intrinsicSize.width, frame);
 
     for (let i = 0; i < flamechart.layers.length; i++) {
       const nodes = flamechart.layers[i];
 
       const layerY = Math.floor(frame.origin.y + i * FLAMECHART_FRAME_HEIGHT);
       if (
-        layerY + FLAMECHART_FRAME_HEIGHT < rect.origin.y ||
-        rect.origin.y + rect.size.height < layerY
+        layerY + FLAMECHART_FRAME_HEIGHT < visibleArea.origin.y ||
+        visibleArea.origin.y + visibleArea.size.height < layerY
       ) {
         continue; // Not in view
       }
@@ -84,7 +85,10 @@ export class FlamegraphView extends View {
         const x = Math.floor(
           timestampToPosition(start / 1000, scaleFactor, frame),
         );
-        if (x + width < rect.origin.x || rect.origin.x + rect.size.width < x) {
+        if (
+          x + width < visibleArea.origin.x ||
+          visibleArea.origin.x + visibleArea.size.width < x
+        ) {
           continue; // Not in view
         }
 

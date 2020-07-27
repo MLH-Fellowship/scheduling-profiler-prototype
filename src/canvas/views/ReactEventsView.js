@@ -118,21 +118,23 @@ export class ReactEventsView extends View {
     }
   }
 
-  drawRect(context: CanvasRenderingContext2D, rect: Rect) {
-    context.fillStyle = COLORS.BACKGROUND;
-    context.fillRect(
-      rect.origin.x,
-      rect.origin.y,
-      rect.size.width,
-      rect.size.height,
-    );
-
-    // Draw events
+  draw(context: CanvasRenderingContext2D) {
     const {
       frame,
       profilerData: {events},
       hoveredEvent,
+      visibleArea,
     } = this;
+
+    context.fillStyle = COLORS.BACKGROUND;
+    context.fillRect(
+      visibleArea.origin.x,
+      visibleArea.origin.y,
+      visibleArea.size.width,
+      visibleArea.size.height,
+    );
+
+    // Draw events
     const baseY = frame.origin.y + REACT_EVENT_ROW_PADDING;
     const scaleFactor = positioningScaleFactor(this.intrinsicSize.width, frame);
 
@@ -142,7 +144,7 @@ export class ReactEventsView extends View {
       }
       this.drawSingleReactEvent(
         context,
-        rect,
+        visibleArea,
         event,
         baseY,
         scaleFactor,
@@ -155,7 +157,7 @@ export class ReactEventsView extends View {
     if (hoveredEvent !== null) {
       this.drawSingleReactEvent(
         context,
-        rect,
+        visibleArea,
         hoveredEvent,
         baseY,
         scaleFactor,
@@ -175,8 +177,11 @@ export class ReactEventsView extends View {
         height: REACT_WORK_BORDER_SIZE,
       },
     };
-    if (rectIntersectsRect(borderFrame, rect)) {
-      const borderDrawableRect = rectIntersectionWithRect(borderFrame, rect);
+    if (rectIntersectsRect(borderFrame, visibleArea)) {
+      const borderDrawableRect = rectIntersectionWithRect(
+        borderFrame,
+        visibleArea,
+      );
       context.fillStyle = COLORS.PRIORITY_BORDER;
       context.fillRect(
         borderDrawableRect.origin.x,

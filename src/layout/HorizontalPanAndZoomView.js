@@ -74,10 +74,11 @@ export class HorizontalPanAndZoomView extends View {
       },
     };
     this.contentView.setFrame(proposedFrame);
+    this.contentView.setVisibleArea(this.visibleArea);
   }
 
-  drawRect(context: CanvasRenderingContext2D, rect: Rect) {
-    this.contentView.displayIfNeeded(context, rect);
+  draw(context: CanvasRenderingContext2D) {
+    this.contentView.displayIfNeeded(context);
   }
 
   hitTest(point: Point): ?View {

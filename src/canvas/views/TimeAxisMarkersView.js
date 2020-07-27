@@ -59,15 +59,16 @@ export class TimeAxisMarkersView extends View {
     return INTERVAL_TIMES[0];
   }
 
-  drawRect(context: CanvasRenderingContext2D, rect: Rect) {
+  draw(context: CanvasRenderingContext2D) {
+    const {frame, intrinsicSize, visibleArea} = this;
     const clippedFrame = {
-      origin: this.frame.origin,
+      origin: frame.origin,
       size: {
-        width: this.frame.size.width,
-        height: this.intrinsicSize.height,
+        width: frame.size.width,
+        height: intrinsicSize.height,
       },
     };
-    const drawableRect = rectIntersectionWithRect(clippedFrame, rect);
+    const drawableRect = rectIntersectionWithRect(clippedFrame, visibleArea);
 
     // Clear background
     context.fillStyle = COLORS.BACKGROUND;
@@ -79,7 +80,7 @@ export class TimeAxisMarkersView extends View {
     );
 
     const scaleFactor = positioningScaleFactor(
-      this.intrinsicSize.width,
+      intrinsicSize.width,
       clippedFrame,
     );
     const interval = this.getTimeTickInterval(scaleFactor);
@@ -142,8 +143,11 @@ export class TimeAxisMarkersView extends View {
         height: REACT_WORK_BORDER_SIZE,
       },
     };
-    if (rectIntersectsRect(borderFrame, rect)) {
-      const borderDrawableRect = rectIntersectionWithRect(borderFrame, rect);
+    if (rectIntersectsRect(borderFrame, visibleArea)) {
+      const borderDrawableRect = rectIntersectionWithRect(
+        borderFrame,
+        visibleArea,
+      );
       context.fillStyle = COLORS.PRIORITY_BORDER;
       context.fillRect(
         borderDrawableRect.origin.x,

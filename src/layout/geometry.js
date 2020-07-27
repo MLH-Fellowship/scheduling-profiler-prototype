@@ -29,6 +29,14 @@ export function rectEqualToRect(rect1: Rect, rect2: Rect): boolean {
   );
 }
 
+export function sizeIsValid({width, height}: Size): boolean {
+  return width >= 0 && height >= 0;
+}
+
+export function sizeIsEmpty({width, height}: Size): boolean {
+  return width <= 0 || height <= 0;
+}
+
 function rectToBoundaryCoordinates(
   rect: Rect,
 ): [number, number, number, number] {

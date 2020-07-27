@@ -27,13 +27,15 @@ export class Surface {
   }
 
   displayIfNeeded() {
-    if (!this.rootView || !this.context || !this.canvasSize) {
+    const {rootView, canvasSize, context} = this;
+    if (!rootView || !context || !canvasSize) {
       return;
     }
-    this.rootView.displayIfNeeded(this.context, {
+    rootView.setVisibleArea({
       origin: zeroPoint,
-      size: this.canvasSize,
+      size: canvasSize,
     });
+    rootView.displayIfNeeded(context);
   }
 
   handleInteraction(interaction: Interaction) {

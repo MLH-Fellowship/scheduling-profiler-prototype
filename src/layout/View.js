@@ -8,18 +8,25 @@ import {
   rectIntersectsRect,
   rectEqualToRect,
   rectContainsPoint,
+  sizeIsEmpty,
+  sizeIsValid,
+  zeroRect,
 } from './geometry';
 
 export class View {
   surface: Surface;
+
   frame: Rect;
+  visibleArea: Rect;
+
   superview: ?View;
 
   needsDisplay = true;
 
-  constructor(surface: Surface, frame: Rect) {
+  constructor(surface: Surface, frame: Rect, visibleArea: Rect = frame) {
     this.surface = surface;
     this.frame = frame;
+    this.visibleArea = visibleArea;
   }
 
   /**
@@ -35,6 +42,22 @@ export class View {
   setFrame(newFrame: Rect) {
     if (!rectEqualToRect(this.frame, newFrame)) {
       this.frame = newFrame;
+      if (sizeIsValid(newFrame.size)) {
+        this.frame = newFrame;
+      } else {
+        this.frame = zeroRect;
+      }
+      this.setNeedsDisplay();
+    }
+  }
+
+  setVisibleArea(newVisibleArea: Rect) {
+    if (!rectEqualToRect(this.visibleArea, newVisibleArea)) {
+      if (sizeIsValid(newVisibleArea.size)) {
+        this.visibleArea = newVisibleArea;
+      } else {
+        this.visibleArea = zeroRect;
+      }
       this.setNeedsDisplay();
     }
   }
@@ -50,15 +73,19 @@ export class View {
    */
   layoutSubviews() {}
 
-  displayIfNeeded(context: CanvasRenderingContext2D, rect: Rect) {
-    if (this.needsDisplay && rectIntersectsRect(this.frame, rect)) {
+  displayIfNeeded(context: CanvasRenderingContext2D) {
+    if (
+      this.needsDisplay &&
+      rectIntersectsRect(this.frame, this.visibleArea) &&
+      !sizeIsEmpty(this.visibleArea.size)
+    ) {
       this.layoutSubviews();
-      this.drawRect(context, rect);
+      this.draw(context);
       this.needsDisplay = false;
     }
   }
 
-  drawRect(context: CanvasRenderingContext2D, rect: Rect) {}
+  draw(context: CanvasRenderingContext2D) {}
 
   /**
    * Override to prevent hit testing of this view (and its subviews).

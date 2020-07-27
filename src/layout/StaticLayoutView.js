@@ -4,7 +4,11 @@ import type {Rect, Point} from './geometry';
 
 import {Surface} from './Surface';
 import {View} from './View';
-import {rectIntersectsRect, rectIntersectionWithRect} from './geometry';
+import {
+  rectIntersectsRect,
+  rectIntersectionWithRect,
+  zeroRect,
+} from './geometry';
 
 export type Layouter = (views: View[], containingFrame: Rect) => void;
 
@@ -50,16 +54,24 @@ export class StaticLayoutView extends View {
   }
 
   layoutSubviews() {
-    this.layouter(this.subviews, this.frame);
+    const {frame, layouter, subviews, visibleArea} = this;
+    layouter(subviews, frame);
+    subviews.forEach(subview => {
+      if (rectIntersectsRect(visibleArea, subview.frame)) {
+        subview.setVisibleArea(
+          rectIntersectionWithRect(visibleArea, subview.frame),
+        );
+      } else {
+        subview.setVisibleArea(zeroRect);
+      }
+    });
   }
 
-  drawRect(context: CanvasRenderingContext2D, rect: Rect) {
-    this.subviews.forEach(subview => {
-      if (rectIntersectsRect(rect, subview.frame)) {
-        subview.displayIfNeeded(
-          context,
-          rectIntersectionWithRect(rect, subview.frame),
-        );
+  draw(context: CanvasRenderingContext2D) {
+    const {subviews, visibleArea} = this;
+    subviews.forEach(subview => {
+      if (rectIntersectsRect(visibleArea, subview.visibleArea)) {
+        subview.displayIfNeeded(context);
       }
     });
   }
