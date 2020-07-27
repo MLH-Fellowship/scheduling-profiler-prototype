@@ -5,12 +5,14 @@ import type {
   VerticalPanStartInteraction,
   VerticalPanMoveInteraction,
   VerticalPanEndInteraction,
+  WheelPlainInteraction,
 } from '../useCanvasInteraction';
 import type {Rect} from './geometry';
 
 import {Surface} from './Surface';
 import {View} from './View';
 import {rectContainsPoint} from './geometry';
+import {MOVE_WHEEL_DELTA_THRESHOLD} from '../canvas/constants'; // TODO: Remove external dependency
 
 type VerticalScrollState = {|
   offsetY: number,
@@ -93,13 +95,10 @@ export class VerticalScrollView extends View {
     }
     const {offsetY} = this.scrollState;
     const {movementY} = interaction.payload.event;
-    const proposedNewState = this.clampedProposedState({
+    this.updateState({
       ...this.scrollState,
       offsetY: offsetY + movementY,
     });
-    this.scrollState = this.stateDeriver(proposedNewState);
-    this.onStateChange(this.scrollState);
-    this.setNeedsDisplay();
   }
 
   handleVerticalPanEnd(interaction: VerticalPanEndInteraction) {
@@ -108,10 +107,30 @@ export class VerticalScrollView extends View {
     }
   }
 
-  // handleVerticalScroll(interaction) {
-  //   // TODO: Scroll
-  //   this.contentView.handleInteractionAndPropagateToSubviews(interaction);
-  // }
+  handleWheelPlain(interaction: WheelPlainInteraction) {
+    const {
+      location,
+      event: {deltaX, deltaY},
+    } = interaction.payload;
+    if (!rectContainsPoint(location, this.frame)) {
+      return; // Not scrolling on view
+    }
+
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
+    if (absDeltaX > absDeltaY) {
+      return; // Scrolling horizontally
+    }
+
+    if (absDeltaY < MOVE_WHEEL_DELTA_THRESHOLD) {
+      return;
+    }
+
+    this.updateState({
+      ...this.scrollState,
+      offsetY: this.scrollState.offsetY - deltaY,
+    });
+  }
 
   handleInteractionAndPropagateToSubviews(interaction: Interaction) {
     switch (interaction.type) {
@@ -124,8 +143,21 @@ export class VerticalScrollView extends View {
       case 'vertical-pan-end':
         this.handleVerticalPanEnd(interaction);
         break;
+      case 'wheel-plain':
+        this.handleWheelPlain(interaction);
+        break;
     }
     this.contentView.handleInteractionAndPropagateToSubviews(interaction);
+  }
+
+  /**
+   * @private
+   */
+  updateState(proposedState: VerticalScrollState) {
+    const clampedState = this.clampedProposedState(proposedState);
+    this.scrollState = this.stateDeriver(clampedState);
+    this.onStateChange(this.scrollState);
+    this.setNeedsDisplay();
   }
 
   /**

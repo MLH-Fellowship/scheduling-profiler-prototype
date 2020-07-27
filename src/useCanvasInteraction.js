@@ -53,8 +53,29 @@ export type HoverInteraction = {|
     location: Point,
   |},
 |};
-export type WheelInteraction = {|
-  type: 'wheel',
+export type WheelPlainInteraction = {|
+  type: 'wheel-plain',
+  payload: {|
+    event: WheelEvent,
+    location: Point,
+  |},
+|};
+export type WheelWithShiftInteraction = {|
+  type: 'wheel-shift',
+  payload: {|
+    event: WheelEvent,
+    location: Point,
+  |},
+|};
+export type WheelWithControlInteraction = {|
+  type: 'wheel-control',
+  payload: {|
+    event: WheelEvent,
+    location: Point,
+  |},
+|};
+export type WheelWithMetaInteraction = {|
+  type: 'wheel-meta',
   payload: {|
     event: WheelEvent,
     location: Point,
@@ -69,7 +90,10 @@ export type Interaction =
   | HorizontalPanMoveInteraction
   | HorizontalPanEndInteraction
   | HoverInteraction
-  | WheelInteraction;
+  | WheelPlainInteraction
+  | WheelWithShiftInteraction
+  | WheelWithControlInteraction
+  | WheelWithMetaInteraction;
 
 export function useCanvasInteraction(
   canvasRef: {|current: HTMLCanvasElement | null|},
@@ -156,8 +180,39 @@ export function useCanvasInteraction(
       event.preventDefault();
       event.stopPropagation();
 
-      // TODO: Decide if this is a horizontal scroll, vertical scroll, or zoom,
-      // and fire the appropriate action.
+      if (event.shiftKey) {
+        interactor({
+          type: 'wheel-shift',
+          payload: {
+            event,
+            location: localToCanvasCoordinates({x: event.x, y: event.y}),
+          },
+        });
+      } else if (event.ctrlKey) {
+        interactor({
+          type: 'wheel-control',
+          payload: {
+            event,
+            location: localToCanvasCoordinates({x: event.x, y: event.y}),
+          },
+        });
+      } else if (event.metaKey) {
+        interactor({
+          type: 'wheel-meta',
+          payload: {
+            event,
+            location: localToCanvasCoordinates({x: event.x, y: event.y}),
+          },
+        });
+      } else {
+        interactor({
+          type: 'wheel-plain',
+          payload: {
+            event,
+            location: localToCanvasCoordinates({x: event.x, y: event.y}),
+          },
+        });
+      }
 
       return false;
     };
