@@ -132,3 +132,7 @@ export function positionToTimestamp(
 export function durationToWidth(duration: number, scaleFactor: number): number {
   return duration * scaleFactor;
 }
+
+export function widthToDuration(width: number, scaleFactor: number): number {
+  return width / scaleFactor;
+}

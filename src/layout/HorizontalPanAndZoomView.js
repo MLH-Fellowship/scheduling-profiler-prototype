@@ -90,9 +90,7 @@ export class HorizontalPanAndZoomView extends View {
   isPanning = false;
 
   handleHorizontalPanStart(interaction: HorizontalPanStartInteraction) {
-    const {x, y} = interaction.payload.event;
-    const mousePosition = {x, y};
-    if (rectContainsPoint(mousePosition, this.frame)) {
+    if (rectContainsPoint(interaction.payload.location, this.frame)) {
       this.isPanning = true;
       return true;
     }

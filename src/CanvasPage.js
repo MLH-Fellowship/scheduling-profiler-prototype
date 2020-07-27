@@ -1,11 +1,11 @@
 // @flow
 
-import type {PanAndZoomState} from './util/usePanAndZoom';
-import type {Interaction} from './useCanvasInteraction';
+import type {Point} from './layout';
 
 import {copy} from 'clipboard-js';
 import React, {
   Fragment,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -58,7 +58,6 @@ type ContextMenuContextData = {|
   data: ReactProfilerData,
   flamechart: FlamechartData,
   hoveredEvent: ReactHoverContextInfo | null,
-  state: PanAndZoomState,
 |};
 
 type Props = {|
@@ -102,6 +101,7 @@ const copySummary = (data, measure) => {
   );
 };
 
+// TODO: Replace `state`
 const zoomToBatch = (data, measure, state) => {
   const {zoomTo} = state;
   if (!zoomTo) {
@@ -128,6 +128,13 @@ function AutoSizedCanvas({
   width,
 }: AutoSizedCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const [isContextMenuShown, setIsContextMenuShown] = useState<boolean>(false);
+  const [mouseLocation, setMouseLocation] = useState<Point>(zeroPoint); // DOM coordinates
+  const [
+    hoveredEvent,
+    setHoveredEvent,
+  ] = useState<ReactHoverContextInfo | null>(null);
 
   // const state = usePanAndZoom({
   //   canvasRef,
@@ -202,7 +209,7 @@ function AutoSizedCanvas({
     );
 
     surfaceRef.current.rootView = rootViewRef.current;
-  }, [data, flamechart]);
+  }, [data, flamechart, setHoveredEvent]);
 
   // TODO: Sync scrolls with state
 
@@ -215,36 +222,62 @@ function AutoSizedCanvas({
 
   const interactor = useCallback(
     interaction => {
+      if (hoveredEvent) {
+        setMouseLocation({
+          x: interaction.payload.event.x,
+          y: interaction.payload.event.y,
+        });
+      }
       if (canvasRef.current === null) {
         return;
       }
       surfaceRef.current.handleInteraction(interaction);
       surfaceRef.current.displayIfNeeded();
     },
-    [surfaceRef],
+    [surfaceRef, hoveredEvent, setMouseLocation],
   );
 
   useCanvasInteraction(canvasRef, interactor);
 
-  // const hoveredEvent = getHoveredEvent(
-  //   schedulerCanvasHeight,
-  //   data,
-  //   flamechart,
-  //   state,
-  // );
-  // const [isContextMenuShown, setIsContextMenuShown] = useState<boolean>(false);
+  useContextMenu<ContextMenuContextData>({
+    data: {
+      data,
+      flamechart,
+      hoveredEvent,
+    },
+    id: CONTEXT_MENU_ID,
+    onChange: setIsContextMenuShown,
+    ref: canvasRef,
+  });
 
-  // useContextMenu<ContextMenuContextData>({
-  //   data: {
-  //     data,
-  //     flamechart,
-  //     hoveredEvent,
-  //     state,
-  //   },
-  //   id: CONTEXT_MENU_ID,
-  //   onChange: setIsContextMenuShown,
-  //   ref: canvasRef,
-  // });
+  useEffect(() => {
+    const {current: reactEventsView} = reactEventsViewRef;
+    if (reactEventsView) {
+      reactEventsView.onHover = event => {
+        if (hoveredEvent && event === null) {
+          setHoveredEvent(null);
+        } else if (!hoveredEvent || hoveredEvent.event !== event) {
+          setHoveredEvent({
+            event,
+            flamechartNode: null,
+            measure: null,
+            lane: null,
+            data,
+          });
+        }
+      };
+    }
+
+    // TODO: Set onHovers for every other view
+  }, [reactEventsViewRef, hoveredEvent, setHoveredEvent]);
+
+  useLayoutEffect(() => {
+    const {current: reactEventsView} = reactEventsViewRef;
+    if (reactEventsView) {
+      reactEventsView.setHoveredEvent(hoveredEvent ? hoveredEvent.event : null);
+    }
+    // TODO: Update hover data for every other view
+  }, [hoveredEvent, reactEventsViewRef]);
 
   // When React component renders, rerender surface.
   // TODO: See if displaying on rAF would make more sense since we're somewhat
@@ -252,85 +285,78 @@ function AutoSizedCanvas({
   // frame.
   useLayoutEffect(() => {
     surfaceRef.current.displayIfNeeded();
-    // renderCanvas(
-    //   data,
-    //   flamechart,
-    //   canvasRef.current,
-    //   width,
-    //   height,
-    //   state,
-    //   hoveredEvent,
-    // );
   });
 
-  return <canvas ref={canvasRef} height={height} width={width} />;
-
-  // return (
-  //   <Fragment>
-  //     <canvas ref={canvasRef} height={height} width={width} />
-  //     <ContextMenu id={CONTEXT_MENU_ID}>
-  //       {(contextData: ContextMenuContextData) => {
-  //         if (contextData.hoveredEvent == null) {
-  //           return null;
-  //         }
-  //         const {event, flamechartNode, measure} = contextData.hoveredEvent;
-  //         return (
-  //           <Fragment>
-  //             {event !== null && (
-  //               <ContextMenuItem
-  //                 onClick={() => copy(event.componentName)}
-  //                 title="Copy component name">
-  //                 Copy component name
-  //               </ContextMenuItem>
-  //             )}
-  //             {event !== null && (
-  //               <ContextMenuItem
-  //                 onClick={() => copy(event.componentStack)}
-  //                 title="Copy component stack">
-  //                 Copy component stack
-  //               </ContextMenuItem>
-  //             )}
-  //             {measure !== null && (
-  //               <ContextMenuItem
-  //                 onClick={() => zoomToBatch(contextData.data, measure, state)}
-  //                 title="Zoom to batch">
-  //                 Zoom to batch
-  //               </ContextMenuItem>
-  //             )}
-  //             {measure !== null && (
-  //               <ContextMenuItem
-  //                 onClick={() => copySummary(contextData.data, measure)}
-  //                 title="Copy summary">
-  //                 Copy summary
-  //               </ContextMenuItem>
-  //             )}
-  //             {flamechartNode !== null && (
-  //               <ContextMenuItem
-  //                 onClick={() => copy(flamechartNode.node.frame.file)}
-  //                 title="Copy file path">
-  //                 Copy file path
-  //               </ContextMenuItem>
-  //             )}
-  //             {flamechartNode !== null && (
-  //               <ContextMenuItem
-  //                 onClick={() =>
-  //                   copy(
-  //                     `line ${flamechartNode.node.frame.line}, column ${flamechartNode.node.frame.col}`,
-  //                   )
-  //                 }
-  //                 title="Copy location">
-  //                 Copy location
-  //               </ContextMenuItem>
-  //             )}
-  //           </Fragment>
-  //         );
-  //       }}
-  //     </ContextMenu>
-  //     {!isContextMenuShown && (
-  //       <EventTooltip data={data} hoveredEvent={hoveredEvent} state={state} />
-  //     )}
-  //   </Fragment>
-  // );
+  return (
+    <Fragment>
+      <canvas ref={canvasRef} height={height} width={width} />
+      <ContextMenu id={CONTEXT_MENU_ID}>
+        {(contextData: ContextMenuContextData) => {
+          if (contextData.hoveredEvent == null) {
+            return null;
+          }
+          const {event, flamechartNode, measure} = contextData.hoveredEvent;
+          return (
+            <Fragment>
+              {event !== null && (
+                <ContextMenuItem
+                  onClick={() => copy(event.componentName)}
+                  title="Copy component name">
+                  Copy component name
+                </ContextMenuItem>
+              )}
+              {event !== null && (
+                <ContextMenuItem
+                  onClick={() => copy(event.componentStack)}
+                  title="Copy component stack">
+                  Copy component stack
+                </ContextMenuItem>
+              )}
+              {/* {measure !== null && (
+                <ContextMenuItem
+                  onClick={() => zoomToBatch(contextData.data, measure, state)}
+                  title="Zoom to batch">
+                  Zoom to batch
+                </ContextMenuItem>
+              )} */}
+              {measure !== null && (
+                <ContextMenuItem
+                  onClick={() => copySummary(contextData.data, measure)}
+                  title="Copy summary">
+                  Copy summary
+                </ContextMenuItem>
+              )}
+              {flamechartNode !== null && (
+                <ContextMenuItem
+                  onClick={() => copy(flamechartNode.node.frame.file)}
+                  title="Copy file path">
+                  Copy file path
+                </ContextMenuItem>
+              )}
+              {flamechartNode !== null && (
+                <ContextMenuItem
+                  onClick={() =>
+                    copy(
+                      `line ${flamechartNode.node.frame.line}, column ${flamechartNode.node.frame.col}`,
+                    )
+                  }
+                  title="Copy location">
+                  Copy location
+                </ContextMenuItem>
+              )}
+            </Fragment>
+          );
+        }}
+      </ContextMenu>
+      {!isContextMenuShown && (
+        <EventTooltip
+          data={data}
+          hoveredEvent={hoveredEvent}
+          origin={mouseLocation}
+        />
+      )}
+    </Fragment>
+  );
 }
 
 export default CanvasPage;

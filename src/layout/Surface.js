@@ -40,8 +40,7 @@ export class Surface {
     if (!this.rootView) {
       return;
     }
-    const {x, y} = interaction.payload.event;
-    const responder = this.rootView.hitTest({x, y});
+    const responder = this.rootView.hitTest(interaction.payload.location);
     if (responder) {
       responder.handleInteractionOrBubbleUp(interaction);
     }

@@ -1,9 +1,15 @@
 // @flow
 
+import type {Interaction, HoverInteraction} from '../../useCanvasInteraction';
 import type {ReactEvent, ReactProfilerData} from '../../types';
 import type {Rect, Size} from '../../layout';
 
-import {positioningScaleFactor, timestampToPosition} from '../canvasUtils';
+import {
+  positioningScaleFactor,
+  timestampToPosition,
+  positionToTimestamp,
+  widthToDuration,
+} from '../canvasUtils';
 import {
   View,
   Surface,
@@ -22,9 +28,13 @@ export class ReactEventsView extends View {
   profilerData: ReactProfilerData;
   intrinsicSize: Size;
 
+  hoveredEvent: ReactEvent | null = null;
+  onHover: ((event: ReactEvent | null) => void) | null = null;
+
   constructor(surface: Surface, frame: Rect, profilerData: ReactProfilerData) {
     super(surface, frame);
     this.profilerData = profilerData;
+
     this.intrinsicSize = {
       width: this.profilerData.duration,
       height: EVENT_ROW_HEIGHT_FIXED,
@@ -33,6 +43,14 @@ export class ReactEventsView extends View {
 
   desiredSize() {
     return this.intrinsicSize;
+  }
+
+  setHoveredEvent(hoveredEvent: ReactEvent | null) {
+    if (this.hoveredEvent === hoveredEvent) {
+      return;
+    }
+    this.hoveredEvent = hoveredEvent;
+    this.setNeedsDisplay();
   }
 
   /**
@@ -113,37 +131,38 @@ export class ReactEventsView extends View {
     const {
       frame,
       profilerData: {events},
+      hoveredEvent,
     } = this;
     const baseY = frame.origin.y + REACT_EVENT_ROW_PADDING;
     const scaleFactor = positioningScaleFactor(this.intrinsicSize.width, frame);
 
     events.forEach(event => {
-      // TODO: Hovering
-      // const showHoverHighlight = hoveredEvent && hoveredEvent.event === event;
-      const showHoverHighlight = false;
-
+      if (event === hoveredEvent) {
+        return;
+      }
       this.drawSingleReactEvent(
         context,
         rect,
         event,
         baseY,
         scaleFactor,
-        showHoverHighlight,
+        false,
       );
     });
 
     // Draw the hovered and/or selected items on top so they stand out.
     // This is helpful if there are multiple (overlapping) items close to each other.
-    // if (hoveredEvent !== null && hoveredEvent.event !== null) {
-    //   this.drawSingleReactEvent(
-    //     context,
-    //     rect,
-    //     hoveredEvent.event,
-    //     baseY,
-    //     scaleFactor,
-    //     true,
-    //   );
-    // }
+    if (hoveredEvent !== null) {
+      this.drawSingleReactEvent(
+        context,
+        rect,
+        hoveredEvent,
+        baseY,
+        scaleFactor,
+        true,
+      );
+    }
+
     // Render bottom border.
     // Propose border rect, check if intersects with `rect`, draw intersection.
     const borderFrame: Rect = {
@@ -165,6 +184,56 @@ export class ReactEventsView extends View {
         borderDrawableRect.size.width,
         borderDrawableRect.size.height,
       );
+    }
+  }
+
+  /**
+   * @private
+   */
+  handleHover(interaction: HoverInteraction) {
+    const {onHover} = this;
+    if (!onHover) {
+      return;
+    }
+
+    const {
+      frame,
+      profilerData: {events},
+    } = this;
+    const scaleFactor = positioningScaleFactor(this.intrinsicSize.width, frame);
+    const hoverTimestamp = positionToTimestamp(
+      interaction.payload.location.x,
+      scaleFactor,
+      frame,
+    );
+    const eventTimestampAllowance = widthToDuration(
+      REACT_EVENT_SIZE / 2,
+      scaleFactor,
+    );
+
+    // Because data ranges may overlap, we want to find the last intersecting item.
+    // This will always be the one on "top" (the one the user is hovering over).
+    for (let index = events.length - 1; index >= 0; index--) {
+      const event = events[index];
+      const {timestamp} = event;
+
+      if (
+        timestamp - eventTimestampAllowance <= hoverTimestamp &&
+        hoverTimestamp <= timestamp + eventTimestampAllowance
+      ) {
+        onHover(event);
+        return true;
+      }
+    }
+
+    onHover(null);
+    return true;
+  }
+
+  handleInteraction(interaction: Interaction) {
+    switch (interaction.type) {
+      case 'hover':
+        return this.handleHover(interaction);
     }
   }
 }

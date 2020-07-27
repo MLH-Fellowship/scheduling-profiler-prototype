@@ -1,6 +1,6 @@
 // @flow
 
-import type {PanAndZoomState} from './util/usePanAndZoom';
+import type {Point} from './layout';
 import type {FlamechartFrame} from '@elg/speedscope';
 import type {
   ReactEvent,
@@ -20,7 +20,7 @@ import styles from './EventTooltip.css';
 type Props = {|
   data: ReactProfilerData,
   hoveredEvent: ReactHoverContextInfo | null,
-  state: PanAndZoomState,
+  origin: Point,
 |};
 
 function formatTimestamp(ms) {
@@ -31,12 +31,10 @@ function formatDuration(ms) {
   return prettyMilliseconds(ms, {millisecondsDecimalDigits: 3});
 }
 
-export default function EventTooltip({data, hoveredEvent, state}: Props) {
-  const {canvasMouseY, canvasMouseX} = state;
-
+export default function EventTooltip({data, hoveredEvent, origin}: Props) {
   const tooltipRef = useSmartTooltip({
-    mouseX: canvasMouseX,
-    mouseY: canvasMouseY,
+    mouseX: origin.x,
+    mouseY: origin.y,
   });
 
   if (hoveredEvent === null) {
