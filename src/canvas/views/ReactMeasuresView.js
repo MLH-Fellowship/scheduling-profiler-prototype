@@ -31,7 +31,7 @@ export class ReactMeasuresView extends View {
   laneToMeasures: Map<ReactLane, ReactMeasure[]>;
 
   hoveredMeasure: ReactMeasure | null = null;
-  onHover: ((event: ReactMeasure | null) => void) | null = null;
+  onHover: ((measure: ReactMeasure | null) => void) | null = null;
 
   constructor(surface: Surface, frame: Rect, profilerData: ReactProfilerData) {
     super(surface, frame);

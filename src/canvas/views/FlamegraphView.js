@@ -1,9 +1,11 @@
 // @flow
 
+import type {FlamechartFrame} from '@elg/speedscope';
+import type {Interaction, HoverInteraction} from '../../useCanvasInteraction';
 import type {FlamechartData, ReactProfilerData} from '../../types';
 import type {Rect, Size} from '../../layout';
 
-import {View, Surface} from '../../layout';
+import {View, Surface, rectContainsPoint} from '../../layout';
 import {
   durationToWidth,
   positioningScaleFactor,
@@ -23,6 +25,9 @@ export class FlamegraphView extends View {
   profilerData: ReactProfilerData;
   intrinsicSize: Size;
 
+  hoveredFlamechartNode: FlamechartFrame | null = null;
+  onHover: ((node: FlamechartFrame | null) => void) | null = null;
+
   constructor(
     surface: Surface,
     frame: Rect,
@@ -34,7 +39,7 @@ export class FlamegraphView extends View {
     this.profilerData = profilerData;
     this.intrinsicSize = {
       width: this.profilerData.duration,
-      height: this.flamechart.layers.length * FLAMECHART_FRAME_HEIGHT,
+      height: this.flamechart.getLayers().length * FLAMECHART_FRAME_HEIGHT,
     };
   }
 
@@ -42,8 +47,22 @@ export class FlamegraphView extends View {
     return this.intrinsicSize;
   }
 
+  setHoveredFlamechartNode(hoveredFlamechartNode: FlamechartFrame | null) {
+    if (this.hoveredFlamechartNode === hoveredFlamechartNode) {
+      return;
+    }
+    this.hoveredFlamechartNode = hoveredFlamechartNode;
+    this.setNeedsDisplay();
+  }
+
   draw(context: CanvasRenderingContext2D) {
-    const {frame, flamechart, intrinsicSize, visibleArea} = this;
+    const {
+      frame,
+      flamechart,
+      hoveredFlamechartNode,
+      intrinsicSize,
+      visibleArea,
+    } = this;
 
     context.fillStyle = COLORS.BACKGROUND;
     context.fillRect(
@@ -59,8 +78,8 @@ export class FlamegraphView extends View {
 
     const scaleFactor = positioningScaleFactor(intrinsicSize.width, frame);
 
-    for (let i = 0; i < flamechart.layers.length; i++) {
-      const nodes = flamechart.layers[i];
+    for (let i = 0; i < flamechart.getLayers().length; i++) {
+      const nodes = flamechart.getLayers()[i];
 
       const layerY = Math.floor(frame.origin.y + i * FLAMECHART_FRAME_HEIGHT);
       if (
@@ -74,9 +93,6 @@ export class FlamegraphView extends View {
         const {end, node, start} = nodes[j];
         const {name} = node.frame;
 
-        const showHoverHighlight = false;
-        // TODO: Hovering
-        //   hoveredEvent && hoveredEvent.flamechartNode === nodes[j];
         const width = durationToWidth((end - start) / 1000, scaleFactor);
         if (width < 1) {
           continue; // Too small to render at this zoom level
@@ -92,6 +108,7 @@ export class FlamegraphView extends View {
           continue; // Not in view
         }
 
+        const showHoverHighlight = hoveredFlamechartNode === nodes[j];
         context.fillStyle = showHoverHighlight
           ? COLORS.FLAME_GRAPH_HOVER
           : COLORS.FLAME_GRAPH;
@@ -119,6 +136,75 @@ export class FlamegraphView extends View {
           }
         }
       }
+    }
+  }
+
+  /**
+   * @private
+   */
+  handleHover(interaction: HoverInteraction) {
+    const {flamechart, frame, intrinsicSize, onHover, visibleArea} = this;
+    if (!onHover) {
+      return;
+    }
+
+    const {location} = interaction.payload;
+    if (!rectContainsPoint(location, visibleArea)) {
+      onHover(null);
+      return;
+    }
+
+    // Identify the layer being hovered over
+    const adjustedCanvasMouseY = location.y - frame.origin.y;
+    const layerIndex = Math.floor(
+      adjustedCanvasMouseY / FLAMECHART_FRAME_HEIGHT,
+    );
+    if (layerIndex < 0 || layerIndex >= flamechart.getLayers().length) {
+      onHover(null);
+      return;
+    }
+    const layer = flamechart.getLayers()[layerIndex];
+
+    if (!layer) {
+      return null;
+    }
+
+    // Find the node being hovered over.
+    const scaleFactor = positioningScaleFactor(intrinsicSize.width, frame);
+    let startIndex = 0;
+    let stopIndex = layer.length - 1;
+    while (startIndex <= stopIndex) {
+      const currentIndex = Math.floor((startIndex + stopIndex) / 2);
+      const flamechartNode = layer[currentIndex];
+
+      const {end, start} = flamechartNode;
+
+      const width = durationToWidth((end - start) / 1000, scaleFactor);
+
+      const x = Math.floor(
+        timestampToPosition(start / 1000, scaleFactor, frame),
+      );
+
+      if (x <= location.x && x + width >= location.x) {
+        onHover(flamechartNode);
+        return;
+      }
+
+      if (x > location.x) {
+        stopIndex = currentIndex - 1;
+      } else {
+        startIndex = currentIndex + 1;
+      }
+    }
+
+    onHover(null);
+  }
+
+  handleInteractionAndPropagateToSubviews(interaction: Interaction) {
+    switch (interaction.type) {
+      case 'hover':
+        this.handleHover(interaction);
+        break;
     }
   }
 }

@@ -11,10 +11,6 @@ import React, {
   useState,
   useCallback,
 } from 'react';
-import usePanAndZoom from './util/usePanAndZoom';
-
-import {getHoveredEvent} from './canvas/getHoveredEvent';
-import {renderCanvas} from './canvas/renderCanvas';
 
 import {
   HorizontalPanAndZoomView,
@@ -30,12 +26,7 @@ import {getBatchRange} from './util/getBatchRange';
 import EventTooltip from './EventTooltip';
 import styles from './CanvasPage.css';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import {
-  COLORS,
-  FLAMECHART_FRAME_HEIGHT,
-  LABEL_FIXED_WIDTH,
-  HEADER_HEIGHT_FIXED,
-} from './canvas/constants';
+import {COLORS} from './canvas/constants';
 
 import {ContextMenu, ContextMenuItem, useContextMenu} from './context';
 
@@ -136,18 +127,6 @@ function AutoSizedCanvas({
     setHoveredEvent,
   ] = useState<ReactHoverContextInfo | null>(null);
 
-  // const state = usePanAndZoom({
-  //   canvasRef,
-  //   canvasHeight: height,
-  //   canvasWidth: width,
-  //   fixedColumnWidth: LABEL_FIXED_WIDTH,
-  //   fixedHeaderHeight: HEADER_HEIGHT_FIXED,
-  //   unscaledContentWidth: data.duration,
-  //   unscaledContentHeight:
-  //     schedulerCanvasHeight +
-  //     flamechart.layers.length * FLAMECHART_FRAME_HEIGHT,
-  // });
-
   const surfaceRef = useRef(new Surface());
   const flamegraphViewRef = useRef(null);
   const axisMarkersViewRef = useRef(null);
@@ -156,8 +135,6 @@ function AutoSizedCanvas({
   const rootViewRef = useRef(null);
 
   useLayoutEffect(() => {
-    // TODO: Build more of the heirarchy
-
     const axisMarkersView = new TimeAxisMarkersView(
       surfaceRef.current,
       {origin: zeroPoint, size: {width, height}},
@@ -286,8 +263,27 @@ function AutoSizedCanvas({
       };
     }
 
-    // TODO: Set onHovers for every other view
-  }, [reactEventsViewRef, reactMeasuresViewRef, hoveredEvent, setHoveredEvent]);
+    const {current: flamegraphView} = flamegraphViewRef;
+    if (flamegraphView) {
+      flamegraphView.onHover = flamechartNode => {
+        if (!hoveredEvent || hoveredEvent.flamechartNode !== flamechartNode) {
+          setHoveredEvent({
+            event: null,
+            flamechartNode,
+            measure: null,
+            lane: null,
+            data,
+          });
+        }
+      };
+    }
+  }, [
+    reactEventsViewRef,
+    reactMeasuresViewRef,
+    flamegraphViewRef,
+    hoveredEvent,
+    setHoveredEvent,
+  ]);
 
   useLayoutEffect(() => {
     const {current: reactEventsView} = reactEventsViewRef;
@@ -302,8 +298,18 @@ function AutoSizedCanvas({
       );
     }
 
-    // TODO: Update hover data for every other view
-  }, [reactEventsViewRef, reactMeasuresViewRef, hoveredEvent]);
+    const {current: flamegraphView} = flamegraphViewRef;
+    if (flamegraphView) {
+      flamegraphView.setHoveredFlamechartNode(
+        hoveredEvent ? hoveredEvent.flamechartNode : null,
+      );
+    }
+  }, [
+    reactEventsViewRef,
+    reactMeasuresViewRef,
+    flamegraphViewRef,
+    hoveredEvent,
+  ]);
 
   // When React component renders, rerender surface.
   // TODO: See if displaying on rAF would make more sense since we're somewhat
@@ -363,7 +369,8 @@ function AutoSizedCanvas({
                 <ContextMenuItem
                   onClick={() =>
                     copy(
-                      `line ${flamechartNode.node.frame.line}, column ${flamechartNode.node.frame.col}`,
+                      `line ${flamechartNode.node.frame.line ||
+                        ''}, column ${flamechartNode.node.frame.col || ''}`,
                     )
                   }
                   title="Copy location">
