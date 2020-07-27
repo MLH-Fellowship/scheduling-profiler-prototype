@@ -19,7 +19,7 @@ export const layeredLayout: Layouter = (views, frame) =>
   });
 
 export const verticallyStackedLayout: Layouter = (views, frame) => {
-  let currentY = 0;
+  let currentY = frame.origin.y;
   views.forEach(view => {
     const desiredSize = view.desiredSize();
     const height = desiredSize

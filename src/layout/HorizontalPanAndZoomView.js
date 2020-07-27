@@ -25,7 +25,7 @@ function clamp(min: number, max: number, value: number): number {
       `Clamp was called with NaN. Args: min: ${min}, max: ${max}, value: ${value}.`,
     );
   }
-  return Math.max(min, Math.min(max, value));
+  return Math.min(max, Math.max(min, value));
 }
 
 export class HorizontalPanAndZoomView extends View {
@@ -70,7 +70,7 @@ export class HorizontalPanAndZoomView extends View {
       },
       size: {
         width: this.intrinsicContentWidth * zoomLevel,
-        height: this.contentView.frame.size.height,
+        height: this.frame.size.height,
       },
     };
     this.contentView.setFrame(proposedFrame);

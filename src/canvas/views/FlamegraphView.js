@@ -5,7 +5,14 @@ import type {Interaction, HoverInteraction} from '../../useCanvasInteraction';
 import type {FlamechartData, ReactProfilerData} from '../../types';
 import type {Rect, Size} from '../../layout';
 
-import {View, Surface, rectContainsPoint} from '../../layout';
+import {
+  View,
+  Surface,
+  rectContainsPoint,
+  rectEqualToRect,
+  rectIntersectsRect,
+  rectIntersectionWithRect,
+} from '../../layout';
 import {
   durationToWidth,
   positioningScaleFactor,
@@ -101,10 +108,16 @@ export class FlamegraphView extends View {
         const x = Math.floor(
           timestampToPosition(start / 1000, scaleFactor, frame),
         );
-        if (
-          x + width < visibleArea.origin.x ||
-          visibleArea.origin.x + visibleArea.size.width < x
-        ) {
+        const nodeRect: Rect = {
+          origin: {x, y: layerY},
+          size: {
+            width: Math.floor(width - REACT_WORK_BORDER_SIZE),
+            height: Math.floor(
+              FLAMECHART_FRAME_HEIGHT - REACT_WORK_BORDER_SIZE,
+            ),
+          },
+        };
+        if (!rectIntersectsRect(nodeRect, visibleArea)) {
           continue; // Not in view
         }
 
@@ -113,11 +126,12 @@ export class FlamegraphView extends View {
           ? COLORS.FLAME_GRAPH_HOVER
           : COLORS.FLAME_GRAPH;
 
+        const drawableRect = rectIntersectionWithRect(nodeRect, visibleArea);
         context.fillRect(
-          x,
-          layerY,
-          Math.floor(width - REACT_WORK_BORDER_SIZE),
-          Math.floor(FLAMECHART_FRAME_HEIGHT - REACT_WORK_BORDER_SIZE),
+          drawableRect.origin.x,
+          drawableRect.origin.y,
+          drawableRect.size.width,
+          drawableRect.size.height,
         );
 
         if (width > FLAMECHART_TEXT_PADDING * 2) {
@@ -126,13 +140,35 @@ export class FlamegraphView extends View {
             name,
             width - FLAMECHART_TEXT_PADDING * 2 + (x < 0 ? x : 0),
           );
+
           if (trimmedName !== null) {
             context.fillStyle = COLORS.PRIORITY_LABEL;
+
+            // Prevent text from being drawn outside `viewableArea`
+            const textOverflowsViewableArea = !rectEqualToRect(
+              drawableRect,
+              nodeRect,
+            );
+            if (textOverflowsViewableArea) {
+              context.save();
+              context.rect(
+                drawableRect.origin.x,
+                drawableRect.origin.y,
+                drawableRect.size.width,
+                drawableRect.size.height,
+              );
+              context.clip();
+            }
+
             context.fillText(
               trimmedName,
               x + FLAMECHART_TEXT_PADDING - (x < 0 ? x : 0),
               layerY + FLAMECHART_FRAME_HEIGHT / 2,
             );
+
+            if (textOverflowsViewableArea) {
+              context.restore();
+            }
           }
         }
       }

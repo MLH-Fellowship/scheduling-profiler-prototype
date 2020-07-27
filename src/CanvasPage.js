@@ -14,6 +14,7 @@ import React, {
 
 import {
   HorizontalPanAndZoomView,
+  VerticalScrollView,
   Surface,
   StaticLayoutView,
   layeredLayout,
@@ -163,15 +164,26 @@ function AutoSizedCanvas({
       data,
     );
     flamegraphViewRef.current = flamegraphView;
+    const flamegraphVScrollWrapper = new VerticalScrollView(
+      surfaceRef.current,
+      {origin: zeroPoint, size: {width, height}},
+      flamegraphView,
+      flamegraphView.intrinsicSize.height,
+    );
 
     const stackedZoomables = new StaticLayoutView(
       surfaceRef.current,
       {origin: zeroPoint, size: {width, height}},
       verticallyStackedLayout,
-      [axisMarkersView, reactEventsView, reactMeasuresView, flamegraphView],
+      [
+        axisMarkersView,
+        reactEventsView,
+        reactMeasuresView,
+        flamegraphVScrollWrapper,
+      ],
     );
 
-    const flamegraphZoomWrapper = new HorizontalPanAndZoomView(
+    const contentZoomWrapper = new HorizontalPanAndZoomView(
       surfaceRef.current,
       {origin: zeroPoint, size: {width, height}},
       stackedZoomables,
@@ -182,7 +194,7 @@ function AutoSizedCanvas({
       surfaceRef.current,
       {origin: zeroPoint, size: {width, height}},
       layeredLayout,
-      [flamegraphZoomWrapper],
+      [contentZoomWrapper],
     );
 
     surfaceRef.current.rootView = rootViewRef.current;
