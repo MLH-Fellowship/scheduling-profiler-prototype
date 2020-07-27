@@ -93,16 +93,16 @@ const copySummary = (data, measure) => {
   );
 };
 
-// TODO: Replace `state`
-const zoomToBatch = (data, measure, state) => {
-  const {zoomTo} = state;
-  if (!zoomTo) {
-    return;
-  }
-  const {batchUID} = measure;
-  const [startTime, stopTime] = getBatchRange(batchUID, data);
-  zoomTo(startTime, stopTime);
-};
+// TODO: Migrate zoomToBatch to new views architecture
+// const zoomToBatch = (data, measure, state) => {
+//   const {zoomTo} = state;
+//   if (!zoomTo) {
+//     return;
+//   }
+//   const {batchUID} = measure;
+//   const [startTime, stopTime] = getBatchRange(batchUID, data);
+//   zoomTo(startTime, stopTime);
+// };
 
 type AutoSizedCanvasProps = {|
   data: ReactProfilerData,
@@ -253,7 +253,6 @@ function AutoSizedCanvas({
             event,
             flamechartNode: null,
             measure: null,
-            lane: null,
             data,
           });
         }
@@ -268,7 +267,6 @@ function AutoSizedCanvas({
             event: null,
             flamechartNode: null,
             measure,
-            lane: null,
             data,
           });
         }
@@ -283,7 +281,6 @@ function AutoSizedCanvas({
             event: null,
             flamechartNode,
             measure: null,
-            lane: null,
             data,
           });
         }

@@ -40,20 +40,6 @@ export const getCanvasContext = memoize(
   },
 );
 
-export function getCanvasMousePos(
-  canvas: HTMLCanvasElement,
-  mouseEvent: MouseEvent,
-) {
-  const rect =
-    canvas instanceof HTMLCanvasElement
-      ? canvas.getBoundingClientRect()
-      : {left: 0, top: 0};
-  const canvasMouseX = mouseEvent.clientX - rect.left;
-  const canvasMouseY = mouseEvent.clientY - rect.top;
-
-  return {canvasMouseX, canvasMouseY};
-}
-
 // Time mark intervals vary based on the current zoom range and the time it represents.
 // In Chrome, these seem to range from 70-140 pixels wide.
 // Time wise, they represent intervals of e.g. 1s, 500ms, 200ms, 100ms, 50ms, 20ms.
