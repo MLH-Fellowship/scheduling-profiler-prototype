@@ -222,7 +222,12 @@ function AutoSizedCanvas({
 
   const interactor = useCallback(
     interaction => {
-      if (hoveredEvent) {
+      if (
+        hoveredEvent &&
+        (hoveredEvent.event ||
+          hoveredEvent.measure ||
+          hoveredEvent.flamechartNode)
+      ) {
         setMouseLocation({
           x: interaction.payload.event.x,
           y: interaction.payload.event.y,
@@ -254,9 +259,7 @@ function AutoSizedCanvas({
     const {current: reactEventsView} = reactEventsViewRef;
     if (reactEventsView) {
       reactEventsView.onHover = event => {
-        if (hoveredEvent && event === null) {
-          setHoveredEvent(null);
-        } else if (!hoveredEvent || hoveredEvent.event !== event) {
+        if (!hoveredEvent || hoveredEvent.event !== event) {
           setHoveredEvent({
             event,
             flamechartNode: null,
@@ -268,16 +271,39 @@ function AutoSizedCanvas({
       };
     }
 
+    const {current: reactMeasuresView} = reactMeasuresViewRef;
+    if (reactMeasuresView) {
+      reactMeasuresView.onHover = measure => {
+        if (!hoveredEvent || hoveredEvent.measure !== measure) {
+          setHoveredEvent({
+            event: null,
+            flamechartNode: null,
+            measure,
+            lane: null,
+            data,
+          });
+        }
+      };
+    }
+
     // TODO: Set onHovers for every other view
-  }, [reactEventsViewRef, hoveredEvent, setHoveredEvent]);
+  }, [reactEventsViewRef, reactMeasuresViewRef, hoveredEvent, setHoveredEvent]);
 
   useLayoutEffect(() => {
     const {current: reactEventsView} = reactEventsViewRef;
     if (reactEventsView) {
       reactEventsView.setHoveredEvent(hoveredEvent ? hoveredEvent.event : null);
     }
+
+    const {current: reactMeasuresView} = reactMeasuresViewRef;
+    if (reactMeasuresView) {
+      reactMeasuresView.setHoveredMeasure(
+        hoveredEvent ? hoveredEvent.measure : null,
+      );
+    }
+
     // TODO: Update hover data for every other view
-  }, [hoveredEvent, reactEventsViewRef]);
+  }, [reactEventsViewRef, reactMeasuresViewRef, hoveredEvent]);
 
   // When React component renders, rerender surface.
   // TODO: See if displaying on rAF would make more sense since we're somewhat

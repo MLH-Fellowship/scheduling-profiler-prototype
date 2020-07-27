@@ -1,16 +1,19 @@
 // @flow
 
+import type {Interaction, HoverInteraction} from '../../useCanvasInteraction';
 import type {ReactLane, ReactMeasure, ReactProfilerData} from '../../types';
 import type {Rect, Size} from '../../layout';
 
 import {
   durationToWidth,
   positioningScaleFactor,
+  positionToTimestamp,
   timestampToPosition,
 } from '../canvasUtils';
 import {
   View,
   Surface,
+  rectContainsPoint,
   rectIntersectsRect,
   rectIntersectionWithRect,
 } from '../../layout';
@@ -26,6 +29,9 @@ export class ReactMeasuresView extends View {
 
   lanesToRender: ReactLane[];
   laneToMeasures: Map<ReactLane, ReactMeasure[]>;
+
+  hoveredMeasure: ReactMeasure | null = null;
+  onHover: ((event: ReactMeasure | null) => void) | null = null;
 
   constructor(surface: Surface, frame: Rect, profilerData: ReactProfilerData) {
     super(surface, frame);
@@ -56,6 +62,14 @@ export class ReactMeasuresView extends View {
 
   desiredSize() {
     return this.intrinsicSize;
+  }
+
+  setHoveredMeasure(hoveredMeasure: ReactMeasure | null) {
+    if (this.hoveredMeasure === hoveredMeasure) {
+      return;
+    }
+    this.hoveredMeasure = hoveredMeasure;
+    this.setNeedsDisplay();
   }
 
   /**
@@ -142,7 +156,13 @@ export class ReactMeasuresView extends View {
   }
 
   draw(context: CanvasRenderingContext2D) {
-    const {frame, lanesToRender, laneToMeasures, visibleArea} = this;
+    const {
+      frame,
+      hoveredMeasure,
+      lanesToRender,
+      laneToMeasures,
+      visibleArea,
+    } = this;
 
     context.fillStyle = COLORS.PRIORITY_BACKGROUND;
     context.fillRect(
@@ -168,15 +188,9 @@ export class ReactMeasuresView extends View {
       // Draw measures
       for (let j = 0; j < measuresForLane.length; j++) {
         const measure = measuresForLane[j];
-        // TODO: Hovers
-        // const showHoverHighlight =
-        //   hoveredEvent && hoveredEvent.measure === measure;
-        // const showGroupHighlight =
-        //   hoveredEvent &&
-        //   hoveredEvent.measure &&
-        //   hoveredEvent.measure.batchUID === measure.batchUID;
-        const showHoverHighlight = false;
-        const showGroupHighlight = false;
+        const showHoverHighlight = hoveredMeasure === measure;
+        const showGroupHighlight =
+          !!hoveredMeasure && hoveredMeasure.batchUID === measure.batchUID;
 
         this.drawSingleReactMeasure(
           context,
@@ -216,6 +230,75 @@ export class ReactMeasuresView extends View {
           borderDrawableRect.size.height,
         );
       }
+    }
+  }
+
+  /**
+   * @private
+   */
+  handleHover(interaction: HoverInteraction) {
+    const {
+      frame,
+      intrinsicSize,
+      lanesToRender,
+      laneToMeasures,
+      onHover,
+      visibleArea,
+    } = this;
+    if (!onHover) {
+      return;
+    }
+
+    const {location} = interaction.payload;
+    if (!rectContainsPoint(location, visibleArea)) {
+      onHover(null);
+      return;
+    }
+
+    // Identify the lane being hovered over
+    const adjustedCanvasMouseY = location.y - frame.origin.y;
+    const renderedLaneIndex = Math.floor(
+      adjustedCanvasMouseY / REACT_LANE_HEIGHT,
+    );
+    if (renderedLaneIndex < 0 || renderedLaneIndex >= lanesToRender.length) {
+      onHover(null);
+      return;
+    }
+    const lane = lanesToRender[renderedLaneIndex];
+
+    // Find the measure in `lane` being hovered over.
+    //
+    // Because data ranges may overlap, we want to find the last intersecting item.
+    // This will always be the one on "top" (the one the user is hovering over).
+    const scaleFactor = positioningScaleFactor(intrinsicSize.width, frame);
+    const hoverTimestamp = positionToTimestamp(location.x, scaleFactor, frame);
+    const measures = laneToMeasures.get(lane);
+    if (!measures) {
+      onHover(null);
+      return;
+    }
+
+    for (let index = measures.length - 1; index >= 0; index--) {
+      const measure = measures[index];
+      const {duration, timestamp} = measure;
+
+      if (
+        hoverTimestamp >= timestamp &&
+        hoverTimestamp <= timestamp + duration
+      ) {
+        onHover(measure); // TODO: Check if we also need to return lane
+        return;
+      }
+    }
+
+    onHover(null);
+  }
+
+  handleInteractionAndPropagateToSubviews(interaction: Interaction) {
+    switch (interaction.type) {
+      case 'hover':
+        this.handleHover(interaction);
+        break;
     }
   }
 }
