@@ -55,10 +55,9 @@ type ContextMenuContextData = {|
 type Props = {|
   profilerData: ReactProfilerData,
   flamechart: FlamechartData,
-  schedulerCanvasHeight: number,
 |};
 
-function CanvasPage({profilerData, flamechart, schedulerCanvasHeight}: Props) {
+function CanvasPage({profilerData, flamechart}: Props) {
   return (
     <div
       className={styles.CanvasPage}
@@ -69,7 +68,6 @@ function CanvasPage({profilerData, flamechart, schedulerCanvasHeight}: Props) {
             data={profilerData}
             flamechart={flamechart}
             height={height}
-            schedulerCanvasHeight={schedulerCanvasHeight}
             width={width}
           />
         )}
@@ -108,7 +106,6 @@ type AutoSizedCanvasProps = {|
   data: ReactProfilerData,
   flamechart: FlamechartData,
   height: number,
-  schedulerCanvasHeight: number,
   width: number,
 |};
 
@@ -116,7 +113,6 @@ function AutoSizedCanvas({
   data,
   flamechart,
   height,
-  schedulerCanvasHeight,
   width,
 }: AutoSizedCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
