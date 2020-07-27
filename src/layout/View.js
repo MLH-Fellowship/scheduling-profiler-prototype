@@ -22,8 +22,8 @@ export class View {
 
   /** Whether this view needs to be drawn. */
   needsDisplay = true;
-  /** Whether this view contains a subview that needs display. */
-  subviewNeedsDisplay = false;
+  /** Whether the heirarchy below this view has subviews that need display. */
+  subviewsNeedDisplay = false;
 
   constructor(surface: Surface, frame: Rect, visibleArea: Rect = frame) {
     this.surface = surface;
@@ -43,20 +43,20 @@ export class View {
   setNeedsDisplay() {
     this.needsDisplay = true;
     if (this.superview) {
-      this.superview.setSubviewNeedsDisplay();
+      this.superview.setSubviewsNeedDisplay();
     }
   }
 
   /**
-   * Informs superview that this view or one of its subviews needs to be drawn.
+   * Informs superview that it has subviews that need to be drawn.
    *
    * Upward propagating; once called, all superviews of this view should also
-   * have `subviewNeedsDisplay` = true.
+   * have `subviewsNeedDisplay` = true.
    */
-  setSubviewNeedsDisplay() {
-    this.subviewNeedsDisplay = true;
+  setSubviewsNeedDisplay() {
+    this.subviewsNeedDisplay = true;
     if (this.superview) {
-      this.superview.setSubviewNeedsDisplay();
+      this.superview.setSubviewsNeedDisplay();
     }
   }
 
@@ -96,13 +96,13 @@ export class View {
 
   displayIfNeeded(context: CanvasRenderingContext2D) {
     if (
-      (this.needsDisplay || this.subviewNeedsDisplay) &&
+      (this.needsDisplay || this.subviewsNeedDisplay) &&
       rectIntersectsRect(this.frame, this.visibleArea) &&
       !sizeIsEmpty(this.visibleArea.size)
     ) {
       this.layoutSubviews();
       if (this.needsDisplay) this.needsDisplay = false;
-      if (this.subviewNeedsDisplay) this.subviewNeedsDisplay = false;
+      if (this.subviewsNeedDisplay) this.subviewsNeedDisplay = false;
       this.draw(context);
     }
   }
