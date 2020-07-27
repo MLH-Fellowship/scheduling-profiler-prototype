@@ -196,11 +196,8 @@ function AutoSizedCanvas({
     surfaceRef.current.rootView = rootViewRef.current;
   }, [data, flamechart, setHoveredEvent]);
 
-  // TODO: Sync scrolls with state
-
   useLayoutEffect(() => {
     if (canvasRef.current) {
-      // TODO: Resize views too.
       surfaceRef.current.setCanvas(canvasRef.current, {width, height});
     }
   }, [surfaceRef, canvasRef, width, height]);

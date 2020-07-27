@@ -286,7 +286,7 @@ export class ReactMeasuresView extends View {
         hoverTimestamp >= timestamp &&
         hoverTimestamp <= timestamp + duration
       ) {
-        onHover(measure); // TODO: Check if we also need to return lane
+        onHover(measure);
         return;
       }
     }

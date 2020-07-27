@@ -79,19 +79,6 @@ export const trimFlamegraphText = (
   return null;
 };
 
-export const getLaneHeight = (
-  data: $ReadOnly<ReactProfilerData>,
-  lane: ReactLane,
-): number => {
-  // TODO: Return 0 if data has no data for lane
-  return (
-    REACT_GUTTER_SIZE +
-    REACT_WORK_SIZE +
-    REACT_GUTTER_SIZE +
-    REACT_WORK_BORDER_SIZE
-  );
-};
-
 export function positioningScaleFactor(
   intrinsicWidth: number,
   frame: Rect,
