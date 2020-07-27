@@ -42,9 +42,6 @@ export class Surface {
     if (!this.rootView) {
       return;
     }
-    const responder = this.rootView.hitTest(interaction.payload.location);
-    if (responder) {
-      responder.handleInteractionOrBubbleUp(interaction);
-    }
+    this.rootView.handleInteractionAndPropagateToSubviews(interaction);
   }
 }

@@ -87,27 +87,5 @@ export class View {
 
   draw(context: CanvasRenderingContext2D) {}
 
-  /**
-   * Override to prevent hit testing of this view (and its subviews).
-   */
-  hitTest(point: Point): ?View {
-    return rectContainsPoint(point, this.frame) ? this : null;
-  }
-
-  nextResponder(): ?View {
-    return this.superview;
-  }
-
-  handleInteractionOrBubbleUp(interaction: Interaction) {
-    if (this.handleInteraction(interaction)) {
-      return;
-    }
-
-    const nextResponder = this.nextResponder();
-    if (nextResponder) {
-      nextResponder.handleInteractionOrBubbleUp(interaction);
-    }
-  }
-
-  handleInteraction(interaction: Interaction): ?boolean {}
+  handleInteractionAndPropagateToSubviews(interaction: Interaction): ?boolean {}
 }

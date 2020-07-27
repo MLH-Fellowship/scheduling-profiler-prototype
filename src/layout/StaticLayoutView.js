@@ -1,6 +1,7 @@
 // @flow
 
-import type {Rect, Point} from './geometry';
+import type {Interaction} from '../useCanvasInteraction';
+import type {Rect} from './geometry';
 
 import {Surface} from './Surface';
 import {View} from './View';
@@ -76,17 +77,9 @@ export class StaticLayoutView extends View {
     });
   }
 
-  hitTest(point: Point): ?View {
-    if (super.hitTest(point) !== this) {
-      return;
-    }
-    // Views are painted first to last, so they should be hit tested last to
-    // first (so that views in front are hit tested first).
-    for (let i = this.subviews.length - 1; i >= 0; i--) {
-      const hitTestView = this.subviews[i].hitTest(point);
-      if (hitTestView) {
-        return hitTestView;
-      }
-    }
+  handleInteractionAndPropagateToSubviews(interaction: Interaction) {
+    this.subviews.forEach(subview =>
+      subview.handleInteractionAndPropagateToSubviews(interaction),
+    );
   }
 }

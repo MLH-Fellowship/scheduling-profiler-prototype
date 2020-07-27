@@ -13,6 +13,7 @@ import {
 import {
   View,
   Surface,
+  rectContainsPoint,
   rectIntersectsRect,
   rectIntersectionWithRect,
 } from '../../layout';
@@ -196,21 +197,22 @@ export class ReactEventsView extends View {
    * @private
    */
   handleHover(interaction: HoverInteraction) {
-    const {onHover} = this;
+    const {frame, onHover, visibleArea} = this;
     if (!onHover) {
       return;
     }
 
+    const {location} = interaction.payload;
+    if (!rectContainsPoint(location, visibleArea)) {
+      onHover(null);
+      return;
+    }
+
     const {
-      frame,
       profilerData: {events},
     } = this;
     const scaleFactor = positioningScaleFactor(this.intrinsicSize.width, frame);
-    const hoverTimestamp = positionToTimestamp(
-      interaction.payload.location.x,
-      scaleFactor,
-      frame,
-    );
+    const hoverTimestamp = positionToTimestamp(location.x, scaleFactor, frame);
     const eventTimestampAllowance = widthToDuration(
       REACT_EVENT_SIZE / 2,
       scaleFactor,
@@ -227,18 +229,18 @@ export class ReactEventsView extends View {
         hoverTimestamp <= timestamp + eventTimestampAllowance
       ) {
         onHover(event);
-        return true;
+        return;
       }
     }
 
     onHover(null);
-    return true;
   }
 
-  handleInteraction(interaction: Interaction) {
+  handleInteractionAndPropagateToSubviews(interaction: Interaction) {
     switch (interaction.type) {
       case 'hover':
-        return this.handleHover(interaction);
+        this.handleHover(interaction);
+        break;
     }
   }
 }

@@ -6,7 +6,7 @@ import type {
   HorizontalPanMoveInteraction,
   HorizontalPanEndInteraction,
 } from '../useCanvasInteraction';
-import type {Rect, Point} from './geometry';
+import type {Rect} from './geometry';
 
 import {Surface} from './Surface';
 import {View} from './View';
@@ -81,19 +81,11 @@ export class HorizontalPanAndZoomView extends View {
     this.contentView.displayIfNeeded(context);
   }
 
-  hitTest(point: Point): ?View {
-    if (super.hitTest(point) !== this) {
-      return;
-    }
-    return this.contentView.hitTest(point);
-  }
-
   isPanning = false;
 
   handleHorizontalPanStart(interaction: HorizontalPanStartInteraction) {
     if (rectContainsPoint(interaction.payload.location, this.frame)) {
       this.isPanning = true;
-      return true;
     }
   }
 
@@ -110,29 +102,32 @@ export class HorizontalPanAndZoomView extends View {
     this.panAndZoomState = this.stateDeriver(proposedNewState);
     this.onStateChange(this.panAndZoomState);
     this.setNeedsDisplay();
-    return true;
   }
 
   handleHorizontalPanEnd(interaction: HorizontalPanEndInteraction) {
     if (this.isPanning) {
       this.isPanning = false;
-      return true;
     }
   }
 
   // handleHorizontalScroll(interaction) {
   //   // TODO: Scroll
-  //   this.contentView.handleInteraction(interaction);
+  //   this.contentView.handleInteractionAndPropagateToSubviews(interaction);
   // }
-  handleInteraction(interaction: Interaction) {
+
+  handleInteractionAndPropagateToSubviews(interaction: Interaction) {
     switch (interaction.type) {
       case 'horizontal-pan-start':
-        return this.handleHorizontalPanStart(interaction);
+        this.handleHorizontalPanStart(interaction);
+        break;
       case 'horizontal-pan-move':
-        return this.handleHorizontalPanMove(interaction);
+        this.handleHorizontalPanMove(interaction);
+        break;
       case 'horizontal-pan-end':
-        return this.handleHorizontalPanEnd(interaction);
+        this.handleHorizontalPanEnd(interaction);
+        break;
     }
+    this.contentView.handleInteractionAndPropagateToSubviews(interaction);
   }
 
   /**
