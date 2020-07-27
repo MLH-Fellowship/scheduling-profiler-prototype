@@ -76,6 +76,11 @@ export class HorizontalPanAndZoomView extends View {
     if (onStateChange) this.onStateChange = onStateChange;
   }
 
+  setFrame(newFrame: Rect) {
+    super.setFrame(newFrame);
+    this.updateState(this.panAndZoomState);
+  }
+
   layoutSubviews() {
     const {offsetX, zoomLevel} = this.panAndZoomState;
     const proposedFrame = {

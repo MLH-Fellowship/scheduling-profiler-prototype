@@ -57,8 +57,9 @@ export class VerticalScrollView extends View {
     if (onStateChange) this.onStateChange = onStateChange;
   }
 
-  setFrame(frame: Rect) {
-    super.setFrame(frame);
+  setFrame(newFrame: Rect) {
+    super.setFrame(newFrame);
+    this.updateState(this.scrollState);
   }
 
   layoutSubviews() {

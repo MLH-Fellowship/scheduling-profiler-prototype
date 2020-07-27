@@ -1,13 +1,12 @@
 // @flow
 
 import type {Interaction} from '../useCanvasInteraction';
-import type {Rect, Size, Point} from './geometry';
+import type {Rect, Size} from './geometry';
 
 import {Surface} from './Surface';
 import {
   rectIntersectsRect,
   rectEqualToRect,
-  rectContainsPoint,
   sizeIsEmpty,
   sizeIsValid,
   zeroRect,

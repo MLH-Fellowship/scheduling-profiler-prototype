@@ -31,6 +31,10 @@ export class Surface {
     if (!rootView || !context || !canvasSize) {
       return;
     }
+    rootView.setFrame({
+      origin: zeroPoint,
+      size: canvasSize,
+    });
     rootView.setVisibleArea({
       origin: zeroPoint,
       size: canvasSize,
