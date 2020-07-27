@@ -90,14 +90,10 @@ export class HorizontalPanAndZoomView extends View {
     this.contentView.setNeedsDisplay();
   }
 
-  setFrame(newFrame: Rect) {
-    super.setFrame(newFrame);
-
+  layoutSubviews() {
     // Revalidate panAndZoomState
     this.updateState(this.panAndZoomState);
-  }
 
-  layoutSubviews() {
     const {offsetX, zoomLevel} = this.panAndZoomState;
     const proposedFrame = {
       origin: {
@@ -190,34 +186,33 @@ export class HorizontalPanAndZoomView extends View {
       return;
     }
 
-    const clampedState = this.clampedProposedState({
+    const zoomClampedState = this.clampedProposedState({
       ...this.panAndZoomState,
       zoomLevel: this.panAndZoomState.zoomLevel * (1 + 0.005 * -deltaY),
     });
 
     // Determine where the mouse is, and adjust the offset so that point stays
     // centered after zooming.
-    const oldMouseXInFrame =
-      this.visibleArea.origin.x - this.contentView.frame.origin.x + location.x;
+    const oldMouseXInFrame = location.x - zoomClampedState.offsetX;
     const fractionalMouseX =
       oldMouseXInFrame / this.contentView.frame.size.width;
 
     const newContentWidth = zoomLevelAndIntrinsicWidthToFrameWidth(
-      clampedState.zoomLevel,
+      zoomClampedState.zoomLevel,
       this.intrinsicContentWidth,
     );
     const newMouseXInFrame = fractionalMouseX * newContentWidth;
 
-    const adjustedState = this.clampedProposedState(
+    const offsetAdjustedState = this.clampedProposedState(
       {
-        ...clampedState,
-        offsetX: -(newMouseXInFrame - location.x),
+        ...zoomClampedState,
+        offsetX: location.x - newMouseXInFrame,
       },
       newContentWidth,
     );
 
-    if (!panAndZoomStatesAreEqual(adjustedState, this.panAndZoomState)) {
-      this.panAndZoomState = this.stateDeriver(adjustedState);
+    if (!panAndZoomStatesAreEqual(offsetAdjustedState, this.panAndZoomState)) {
+      this.panAndZoomState = this.stateDeriver(offsetAdjustedState);
       this.onStateChange(this.panAndZoomState);
       this.setNeedsDisplay();
     }
