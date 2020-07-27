@@ -29,22 +29,24 @@ export function rectEqualToRect(rect1: Rect, rect2: Rect): boolean {
   );
 }
 
+function rectToBoundaryCoordinates(
+  rect: Rect,
+): [number, number, number, number] {
+  const top = rect.origin.y;
+  const right = rect.origin.x + rect.size.width;
+  const bottom = rect.origin.y + rect.size.height;
+  const left = rect.origin.x;
+  return [top, right, bottom, left];
+}
+
 export function rectIntersectsRect(rect1: Rect, rect2: Rect): boolean {
-  const rect1Left = rect1.origin.x;
-  const rect1Right = rect1.origin.x + rect1.size.width;
-  const rect1Top = rect1.origin.y;
-  const rect1Bottom = rect1.origin.y + rect1.size.height;
-
-  const rect2Left = rect2.origin.x;
-  const rect2Right = rect2.origin.x + rect2.size.width;
-  const rect2Top = rect2.origin.y;
-  const rect2Bottom = rect2.origin.y + rect2.size.height;
-
+  const [top1, right1, bottom1, left1] = rectToBoundaryCoordinates(rect1);
+  const [top2, right2, bottom2, left2] = rectToBoundaryCoordinates(rect2);
   return !(
-    rect1Right < rect2Left ||
-    rect2Right < rect1Left ||
-    rect1Bottom < rect2Top ||
-    rect2Bottom < rect1Top
+    right1 < left2 ||
+    right2 < left1 ||
+    bottom1 < top2 ||
+    bottom2 < top1
   );
 }
 
@@ -52,42 +54,27 @@ export function rectIntersectsRect(rect1: Rect, rect2: Rect): boolean {
  * Prerequisite: rect1 must intersect with rect2.
  */
 export function rectIntersectionWithRect(rect1: Rect, rect2: Rect): Rect {
-  const rect1Left = rect1.origin.x;
-  const rect1Right = rect1.origin.x + rect1.size.width;
-  const rect1Top = rect1.origin.y;
-  const rect1Bottom = rect1.origin.y + rect1.size.height;
+  const [top1, right1, bottom1, left1] = rectToBoundaryCoordinates(rect1);
+  const [top2, right2, bottom2, left2] = rectToBoundaryCoordinates(rect2);
 
-  const rect2Left = rect2.origin.x;
-  const rect2Right = rect2.origin.x + rect2.size.width;
-  const rect2Top = rect2.origin.y;
-  const rect2Bottom = rect2.origin.y + rect2.size.height;
-
-  const intersectLeft = Math.max(rect1Left, rect2Left);
-  const intersectRight = Math.min(rect1Right, rect2Right);
-  const intersectTop = Math.max(rect1Top, rect2Top);
-  const intersectBottom = Math.min(rect1Bottom, rect2Bottom);
+  const intersectleft = Math.max(left1, left2);
+  const intersectRight = Math.min(right1, right2);
+  const intersectTop = Math.max(top1, top2);
+  const intersectBottom = Math.min(bottom1, bottom2);
 
   return {
     origin: {
-      x: intersectLeft,
+      x: intersectleft,
       y: intersectTop,
     },
     size: {
-      width: intersectRight - intersectLeft,
+      width: intersectRight - intersectleft,
       height: intersectBottom - intersectTop,
     },
   };
 }
 
-export function rectContainsPoint(point: Point, rect: Rect): boolean {
-  const rectLeft = rect.origin.x;
-  const rectRight = rect.origin.x + rect.size.width;
-  const rectTop = rect.origin.y;
-  const rectBottom = rect.origin.y + rect.size.height;
-  return !(
-    rectRight < point.x ||
-    point.x < rectLeft ||
-    rectBottom < point.y ||
-    point.y < rectTop
-  );
+export function rectContainsPoint({x, y}: Point, rect: Rect): boolean {
+  const [top, right, bottom, left] = rectToBoundaryCoordinates(rect);
+  return left <= x && x <= right && top <= y && y <= bottom;
 }
