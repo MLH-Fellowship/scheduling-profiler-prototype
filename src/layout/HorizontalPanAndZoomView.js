@@ -90,10 +90,14 @@ export class HorizontalPanAndZoomView extends View {
     this.contentView.setNeedsDisplay();
   }
 
-  layoutSubviews() {
+  setFrame(newFrame: Rect) {
+    super.setFrame(newFrame);
+
     // Revalidate panAndZoomState
     this.updateState(this.panAndZoomState);
+  }
 
+  layoutSubviews() {
     const {offsetX, zoomLevel} = this.panAndZoomState;
     const proposedFrame = {
       origin: {
@@ -186,7 +190,7 @@ export class HorizontalPanAndZoomView extends View {
       return;
     }
 
-    const zoomClampedState = this.clampedProposedState({
+    const zoomClampedState = this.clampedProposedStateZoomLevel({
       ...this.panAndZoomState,
       zoomLevel: this.panAndZoomState.zoomLevel * (1 + 0.005 * -deltaY),
     });
@@ -196,26 +200,18 @@ export class HorizontalPanAndZoomView extends View {
     const oldMouseXInFrame = location.x - zoomClampedState.offsetX;
     const fractionalMouseX =
       oldMouseXInFrame / this.contentView.frame.size.width;
-
     const newContentWidth = zoomLevelAndIntrinsicWidthToFrameWidth(
       zoomClampedState.zoomLevel,
       this.intrinsicContentWidth,
     );
     const newMouseXInFrame = fractionalMouseX * newContentWidth;
 
-    const offsetAdjustedState = this.clampedProposedState(
-      {
-        ...zoomClampedState,
-        offsetX: location.x - newMouseXInFrame,
-      },
-      newContentWidth,
-    );
+    const offsetAdjustedState = this.clampedProposedStateOffsetX({
+      ...zoomClampedState,
+      offsetX: location.x - newMouseXInFrame,
+    });
 
-    if (!panAndZoomStatesAreEqual(offsetAdjustedState, this.panAndZoomState)) {
-      this.panAndZoomState = this.stateDeriver(offsetAdjustedState);
-      this.onStateChange(this.panAndZoomState);
-      this.setNeedsDisplay();
-    }
+    this.updateState(offsetAdjustedState);
   }
 
   handleInteractionAndPropagateToSubviews(interaction: Interaction) {
@@ -258,17 +254,42 @@ export class HorizontalPanAndZoomView extends View {
   /**
    * @private
    */
-  clampedProposedState(
+  clampedProposedStateZoomLevel(
     proposedState: HorizontalPanAndZoomState,
-    knownContentViewWidth: number = this.contentView.frame.size.width,
   ): HorizontalPanAndZoomState {
     return {
+      ...proposedState,
+      zoomLevel: clamp(MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL, proposedState.zoomLevel),
+    };
+  }
+
+  /**
+   * @private
+   */
+  clampedProposedStateOffsetX(
+    proposedState: HorizontalPanAndZoomState,
+  ): HorizontalPanAndZoomState {
+    const newContentWidth = zoomLevelAndIntrinsicWidthToFrameWidth(
+      proposedState.zoomLevel,
+      this.intrinsicContentWidth,
+    );
+    return {
+      ...proposedState,
       offsetX: clamp(
-        -(knownContentViewWidth - this.frame.size.width),
+        -(newContentWidth - this.frame.size.width),
         0,
         proposedState.offsetX,
       ),
-      zoomLevel: clamp(MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL, proposedState.zoomLevel),
     };
+  }
+
+  /**
+   * @private
+   */
+  clampedProposedState(
+    proposedState: HorizontalPanAndZoomState,
+  ): HorizontalPanAndZoomState {
+    const zoomClampedState = this.clampedProposedStateZoomLevel(proposedState);
+    return this.clampedProposedStateOffsetX(zoomClampedState);
   }
 }

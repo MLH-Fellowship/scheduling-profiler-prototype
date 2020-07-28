@@ -69,10 +69,14 @@ export class VerticalScrollView extends View {
     this.contentView.setNeedsDisplay();
   }
 
-  layoutSubviews() {
+  setFrame(newFrame: Rect) {
+    super.setFrame(newFrame);
+
     // Revalidate scrollState
     this.updateState(this.scrollState);
+  }
 
+  layoutSubviews() {
     const {offsetY} = this.scrollState;
     const proposedFrame = {
       origin: {
