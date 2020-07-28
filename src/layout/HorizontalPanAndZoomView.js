@@ -257,9 +257,13 @@ export class HorizontalPanAndZoomView extends View {
   clampedProposedStateZoomLevel(
     proposedState: HorizontalPanAndZoomState,
   ): HorizontalPanAndZoomState {
+    // Content-based min zoom level to ensure that contentView's width >= our width.
+    const minContentBasedZoomLevel =
+      this.frame.size.width / this.intrinsicContentWidth;
+    const minZoomLevel = Math.max(MIN_ZOOM_LEVEL, minContentBasedZoomLevel);
     return {
       ...proposedState,
-      zoomLevel: clamp(MIN_ZOOM_LEVEL, MAX_ZOOM_LEVEL, proposedState.zoomLevel),
+      zoomLevel: clamp(minZoomLevel, MAX_ZOOM_LEVEL, proposedState.zoomLevel),
     };
   }
 
