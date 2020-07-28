@@ -49,13 +49,6 @@ kbd {
   padding-left: 2rem;
 }
 
-/* Old React spinner animation */
-@media (prefers-reduced-motion: no-preference) {
-  .reactlogo {
-    animation: spin infinite 20s linear;
-  }
-}
-
 @keyframes spin {
   from {
     transform: rotate(0deg);
