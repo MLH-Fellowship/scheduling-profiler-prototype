@@ -1,49 +1,37 @@
-export function getReactEventLabel(type) {
-  let label = null;
+//@flow
+
+export function getReactEventLabel(type: string) {
   switch (type) {
     case 'schedule-render':
-      label = 'render scheduled';
-      break;
+      return 'render scheduled';
     case 'schedule-state-update':
-      label = 'state update scheduled';
-      break;
+      return 'state update scheduled';
     case 'schedule-force-update':
-      label = 'force update scheduled';
-      break;
+      return 'force update scheduled';
     case 'suspense-suspend':
-      label = 'suspended';
-      break;
+      return 'suspended';
     case 'suspense-resolved':
-      label = 'suspense resolved';
-      break;
+      return 'suspense resolved';
     case 'suspense-rejected':
-      label = 'suspense rejected';
-      break;
+      return 'suspense rejected';
     default:
-      break;
+      return null;
   }
-  return label;
 }
-export function getReactMeasureLabel(type) {
-  let label = null;
+
+export function getReactMeasureLabel(type: string) {
   switch (type) {
     case 'commit':
-      label = 'commit';
-      break;
+      return 'commit';
     case 'render-idle':
-      label = 'idle';
-      break;
+      return 'idle';
     case 'render':
-      label = 'render';
-      break;
+      return 'render';
     case 'layout-effects':
-      label = 'layout effects';
-      break;
+      return 'layout effects';
     case 'passive-effects':
-      label = 'passive effects';
-      break;
+      return 'passive effects';
     default:
-      break;
+      return null;
   }
-  return label;
 }
