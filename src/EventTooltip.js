@@ -15,6 +15,7 @@ import React, {Fragment, useRef} from 'react';
 import {COLORS} from './canvas/constants';
 import {getBatchRange} from './util/getBatchRange';
 import useSmartTooltip from './util/useSmartTooltip';
+import {getReactEventLabel, getReactMeasureLabel} from './util/tooltipLabel';
 import styles from './EventTooltip.css';
 
 type Props = {|
@@ -184,30 +185,7 @@ const TooltipReactEvent = ({
   tooltipRef: Return<typeof useRef>,
 }) => {
   const {componentName, componentStack, timestamp, type} = event;
-
-  let label = null;
-  switch (type) {
-    case 'schedule-render':
-      label = 'render scheduled';
-      break;
-    case 'schedule-state-update':
-      label = 'state update scheduled';
-      break;
-    case 'schedule-force-update':
-      label = 'force update scheduled';
-      break;
-    case 'suspense-suspend':
-      label = 'suspended';
-      break;
-    case 'suspense-resolved':
-      label = 'suspense resolved';
-      break;
-    case 'suspense-rejected':
-      label = 'suspense rejected';
-      break;
-    default:
-      break;
-  }
+  const label = getReactEventLabel(type);
 
   return (
     <div
@@ -250,28 +228,7 @@ const TooltipReactMeasure = ({
   tooltipRef: Return<typeof useRef>,
 }) => {
   const {batchUID, duration, timestamp, type, lanes} = measure;
-
-  let label = null;
-  switch (type) {
-    case 'commit':
-      label = 'commit';
-      break;
-    case 'render-idle':
-      label = 'idle';
-      break;
-    case 'render':
-      label = 'render';
-      break;
-    case 'layout-effects':
-      label = 'layout effects';
-      break;
-    case 'passive-effects':
-      label = 'passive effects';
-      break;
-    default:
-      break;
-  }
-
+  const label = getReactMeasureLabel(type);
   const [startTime, stopTime] = getBatchRange(batchUID, data);
 
   return (
