@@ -36,16 +36,16 @@ function clamp(min: number, max: number, value: number): number {
 }
 
 export class VerticalScrollView extends View {
-  contentView: View;
-
-  scrollState: VerticalScrollState = {
+  _scrollState: VerticalScrollState = {
     offsetY: 0,
   };
 
-  stateDeriver: (state: VerticalScrollState) => VerticalScrollState = state =>
+  _isPanning = false;
+
+  _stateDeriver: (state: VerticalScrollState) => VerticalScrollState = state =>
     state;
 
-  onStateChange: (state: VerticalScrollState) => void = () => {};
+  _onStateChange: (state: VerticalScrollState) => void = () => {};
 
   constructor(
     surface: Surface,
@@ -55,32 +55,40 @@ export class VerticalScrollView extends View {
     onStateChange?: (state: VerticalScrollState) => void,
   ) {
     super(surface, frame);
-    this.contentView = contentView;
-    contentView.superview = this;
-    if (stateDeriver) this.stateDeriver = stateDeriver;
-    if (onStateChange) this.onStateChange = onStateChange;
-  }
-
-  setNeedsDisplay() {
-    super.setNeedsDisplay();
-    this.contentView.setNeedsDisplay();
+    this.addSubview(contentView);
+    if (stateDeriver) this._stateDeriver = stateDeriver;
+    if (onStateChange) this._onStateChange = onStateChange;
   }
 
   setFrame(newFrame: Rect) {
     super.setFrame(newFrame);
 
     // Revalidate scrollState
-    this.updateState(this.scrollState);
+    this._updateState(this._scrollState);
+  }
+
+  desiredSize() {
+    // We don't want our superview to fit to our content; we'll fit whatever
+    // frame we're given.
+    return null;
+  }
+
+  /**
+   * Reference to the content view. This view is also the only view in
+   * `this.subviews`.
+   */
+  get _contentView() {
+    return this.subviews[0];
   }
 
   layoutSubviews() {
-    const {offsetY} = this.scrollState;
-    const desiredSize = this.contentView.desiredSize();
+    const {offsetY} = this._scrollState;
+    const desiredSize = this._contentView.desiredSize();
 
-    const remainingHeight = this.frame.size.height;
+    const minimumHeight = this.frame.size.height;
     const desiredHeight = desiredSize ? desiredSize.height : 0;
-    // Force last view to take up at least all remaining vertical space.
-    const height = Math.max(desiredHeight, remainingHeight);
+    // Force view to take up at least all remaining vertical space.
+    const height = Math.max(desiredHeight, minimumHeight);
 
     const proposedFrame = {
       origin: {
@@ -92,41 +100,35 @@ export class VerticalScrollView extends View {
         height,
       },
     };
-    this.contentView.setFrame(proposedFrame);
-    this.contentView.setVisibleArea(this.visibleArea);
+    this._contentView.setFrame(proposedFrame);
+    super.layoutSubviews();
   }
 
-  draw(context: CanvasRenderingContext2D) {
-    this.contentView.displayIfNeeded(context);
-  }
-
-  isPanning = false;
-
-  handleVerticalPanStart(interaction: VerticalPanStartInteraction) {
+  _handleVerticalPanStart(interaction: VerticalPanStartInteraction) {
     if (rectContainsPoint(interaction.payload.location, this.frame)) {
-      this.isPanning = true;
+      this._isPanning = true;
     }
   }
 
-  handleVerticalPanMove(interaction: VerticalPanMoveInteraction) {
-    if (!this.isPanning) {
+  _handleVerticalPanMove(interaction: VerticalPanMoveInteraction) {
+    if (!this._isPanning) {
       return;
     }
-    const {offsetY} = this.scrollState;
+    const {offsetY} = this._scrollState;
     const {movementY} = interaction.payload.event;
-    this.updateState({
-      ...this.scrollState,
+    this._updateState({
+      ...this._scrollState,
       offsetY: offsetY + movementY,
     });
   }
 
-  handleVerticalPanEnd(interaction: VerticalPanEndInteraction) {
-    if (this.isPanning) {
-      this.isPanning = false;
+  _handleVerticalPanEnd(interaction: VerticalPanEndInteraction) {
+    if (this._isPanning) {
+      this._isPanning = false;
     }
   }
 
-  handleWheelPlain(interaction: WheelPlainInteraction) {
+  _handleWheelPlain(interaction: WheelPlainInteraction) {
     const {
       location,
       event: {deltaX, deltaY},
@@ -145,40 +147,39 @@ export class VerticalScrollView extends View {
       return;
     }
 
-    this.updateState({
-      ...this.scrollState,
-      offsetY: this.scrollState.offsetY - deltaY,
+    this._updateState({
+      ...this._scrollState,
+      offsetY: this._scrollState.offsetY - deltaY,
     });
   }
 
-  handleInteractionAndPropagateToSubviews(interaction: Interaction) {
+  handleInteraction(interaction: Interaction) {
     switch (interaction.type) {
       case 'vertical-pan-start':
-        this.handleVerticalPanStart(interaction);
+        this._handleVerticalPanStart(interaction);
         break;
       case 'vertical-pan-move':
-        this.handleVerticalPanMove(interaction);
+        this._handleVerticalPanMove(interaction);
         break;
       case 'vertical-pan-end':
-        this.handleVerticalPanEnd(interaction);
+        this._handleVerticalPanEnd(interaction);
         break;
       case 'wheel-plain':
-        this.handleWheelPlain(interaction);
+        this._handleWheelPlain(interaction);
         break;
     }
-    this.contentView.handleInteractionAndPropagateToSubviews(interaction);
   }
 
   /**
    * @private
    */
-  updateState(proposedState: VerticalScrollState) {
-    const clampedState = this.stateDeriver(
-      this.clampedProposedState(proposedState),
+  _updateState(proposedState: VerticalScrollState) {
+    const clampedState = this._stateDeriver(
+      this._clampedProposedState(proposedState),
     );
-    if (!scrollStatesAreEqual(clampedState, this.scrollState)) {
-      this.scrollState = clampedState;
-      this.onStateChange(this.scrollState);
+    if (!scrollStatesAreEqual(clampedState, this._scrollState)) {
+      this._scrollState = clampedState;
+      this._onStateChange(this._scrollState);
       this.setNeedsDisplay();
     }
   }
@@ -186,12 +187,12 @@ export class VerticalScrollView extends View {
   /**
    * @private
    */
-  clampedProposedState(
+  _clampedProposedState(
     proposedState: VerticalScrollState,
   ): VerticalScrollState {
     return {
       offsetY: clamp(
-        -(this.contentView.frame.size.height - this.frame.size.height),
+        -(this._contentView.frame.size.height - this.frame.size.height),
         0,
         proposedState.offsetY,
       ),
