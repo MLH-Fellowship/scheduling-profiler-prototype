@@ -328,11 +328,11 @@ describe(preprocessData, () => {
     ).toMatchInlineSnapshot(`
       Array [
         Object {
-          "name": "Some other mark",
+          "name": "--a-mark-that-looks-like-one-of-ours",
           "timestamp": 255692734.524,
         },
         Object {
-          "name": "--a-mark-that-looks-like-one-of-ours",
+          "name": "Some other mark",
           "timestamp": 255692734.524,
         },
         Object {
