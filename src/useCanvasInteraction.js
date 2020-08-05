@@ -135,7 +135,7 @@ export function useCanvasInteraction(
       });
     };
 
-    const onCanvasMouseMove: MouseEventHandler = event => {
+    const onDocumentMouseMove: MouseEventHandler = event => {
       interactor({
         type: 'horizontal-pan-move',
         payload: {
@@ -217,18 +217,18 @@ export function useCanvasInteraction(
       return false;
     };
 
+    document.addEventListener('mousemove', onDocumentMouseMove);
     document.addEventListener('mouseup', onDocumentMouseUp);
 
-    canvas.addEventListener('wheel', onCanvasWheel);
     canvas.addEventListener('mousedown', onCanvasMouseDown);
-    canvas.addEventListener('mousemove', onCanvasMouseMove);
+    canvas.addEventListener('wheel', onCanvasWheel);
 
     return () => {
+      document.removeEventListener('mousemove', onDocumentMouseMove);
       document.removeEventListener('mouseup', onDocumentMouseUp);
 
-      canvas.removeEventListener('wheel', onCanvasWheel);
       canvas.removeEventListener('mousedown', onCanvasMouseDown);
-      canvas.removeEventListener('mousemove', onCanvasMouseMove);
+      canvas.removeEventListener('wheel', onCanvasWheel);
     };
   }, [canvasRef, interactor]);
 }
