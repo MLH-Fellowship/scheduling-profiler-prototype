@@ -1,6 +1,9 @@
 // @flow
 
-import type {Interaction, HoverInteraction} from '../../useCanvasInteraction';
+import type {
+  Interaction,
+  MouseMoveInteraction,
+} from '../../useCanvasInteraction';
 import type {
   Flamechart,
   FlamechartStackFrame,
@@ -184,12 +187,14 @@ class FlamechartStackLayerView extends View {
           );
           if (textOverflowsViewableArea) {
             context.save();
+            context.beginPath();
             context.rect(
               drawableRect.origin.x,
               drawableRect.origin.y,
               drawableRect.size.width,
               drawableRect.size.height,
             );
+            context.closePath();
             context.clip();
           }
 
@@ -210,7 +215,7 @@ class FlamechartStackLayerView extends View {
   /**
    * @private
    */
-  _handleHover(interaction: HoverInteraction) {
+  _handleMouseMove(interaction: MouseMoveInteraction) {
     const {_stackLayer, frame, _intrinsicSize, _onHover, visibleArea} = this;
     const {location} = interaction.payload;
     if (!_onHover || !rectContainsPoint(location, visibleArea)) {
@@ -245,8 +250,8 @@ class FlamechartStackLayerView extends View {
 
   handleInteraction(interaction: Interaction) {
     switch (interaction.type) {
-      case 'hover':
-        this._handleHover(interaction);
+      case 'mousemove':
+        this._handleMouseMove(interaction);
         break;
     }
   }
@@ -325,7 +330,7 @@ export class FlamechartView extends View {
   /**
    * @private
    */
-  _handleHover(interaction: HoverInteraction) {
+  _handleMouseMove(interaction: MouseMoveInteraction) {
     const {_onHover, visibleArea} = this;
     if (!_onHover) {
       return;
@@ -340,8 +345,8 @@ export class FlamechartView extends View {
 
   handleInteraction(interaction: Interaction) {
     switch (interaction.type) {
-      case 'hover':
-        this._handleHover(interaction);
+      case 'mousemove':
+        this._handleMouseMove(interaction);
         break;
     }
   }

@@ -4,50 +4,22 @@ import type {Point} from './layout';
 
 import {useEffect} from 'react';
 
-export type VerticalPanStartInteraction = {|
-  type: 'vertical-pan-start',
+export type MouseDownInteraction = {|
+  type: 'mousedown',
   payload: {|
     event: MouseEvent,
     location: Point,
   |},
 |};
-export type VerticalPanMoveInteraction = {|
-  type: 'vertical-pan-move',
+export type MouseMoveInteraction = {|
+  type: 'mousemove',
   payload: {|
     event: MouseEvent,
     location: Point,
   |},
 |};
-export type VerticalPanEndInteraction = {|
-  type: 'vertical-pan-end',
-  payload: {|
-    event: MouseEvent,
-    location: Point,
-  |},
-|};
-export type HorizontalPanStartInteraction = {|
-  type: 'horizontal-pan-start',
-  payload: {|
-    event: MouseEvent,
-    location: Point,
-  |},
-|};
-export type HorizontalPanMoveInteraction = {|
-  type: 'horizontal-pan-move',
-  payload: {|
-    event: MouseEvent,
-    location: Point,
-  |},
-|};
-export type HorizontalPanEndInteraction = {|
-  type: 'horizontal-pan-end',
-  payload: {|
-    event: MouseEvent,
-    location: Point,
-  |},
-|};
-export type HoverInteraction = {|
-  type: 'hover',
+export type MouseUpInteraction = {|
+  type: 'mouseup',
   payload: {|
     event: MouseEvent,
     location: Point,
@@ -83,17 +55,30 @@ export type WheelWithMetaInteraction = {|
 |};
 
 export type Interaction =
-  | VerticalPanStartInteraction
-  | VerticalPanMoveInteraction
-  | VerticalPanEndInteraction
-  | HorizontalPanStartInteraction
-  | HorizontalPanMoveInteraction
-  | HorizontalPanEndInteraction
-  | HoverInteraction
+  | MouseDownInteraction
+  | MouseMoveInteraction
+  | MouseUpInteraction
   | WheelPlainInteraction
   | WheelWithShiftInteraction
   | WheelWithControlInteraction
   | WheelWithMetaInteraction;
+
+let canvasBoundingRectCache = null;
+function cacheFirstGetCanvasBoundingRect(canvas) {
+  if (
+    canvasBoundingRectCache &&
+    canvas.width === canvasBoundingRectCache.width &&
+    canvas.height === canvasBoundingRectCache.height
+  ) {
+    return canvasBoundingRectCache.rect;
+  }
+  canvasBoundingRectCache = {
+    width: canvas.width,
+    height: canvas.height,
+    rect: canvas.getBoundingClientRect(),
+  };
+  return canvasBoundingRectCache.rect;
+}
 
 export function useCanvasInteraction(
   canvasRef: {|current: HTMLCanvasElement | null|},
@@ -106,7 +91,7 @@ export function useCanvasInteraction(
       if (!canvas) {
         return localCoordinates;
       }
-      const canvasRect = canvas.getBoundingClientRect();
+      const canvasRect = cacheFirstGetCanvasBoundingRect(canvas);
       return {
         x: localCoordinates.x - canvasRect.left,
         y: localCoordinates.y - canvasRect.top,
@@ -120,14 +105,7 @@ export function useCanvasInteraction(
 
     const onCanvasMouseDown: MouseEventHandler = event => {
       interactor({
-        type: 'horizontal-pan-start',
-        payload: {
-          event,
-          location: localToCanvasCoordinates({x: event.x, y: event.y}),
-        },
-      });
-      interactor({
-        type: 'vertical-pan-start',
+        type: 'mousedown',
         payload: {
           event,
           location: localToCanvasCoordinates({x: event.x, y: event.y}),
@@ -137,21 +115,7 @@ export function useCanvasInteraction(
 
     const onDocumentMouseMove: MouseEventHandler = event => {
       interactor({
-        type: 'horizontal-pan-move',
-        payload: {
-          event,
-          location: localToCanvasCoordinates({x: event.x, y: event.y}),
-        },
-      });
-      interactor({
-        type: 'vertical-pan-move',
-        payload: {
-          event,
-          location: localToCanvasCoordinates({x: event.x, y: event.y}),
-        },
-      });
-      interactor({
-        type: 'hover',
+        type: 'mousemove',
         payload: {
           event,
           location: localToCanvasCoordinates({x: event.x, y: event.y}),
@@ -161,14 +125,7 @@ export function useCanvasInteraction(
 
     const onDocumentMouseUp: MouseEventHandler = event => {
       interactor({
-        type: 'horizontal-pan-end',
-        payload: {
-          event,
-          location: localToCanvasCoordinates({x: event.x, y: event.y}),
-        },
-      });
-      interactor({
-        type: 'vertical-pan-end',
+        type: 'mouseup',
         payload: {
           event,
           location: localToCanvasCoordinates({x: event.x, y: event.y}),
