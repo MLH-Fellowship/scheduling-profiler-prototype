@@ -19,7 +19,7 @@ import {
   MIN_ZOOM_LEVEL,
   MAX_ZOOM_LEVEL,
   MOVE_WHEEL_DELTA_THRESHOLD,
-} from '../content-views/constants'; // TODO: Remove external dependency
+} from './constants';
 
 type HorizontalPanAndZoomState = $ReadOnly<{|
   /** Horizontal offset; positive in the left direction */
