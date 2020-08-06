@@ -6,7 +6,7 @@ import type {
   MouseMoveInteraction,
   MouseUpInteraction,
   WheelPlainInteraction,
-} from '../useCanvasInteraction';
+} from './useCanvasInteraction';
 import type {Rect} from './geometry';
 
 import {Surface} from './Surface';

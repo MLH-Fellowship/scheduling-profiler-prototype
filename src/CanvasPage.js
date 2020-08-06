@@ -20,6 +20,7 @@ import {
   View,
   createComposedLayout,
   lastViewTakesUpRemainingSpaceLayout,
+  useCanvasInteraction,
   verticallyStackedLayout,
   zeroPoint,
 } from './layout';
@@ -36,7 +37,6 @@ import {ContextMenu, ContextMenuItem, useContextMenu} from './context';
 const CONTEXT_MENU_ID = 'canvas';
 
 import type {ReactHoverContextInfo, ReactProfilerData} from './types';
-import {useCanvasInteraction} from './useCanvasInteraction';
 import {
   FlamechartView,
   ReactEventsView,

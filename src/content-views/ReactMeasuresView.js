@@ -1,8 +1,7 @@
 // @flow
 
-import type {Interaction, MouseMoveInteraction} from '../useCanvasInteraction';
 import type {ReactLane, ReactMeasure, ReactProfilerData} from '../types';
-import type {Rect, Size} from '../layout';
+import type {Interaction, MouseMoveInteraction, Rect, Size} from '../layout';
 
 import {
   durationToWidth,

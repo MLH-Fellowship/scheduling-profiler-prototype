@@ -9,7 +9,7 @@ import type {
   WheelWithShiftInteraction,
   WheelWithControlInteraction,
   WheelWithMetaInteraction,
-} from '../useCanvasInteraction';
+} from './useCanvasInteraction';
 import type {Rect} from './geometry';
 
 import {Surface} from './Surface';

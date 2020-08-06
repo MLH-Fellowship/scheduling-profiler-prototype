@@ -1,6 +1,6 @@
 // @flow
 
-import type {Interaction} from '../useCanvasInteraction';
+import type {Interaction} from './useCanvasInteraction';
 import type {Size} from './geometry';
 
 import memoize from 'memoize-one';
