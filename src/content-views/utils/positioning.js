@@ -1,6 +1,6 @@
 // @flow
 
-import type {Rect} from '../../layout';
+import type {Rect} from '../../view-base';
 
 export function positioningScaleFactor(
   intrinsicWidth: number,

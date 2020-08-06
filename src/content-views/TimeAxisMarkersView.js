@@ -1,6 +1,6 @@
 // @flow
 
-import type {Rect, Size} from '../layout';
+import type {Rect, Size} from '../view-base';
 
 import {
   durationToWidth,
@@ -13,7 +13,7 @@ import {
   Surface,
   rectIntersectsRect,
   rectIntersectionWithRect,
-} from '../layout';
+} from '../view-base';
 import {
   COLORS,
   INTERVAL_TIMES,

@@ -1,6 +1,9 @@
 // @flow
 
-import type {Point, HorizontalPanAndZoomViewOnChangeCallback} from './layout';
+import type {
+  Point,
+  HorizontalPanAndZoomViewOnChangeCallback,
+} from './view-base';
 
 import {copy} from 'clipboard-js';
 import React, {
@@ -23,7 +26,7 @@ import {
   useCanvasInteraction,
   verticallyStackedLayout,
   zeroPoint,
-} from './layout';
+} from './view-base';
 
 import prettyMilliseconds from 'pretty-ms';
 import {getBatchRange} from './util/getBatchRange';

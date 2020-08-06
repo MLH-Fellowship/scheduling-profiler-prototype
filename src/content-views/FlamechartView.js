@@ -5,7 +5,7 @@ import type {
   FlamechartStackFrame,
   FlamechartStackLayer,
 } from '../types';
-import type {Interaction, MouseMoveInteraction, Rect, Size} from '../layout';
+import type {Interaction, MouseMoveInteraction, Rect, Size} from '../view-base';
 
 import {
   ColorView,
@@ -17,7 +17,7 @@ import {
   rectIntersectionWithRect,
   rectIntersectsRect,
   verticallyStackedLayout,
-} from '../layout';
+} from '../view-base';
 import {
   durationToWidth,
   positioningScaleFactor,

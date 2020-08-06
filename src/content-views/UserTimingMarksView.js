@@ -1,7 +1,7 @@
 // @flow
 
 import type {UserTimingMark} from '../types';
-import type {Interaction, MouseMoveInteraction, Rect, Size} from '../layout';
+import type {Interaction, MouseMoveInteraction, Rect, Size} from '../view-base';
 
 import {
   positioningScaleFactor,
@@ -15,7 +15,7 @@ import {
   rectContainsPoint,
   rectIntersectsRect,
   rectIntersectionWithRect,
-} from '../layout';
+} from '../view-base';
 import {
   COLORS,
   EVENT_ROW_PADDING,

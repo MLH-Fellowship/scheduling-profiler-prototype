@@ -1,7 +1,7 @@
 // @flow
 
 import type {ReactLane, ReactMeasure, ReactProfilerData} from '../types';
-import type {Interaction, MouseMoveInteraction, Rect, Size} from '../layout';
+import type {Interaction, MouseMoveInteraction, Rect, Size} from '../view-base';
 
 import {
   durationToWidth,
@@ -15,7 +15,7 @@ import {
   rectContainsPoint,
   rectIntersectsRect,
   rectIntersectionWithRect,
-} from '../layout';
+} from '../view-base';
 
 import {COLORS, BORDER_SIZE, REACT_MEASURE_HEIGHT} from './constants';
 import {REACT_TOTAL_NUM_LANES} from '../constants';

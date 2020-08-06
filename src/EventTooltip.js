@@ -1,6 +1,6 @@
 // @flow
 
-import type {Point} from './layout';
+import type {Point} from './view-base';
 import type {
   FlamechartStackFrame,
   ReactEvent,
