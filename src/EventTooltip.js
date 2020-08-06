@@ -157,7 +157,8 @@ const TooltipFlamechartNode = ({
   } = stackFrame;
   return (
     <div className={styles.Tooltip} ref={tooltipRef}>
-      {formatDuration(duration)} {trimComponentName(name)}
+      {formatDuration(duration)}
+      <span className={styles.FlamechartStackFrameName}>{name}</span>
       <div className={styles.DetailsGrid}>
         <div className={styles.DetailsGridLabel}>Timestamp:</div>
         <div>{formatTimestamp(timestamp)}</div>
@@ -202,7 +203,7 @@ const TooltipReactEvent = ({
         <span className={styles.ComponentName} style={{color}}>
           {trimComponentName(componentName)}
         </span>
-      )}{' '}
+      )}
       {label}
       <div className={styles.Divider} />
       <div className={styles.DetailsGrid}>
@@ -241,7 +242,8 @@ const TooltipReactMeasure = ({
 
   return (
     <div className={styles.Tooltip} ref={tooltipRef}>
-      {formatDuration(duration)} {label}
+      {formatDuration(duration)}
+      <span className={styles.ReactMeasureLabel}>{label}</span>
       <div className={styles.Divider} />
       <div className={styles.DetailsGrid}>
         <div className={styles.DetailsGridLabel}>Timestamp:</div>
@@ -267,7 +269,7 @@ const TooltipUserTimingMark = ({
   const {name, timestamp} = mark;
   return (
     <div className={styles.Tooltip} ref={tooltipRef}>
-      {name}
+      <span className={styles.UserTimingLabel}>{name}</span>
       <div className={styles.Divider} />
       <div className={styles.DetailsGrid}>
         <div className={styles.DetailsGridLabel}>Timestamp:</div>
