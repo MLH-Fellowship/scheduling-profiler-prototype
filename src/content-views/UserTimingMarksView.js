@@ -1,54 +1,50 @@
 // @flow
 
-import type {
-  Interaction,
-  MouseMoveInteraction,
-} from '../../useCanvasInteraction';
-import type {ReactEvent, ReactProfilerData} from '../../types';
-import type {Rect, Size} from '../../layout';
+import type {Interaction, MouseMoveInteraction} from '../useCanvasInteraction';
+import type {UserTimingMark} from '../types';
+import type {Rect, Size} from '../layout';
 
 import {
   positioningScaleFactor,
   timestampToPosition,
   positionToTimestamp,
   widthToDuration,
-} from '../canvasUtils';
+} from './utils/positioning';
 import {
   View,
   Surface,
   rectContainsPoint,
   rectIntersectsRect,
   rectIntersectionWithRect,
-} from '../../layout';
+} from '../layout';
 import {
   COLORS,
   EVENT_ROW_HEIGHT_FIXED,
   REACT_EVENT_ROW_PADDING,
   REACT_EVENT_SIZE,
   REACT_WORK_BORDER_SIZE,
-} from '../constants';
+} from './constants';
 
-function isSuspenseEvent(event: ReactEvent): boolean %checks {
-  return (
-    event.type === 'suspense-suspend' ||
-    event.type === 'suspense-resolved' ||
-    event.type === 'suspense-rejected'
-  );
-}
+// COMBAK: use this viewA
 
-export class ReactEventsView extends View {
-  _profilerData: ReactProfilerData;
+export class UserTimingMarksView extends View {
+  _marks: UserTimingMark[];
   _intrinsicSize: Size;
 
-  _hoveredEvent: ReactEvent | null = null;
-  onHover: ((event: ReactEvent | null) => void) | null = null;
+  _hoveredMark: UserTimingMark | null = null;
+  onHover: ((mark: UserTimingMark | null) => void) | null = null;
 
-  constructor(surface: Surface, frame: Rect, profilerData: ReactProfilerData) {
+  constructor(
+    surface: Surface,
+    frame: Rect,
+    marks: UserTimingMark[],
+    duration: number,
+  ) {
     super(surface, frame);
-    this._profilerData = profilerData;
+    this._marks = marks;
 
     this._intrinsicSize = {
-      width: this._profilerData.duration,
+      width: duration,
       height: EVENT_ROW_HEIGHT_FIXED,
     };
   }
@@ -57,71 +53,48 @@ export class ReactEventsView extends View {
     return this._intrinsicSize;
   }
 
-  setHoveredEvent(hoveredEvent: ReactEvent | null) {
-    if (this._hoveredEvent === hoveredEvent) {
+  setHoveredMark(hoveredMark: UserTimingMark | null) {
+    if (this._hoveredMark === hoveredMark) {
       return;
     }
-    this._hoveredEvent = hoveredEvent;
+    this._hoveredMark = hoveredMark;
     this.setNeedsDisplay();
   }
 
   /**
-   * Draw a single `ReactEvent` as a circle in the canvas.
+   * Draw a single `UserTimingMark` as a circle in the canvas.
    */
-  _drawSingleReactEvent(
+  _drawSingleMark(
     context: CanvasRenderingContext2D,
     rect: Rect,
-    event: ReactEvent,
+    mark: UserTimingMark,
     baseY: number,
     scaleFactor: number,
     showHoverHighlight: boolean,
   ) {
     const {frame} = this;
-    const {timestamp, type} = event;
+    const {timestamp} = mark;
 
     const x = timestampToPosition(timestamp, scaleFactor, frame);
     const radius = REACT_EVENT_SIZE / 2;
-    const eventRect: Rect = {
+    const markRect: Rect = {
       origin: {
         x: x - radius,
         y: baseY,
       },
       size: {width: REACT_EVENT_SIZE, height: REACT_EVENT_SIZE},
     };
-    if (!rectIntersectsRect(eventRect, rect)) {
+    if (!rectIntersectsRect(markRect, rect)) {
       return; // Not in view
     }
 
-    let fillStyle = null;
-
-    switch (type) {
-      case 'schedule-render':
-      case 'schedule-state-update':
-      case 'schedule-force-update':
-        if (event.isCascading) {
-          fillStyle = showHoverHighlight
-            ? COLORS.REACT_SCHEDULE_CASCADING_HOVER
-            : COLORS.REACT_SCHEDULE_CASCADING;
-        } else {
-          fillStyle = showHoverHighlight
-            ? COLORS.REACT_SCHEDULE_HOVER
-            : COLORS.REACT_SCHEDULE;
-        }
-        break;
-      case 'suspense-suspend':
-      case 'suspense-resolved':
-      case 'suspense-rejected':
-        fillStyle = showHoverHighlight
-          ? COLORS.REACT_SUSPEND_HOVER
-          : COLORS.REACT_SUSPEND;
-        break;
-      default:
-        console.warn(`Unexpected event type "${type}"`);
-        break;
-    }
+    // TODO: Use blue color from Firefox
+    const fillStyle = showHoverHighlight
+      ? COLORS.USER_TIMING_HOVER
+      : COLORS.USER_TIMING;
 
     if (fillStyle !== null) {
-      const y = eventRect.origin.y + radius;
+      const y = markRect.origin.y + radius;
 
       context.beginPath();
       context.fillStyle = fillStyle;
@@ -131,12 +104,7 @@ export class ReactEventsView extends View {
   }
 
   draw(context: CanvasRenderingContext2D) {
-    const {
-      frame,
-      _profilerData: {events},
-      _hoveredEvent,
-      visibleArea,
-    } = this;
+    const {frame, _marks, _hoveredMark, visibleArea} = this;
 
     context.fillStyle = COLORS.BACKGROUND;
     context.fillRect(
@@ -146,48 +114,39 @@ export class ReactEventsView extends View {
       visibleArea.size.height,
     );
 
-    // Draw events
+    // Draw marks
     const baseY = frame.origin.y + REACT_EVENT_ROW_PADDING;
     const scaleFactor = positioningScaleFactor(
       this._intrinsicSize.width,
       frame,
     );
 
-    const highlightedEvents: ReactEvent[] = [];
-
-    events.forEach(event => {
-      if (
-        event === _hoveredEvent ||
-        (_hoveredEvent &&
-          isSuspenseEvent(event) &&
-          isSuspenseEvent(_hoveredEvent) &&
-          event.id === _hoveredEvent.id)
-      ) {
-        highlightedEvents.push(event);
+    _marks.forEach(mark => {
+      if (mark === _hoveredMark) {
         return;
       }
-      this._drawSingleReactEvent(
+      this._drawSingleMark(
         context,
         visibleArea,
-        event,
+        mark,
         baseY,
         scaleFactor,
         false,
       );
     });
 
-    // Draw the highlighted items on top so they stand out.
+    // Draw the hovered and/or selected items on top so they stand out.
     // This is helpful if there are multiple (overlapping) items close to each other.
-    highlightedEvents.forEach(event => {
-      this._drawSingleReactEvent(
+    if (_hoveredMark !== null) {
+      this._drawSingleMark(
         context,
         visibleArea,
-        event,
+        _hoveredMark,
         baseY,
         scaleFactor,
         true,
       );
-    });
+    }
 
     // Render bottom border.
     // Propose border rect, check if intersects with `rect`, draw intersection.
@@ -231,30 +190,28 @@ export class ReactEventsView extends View {
       return;
     }
 
-    const {
-      _profilerData: {events},
-    } = this;
+    const {_marks} = this;
     const scaleFactor = positioningScaleFactor(
       this._intrinsicSize.width,
       frame,
     );
     const hoverTimestamp = positionToTimestamp(location.x, scaleFactor, frame);
-    const eventTimestampAllowance = widthToDuration(
+    const markTimestampAllowance = widthToDuration(
       REACT_EVENT_SIZE / 2,
       scaleFactor,
     );
 
     // Because data ranges may overlap, we want to find the last intersecting item.
     // This will always be the one on "top" (the one the user is hovering over).
-    for (let index = events.length - 1; index >= 0; index--) {
-      const event = events[index];
-      const {timestamp} = event;
+    for (let index = _marks.length - 1; index >= 0; index--) {
+      const mark = _marks[index];
+      const {timestamp} = mark;
 
       if (
-        timestamp - eventTimestampAllowance <= hoverTimestamp &&
-        hoverTimestamp <= timestamp + eventTimestampAllowance
+        timestamp - markTimestampAllowance <= hoverTimestamp &&
+        hoverTimestamp <= timestamp + markTimestampAllowance
       ) {
-        onHover(event);
+        onHover(mark);
         return;
       }
     }

@@ -1,15 +1,12 @@
 // @flow
 
-import type {
-  Interaction,
-  MouseMoveInteraction,
-} from '../../useCanvasInteraction';
+import type {Interaction, MouseMoveInteraction} from '../useCanvasInteraction';
 import type {
   Flamechart,
   FlamechartStackFrame,
   FlamechartStackLayer,
-} from '../../types';
-import type {Rect, Size} from '../../layout';
+} from '../types';
+import type {Rect, Size} from '../layout';
 
 import {
   ColorView,
@@ -21,12 +18,12 @@ import {
   rectIntersectionWithRect,
   rectIntersectsRect,
   verticallyStackedLayout,
-} from '../../layout';
+} from '../layout';
 import {
   durationToWidth,
   positioningScaleFactor,
   timestampToPosition,
-} from '../canvasUtils';
+} from './utils/positioning';
 import {
   COLORS,
   FLAMECHART_FONT_SIZE,
@@ -34,8 +31,8 @@ import {
   FLAMECHART_TEXT_PADDING,
   COLOR_HOVER_DIM_DELTA,
   REACT_WORK_BORDER_SIZE,
-} from '../constants';
-import {ColorGenerator, dimmedColor, hslaColorToString} from '../colors';
+} from './constants';
+import {ColorGenerator, dimmedColor, hslaColorToString} from './utils/colors';
 
 // Source: https://source.chromium.org/chromium/chromium/src/+/master:out/Debug/gen/devtools/timeline/TimelineUIUtils.js;l=2109;drc=fb32e928d79707a693351b806b8710b2f6b7d399
 const colorGenerator = new ColorGenerator(

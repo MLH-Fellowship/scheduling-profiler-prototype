@@ -1,28 +1,25 @@
 // @flow
 
-import type {
-  Interaction,
-  MouseMoveInteraction,
-} from '../../useCanvasInteraction';
-import type {ReactLane, ReactMeasure, ReactProfilerData} from '../../types';
-import type {Rect, Size} from '../../layout';
+import type {Interaction, MouseMoveInteraction} from '../useCanvasInteraction';
+import type {ReactLane, ReactMeasure, ReactProfilerData} from '../types';
+import type {Rect, Size} from '../layout';
 
 import {
   durationToWidth,
   positioningScaleFactor,
   positionToTimestamp,
   timestampToPosition,
-} from '../canvasUtils';
+} from './utils/positioning';
 import {
   View,
   Surface,
   rectContainsPoint,
   rectIntersectsRect,
   rectIntersectionWithRect,
-} from '../../layout';
+} from '../layout';
 
-import {COLORS, REACT_WORK_BORDER_SIZE, REACT_WORK_SIZE} from '../constants';
-import {REACT_TOTAL_NUM_LANES} from '../../constants';
+import {COLORS, REACT_WORK_BORDER_SIZE, REACT_WORK_SIZE} from './constants';
+import {REACT_TOTAL_NUM_LANES} from '../constants';
 
 const REACT_LANE_HEIGHT = REACT_WORK_SIZE + REACT_WORK_BORDER_SIZE;
 

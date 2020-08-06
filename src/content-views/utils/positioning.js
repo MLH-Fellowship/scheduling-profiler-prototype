@@ -1,7 +1,6 @@
 // @flow
-// Contains helper functions for rendering canvas elements
 
-import type {Rect} from '../layout';
+import type {Rect} from '../../layout';
 
 export function positioningScaleFactor(
   intrinsicWidth: number,

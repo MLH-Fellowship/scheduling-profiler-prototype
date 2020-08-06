@@ -1,19 +1,19 @@
 // @flow
 
-import type {Rect, Size} from '../../layout';
+import type {Rect, Size} from '../layout';
 
 import {
   durationToWidth,
   positioningScaleFactor,
   positionToTimestamp,
   timestampToPosition,
-} from '../canvasUtils';
+} from './utils/positioning';
 import {
   View,
   Surface,
   rectIntersectsRect,
   rectIntersectionWithRect,
-} from '../../layout';
+} from '../layout';
 import {
   COLORS,
   HEADER_HEIGHT_FIXED,
@@ -25,7 +25,7 @@ import {
   MARKER_TICK_HEIGHT,
   MIN_INTERVAL_SIZE_PX,
   REACT_WORK_BORDER_SIZE,
-} from '../constants';
+} from './constants';
 
 export class TimeAxisMarkersView extends View {
   _totalDuration: number;

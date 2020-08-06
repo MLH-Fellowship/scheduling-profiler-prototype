@@ -43,7 +43,7 @@ import {
   ReactMeasuresView,
   TimeAxisMarkersView,
   UserTimingMarksView,
-} from './content-views/views';
+} from './content-views';
 
 type ContextMenuContextData = {|
   data: ReactProfilerData,
