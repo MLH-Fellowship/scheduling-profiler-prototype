@@ -32,13 +32,6 @@ function formatDuration(ms) {
   return prettyMilliseconds(ms, {millisecondsDecimalDigits: 3});
 }
 
-function trimComponentName(name) {
-  if (name.length > 128) {
-    return name.substring(0, 127) + '...';
-  }
-  return name;
-}
-
 function getReactEventLabel(type): string | null {
   switch (type) {
     case 'schedule-render':
@@ -201,7 +194,7 @@ const TooltipReactEvent = ({
     <div className={styles.Tooltip} ref={tooltipRef}>
       {componentName && (
         <span className={styles.ComponentName} style={{color}}>
-          {trimComponentName(componentName)}
+          {componentName}
         </span>
       )}
       {label}
