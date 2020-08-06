@@ -26,7 +26,6 @@ import {
   durationToWidth,
   positioningScaleFactor,
   timestampToPosition,
-  trimFlamechartText,
 } from '../canvasUtils';
 import {
   COLORS,
@@ -62,6 +61,29 @@ function hoverColorForStackFrame(stackFrame: FlamechartStackFrame): string {
   );
   return hslaColorToString(color);
 }
+
+const cachedFlamechartTextWidths = new Map();
+const trimFlamechartText = (
+  context: CanvasRenderingContext2D,
+  text: string,
+  width: number,
+) => {
+  for (let i = text.length - 1; i >= 0; i--) {
+    const trimmedText = i === text.length - 1 ? text : text.substr(0, i) + '…';
+
+    let measuredWidth = cachedFlamechartTextWidths.get(trimmedText);
+    if (measuredWidth == null) {
+      measuredWidth = context.measureText(trimmedText).width;
+      cachedFlamechartTextWidths.set(trimmedText, measuredWidth);
+    }
+
+    if (measuredWidth <= width) {
+      return trimmedText;
+    }
+  }
+
+  return null;
+};
 
 class FlamechartStackLayerView extends View {
   /** Layer to display */
