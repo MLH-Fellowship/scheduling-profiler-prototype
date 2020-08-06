@@ -30,7 +30,7 @@ import {
   FLAMECHART_FRAME_HEIGHT,
   FLAMECHART_TEXT_PADDING,
   COLOR_HOVER_DIM_DELTA,
-  REACT_WORK_BORDER_SIZE,
+  BORDER_SIZE,
 } from './constants';
 import {ColorGenerator, dimmedColor, hslaColorToString} from './utils/colors';
 
@@ -168,8 +168,8 @@ class FlamechartStackLayerView extends View {
       const nodeRect: Rect = {
         origin: {x, y: frame.origin.y},
         size: {
-          width: Math.floor(width - REACT_WORK_BORDER_SIZE),
-          height: Math.floor(FLAMECHART_FRAME_HEIGHT - REACT_WORK_BORDER_SIZE),
+          width: Math.floor(width - BORDER_SIZE),
+          height: Math.floor(FLAMECHART_FRAME_HEIGHT - BORDER_SIZE),
         },
       };
       if (!rectIntersectsRect(nodeRect, visibleArea)) {

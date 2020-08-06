@@ -24,19 +24,14 @@ export const INTERVAL_TIMES = [
 ];
 export const MIN_INTERVAL_SIZE_PX = 70;
 
-export const REACT_EVENT_ROW_PADDING = 4;
-export const REACT_EVENT_SIZE = 6;
-export const REACT_WORK_SIZE = 9;
-export const REACT_WORK_BORDER_SIZE = 1;
+export const EVENT_ROW_PADDING = 4;
+export const EVENT_DIAMETER = 6;
+export const REACT_MEASURE_HEIGHT = 9;
+export const BORDER_SIZE = 1;
 
 export const FLAMECHART_FONT_SIZE = 10;
 export const FLAMECHART_FRAME_HEIGHT = 16;
 export const FLAMECHART_TEXT_PADDING = 3;
-
-export const LABEL_FIXED_WIDTH = LABEL_SIZE + REACT_WORK_BORDER_SIZE;
-export const HEADER_HEIGHT_FIXED = MARKER_HEIGHT + REACT_WORK_BORDER_SIZE;
-export const EVENT_ROW_HEIGHT_FIXED =
-  REACT_EVENT_ROW_PADDING + REACT_EVENT_SIZE + REACT_EVENT_ROW_PADDING;
 
 export const COLORS = Object.freeze({
   BACKGROUND: '#ffffff',
