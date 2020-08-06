@@ -19,7 +19,7 @@ import {
   MIN_ZOOM_LEVEL,
   MAX_ZOOM_LEVEL,
   MOVE_WHEEL_DELTA_THRESHOLD,
-} from '../canvas/constants'; // TODO: Remove external dependency
+} from '../content-views/constants'; // TODO: Remove external dependency
 
 type HorizontalPanAndZoomState = $ReadOnly<{|
   /** Horizontal offset; positive in the left direction */

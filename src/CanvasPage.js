@@ -29,7 +29,7 @@ import {getBatchRange} from './util/getBatchRange';
 import EventTooltip from './EventTooltip';
 import styles from './CanvasPage.css';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import {COLORS} from './canvas/constants';
+import {COLORS} from './content-views/constants';
 
 import {ContextMenu, ContextMenuItem, useContextMenu} from './context';
 
@@ -43,7 +43,7 @@ import {
   ReactMeasuresView,
   TimeAxisMarkersView,
   UserTimingMarksView,
-} from './canvas/views';
+} from './content-views/views';
 
 type ContextMenuContextData = {|
   data: ReactProfilerData,

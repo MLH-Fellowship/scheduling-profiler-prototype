@@ -3,7 +3,7 @@
 import type {Interaction} from '../useCanvasInteraction';
 import type {Size} from './geometry';
 
-import {getCanvasContext} from '../canvas/canvasUtils';
+import {getCanvasContext} from '../content-views/canvasUtils';
 
 import {View} from './View';
 import {zeroPoint} from './geometry';

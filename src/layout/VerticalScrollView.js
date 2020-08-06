@@ -12,7 +12,7 @@ import type {Rect} from './geometry';
 import {Surface} from './Surface';
 import {View} from './View';
 import {rectContainsPoint} from './geometry';
-import {MOVE_WHEEL_DELTA_THRESHOLD} from '../canvas/constants'; // TODO: Remove external dependency
+import {MOVE_WHEEL_DELTA_THRESHOLD} from '../content-views/constants'; // TODO: Remove external dependency
 
 type VerticalScrollState = $ReadOnly<{|
   offsetY: number,

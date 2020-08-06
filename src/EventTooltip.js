@@ -13,7 +13,7 @@ import type {
 
 import prettyMilliseconds from 'pretty-ms';
 import React, {Fragment, useRef} from 'react';
-import {COLORS} from './canvas/constants';
+import {COLORS} from './content-views/constants';
 import {getBatchRange} from './util/getBatchRange';
 import useSmartTooltip from './util/useSmartTooltip';
 import styles from './EventTooltip.css';
