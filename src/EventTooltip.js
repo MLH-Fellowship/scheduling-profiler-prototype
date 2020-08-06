@@ -14,8 +14,8 @@ import type {
 import prettyMilliseconds from 'pretty-ms';
 import React, {Fragment, useRef} from 'react';
 import {COLORS} from './content-views/constants';
-import {getBatchRange} from './util/getBatchRange';
-import useSmartTooltip from './util/useSmartTooltip';
+import {getBatchRange} from './utils/getBatchRange';
+import useSmartTooltip from './utils/useSmartTooltip';
 import styles from './EventTooltip.css';
 
 type Props = {|

@@ -29,7 +29,7 @@ import {
 } from './view-base';
 
 import prettyMilliseconds from 'pretty-ms';
-import {getBatchRange} from './util/getBatchRange';
+import {getBatchRange} from './utils/getBatchRange';
 import EventTooltip from './EventTooltip';
 import styles from './CanvasPage.css';
 import AutoSizer from 'react-virtualized-auto-sizer';
