@@ -32,6 +32,13 @@ function formatDuration(ms) {
   return prettyMilliseconds(ms, {millisecondsDecimalDigits: 3});
 }
 
+function trimmedString(string: string, length: number): string {
+  if (string.length > length) {
+    return `${string.substr(0, length - 1)}…`;
+  }
+  return string;
+}
+
 function getReactEventLabel(type): string | null {
   switch (type) {
     case 'schedule-render':
@@ -194,7 +201,7 @@ const TooltipReactEvent = ({
     <div className={styles.Tooltip} ref={tooltipRef}>
       {componentName && (
         <span className={styles.ComponentName} style={{color}}>
-          {componentName}
+          {trimmedString(componentName, 768)}
         </span>
       )}
       {label}
