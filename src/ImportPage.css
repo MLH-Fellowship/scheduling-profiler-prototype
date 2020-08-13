@@ -1,6 +1,7 @@
 .App {
   background-color: #282c34;
   text-align: center;
+  overflow: hidden;
 }
 
 .container {
@@ -22,6 +23,9 @@
   transition: 0.2s;
   font-size: calc(10px + 1.5vmin);
 }
+.header{
+  margin-right: 1.5rem;
+}
 
 kbd {
   display: inline-block;
@@ -30,6 +34,71 @@ kbd {
   margin: 0 0.2em;
   background-color: #f6f6f6;
   border-radius: 0.2em;
+}
+
+/* Spinner */
+.loader {
+  font-size: 10px;
+  margin: auto;
+  text-indent: -9999em;
+  width: 10em;
+  height: 10em;
+  border-radius: 50%;
+  background: #61dafb;
+  background: -moz-linear-gradient(left, #61dafb 10%, rgba(255, 255, 255, 0) 42%);
+  background: -webkit-linear-gradient(left, #61dafb 10%, rgba(255, 255, 255, 0) 42%);
+  background: -o-linear-gradient(left, #61dafb 10%, rgba(255, 255, 255, 0) 42%);
+  background: -ms-linear-gradient(left, #61dafb 10%, rgba(255, 255, 255, 0) 42%);
+  background: linear-gradient(to right, #61dafb 10%, rgba(255, 255, 255, 0) 42%);
+  position: relative;
+  -webkit-animation: load3 1.4s infinite linear;
+  animation: load3 1.4s infinite linear;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.loader:before {
+  width: 50%;
+  height: 50%;
+  background: #61dafb;
+  border-radius: 100% 0 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+}
+.loader:after {
+  background: white;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+@-webkit-keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
 /* Landing Graphic */
@@ -53,13 +122,8 @@ kbd {
   padding-left: 2rem;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.subtext{
+  font-size: 14px;
 }
 
 hr {
@@ -115,7 +179,7 @@ hr {
 }
 
 .buttongrp {
-  float: left; /* Float the buttons side by side */
+  float: left;
 }
 
 .button {
@@ -138,15 +202,6 @@ hr {
   transition: 0.3s;
 }
 
-.button span:after {
-  content: '\00bb';
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  right: -20px;
-  transition: 0.3s;
-}
-
 .button:hover {
   background-color: white;
   color: black;
@@ -161,7 +216,7 @@ hr {
   right: 0;
 }
 
-/* Button2 styling */
+/* Button Transparent styling */
 .btndoc {
   background-color: transparent;
   color: black;
@@ -203,4 +258,129 @@ hr {
 .btndoc:hover span:after {
   opacity: 1;
   right: 0;
+}
+
+/* How-to Overlay */
+@media only screen and (min-width: 40em) {
+  .modalOverlay {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+            justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    background-color: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+    -webkit-transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1), visibility 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+    transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1), visibility 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+  }
+  .modalOverlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+.modal {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+          justify-content: center;
+  position: relative;
+  margin: 0 auto;
+  background-color: #fff;
+  width: 80%;
+  max-width: 75rem;
+  min-height: 20rem;
+  padding: 1rem;
+  border-radius: 3px;
+  opacity: 0;
+  overflow-y: auto;
+  visibility: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transform: scale(1.2);
+          transform: scale(1.2);
+  -webkit-transition: all 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+  transition: all 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+}
+.modal .closeModal {
+  position: absolute;
+  cursor: pointer;
+  top: 5px;
+  right: 15px;
+  opacity: 0;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1), -webkit-transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+  transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1), -webkit-transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+  transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1), transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+  transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1), transform 0.3s cubic-bezier(0.55, 0, 0.1, 1), -webkit-transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+  -webkit-transition-delay: 0.3s;
+          transition-delay: 0.3s;
+}
+.modal .closeModal svg {
+  width: 1.75em;
+  height: 1.75em;
+}
+.modal .modalContent {
+  width: 100%;
+  text-align: left;
+  opacity: 0;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+  transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+  -webkit-transition-delay: 0.3s;
+          transition-delay: 0.3s;
+}
+.modal.active {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transform: scale(1);
+          transform: scale(1);
+}
+.modal.active .modalContent {
+  opacity: 1;
+}
+.modal.active .closeModal {
+  -webkit-transform: translateY(10px);
+          transform: translateY(10px);
+  opacity: 1;
+}
+
+/**
+ * Mobile styling
+ */
+@media only screen and (max-width: 39.9375em) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 0;
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+    padding: 0 !important;
+  }
+
+  .closeModal {
+    right: 20px !important;
+  }
 }
