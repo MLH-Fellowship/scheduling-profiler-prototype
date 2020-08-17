@@ -4,7 +4,10 @@ import type {TimelineEvent} from '@elg/speedscope';
 import type {ReactProfilerData} from './types';
 
 import React, {useEffect, useState, useCallback, useRef} from 'react';
-import profilerBrowser from './assets/profilerBrowser.png';
+// Imported assets use suffix 'Img'
+import profilerBrowserImg from './assets/profilerBrowser.png';
+import lanesImg from './assets/lanes.png';
+import flamechartImg from './assets/flamechart.png';
 import style from './ImportPage.css';
 
 import preprocessData from './utils/preprocessData';
@@ -28,12 +31,12 @@ export default function ImportPage({onDataImported}: Props) {
   );
 
   // DEV only: auto-import a demo profile on component mount (i.e. page load)
-  // useEffect(() => {
-  //   if (process.env.NODE_ENV === 'production') return;
-  //   fetch(JSON_PATH)
-  //     .then(res => res.json())
-  //     .then(processTimeline);
-  // }, [processTimeline]);
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    fetch(JSON_PATH)
+      .then(res => res.json())
+      .then(processTimeline);
+  }, [processTimeline]);
 
   const handleProfilerInput = useCallback(
     async (event: File) => {
@@ -67,7 +70,7 @@ export default function ImportPage({onDataImported}: Props) {
                   </>
                 ) : (
                   <img
-                    src={profilerBrowser}
+                    src={profilerBrowserImg}
                     className={style.browserScreenshot}
                     alt="logo"
                   />
@@ -78,7 +81,9 @@ export default function ImportPage({onDataImported}: Props) {
                   <span className={style.header}>
                     React Concurrent Mode Profiler
                   </span>
-                  <a href="https://github.com/MLH-Fellowship/scheduling-profiler-prototype">
+                  <a
+                    target="_blank"
+                    href="https://github.com/MLH-Fellowship/scheduling-profiler-prototype">
                     <svg width="24" height="24" viewBox="0 0 16 16">
                       <path
                         fillRule="evenodd"
@@ -143,51 +148,81 @@ export default function ImportPage({onDataImported}: Props) {
                     <div className={style.modalContent}>
                       <div className={style.cardcontainer}>
                         <div className={style.columncontent}>
-                          <h2>
-                            React Concurrent Mode Profiler
-                            <svg
-                              width="24"
-                              height="24"
-                              className={style.githubLogo}
-                              viewBox="0 0 16 16">
-                              <path
-                                fill-rule="evenodd"
-                                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+                          <h1>Getting Started</h1>
+
+                          <div className={style.modalRow}>
+                            <div className={style.modalColumn}>
+                              The event row displays React events and custom
+                              timing marks. The gray bars show the lanes React
+                              was working in. Hover over different measures to
+                              get more information.
+                            </div>
+                            <div className={style.modalColumn}>
+                              <img
+                                src={lanesImg}
+                                className={style.modalImg}
+                                alt="logo"
                               />
-                            </svg>
-                          </h2>
-                          <hr />
-                          <p>
-                            Import a captured{' '}
-                            <a
-                              className={style.link}
-                              href="https://developers.google.com/web/tools/chrome-devtools/evaluate-performance">
-                              performance profile
-                            </a>{' '}
-                            from Chrome Devtools.
-                            <br />
-                            <br />
-                            To zoom, scroll while holding down <kbd>
-                              Ctrl
-                            </kbd>{' '}
-                            or <kbd>Shift</kbd>
-                          </p>
-                          <p className={style.legendKey}>
-                            <svg height="20" width="20">
-                              <circle cx="10" cy="10" r="5" fill="#ff718e" />
-                            </svg>
-                            State Update Scheduled
-                            <br />
-                            <svg height="20" width="20">
-                              <circle cx="10" cy="10" r="5" fill="#9fc3f3" />
-                            </svg>
-                            State Update Scheduled
-                            <br />
-                            <svg height="20" width="20">
-                              <circle cx="10" cy="10" r="5" fill="#a6e59f" />
-                            </svg>
-                            Suspended
-                          </p>
+                            </div>
+                          </div>
+                          <div className={style.modalRow}>
+                            <div className={style.modalColumn}>
+                              Hover over the flamechart to get information about
+                              an individual flame cell. Similar colored
+                              flamecells show work done from the same origin
+                              URL.
+                            </div>
+                            <div className={style.modalColumn}>
+                              <img
+                                src={flamechartImg}
+                                className={style.modalImg}
+                                alt="logo"
+                              />
+                            </div>
+                          </div>
+                          <div className={style.modalRow}>
+                            <div className={style.modalColumn}>
+                              <p>
+                                To zoom, scroll while holding down{' '}
+                                <kbd>Ctrl</kbd> or <kbd>Shift</kbd>. Drag the
+                                grey bar above the flamechart to vertically
+                                resize sections.
+                              </p>
+                            </div>
+                            <div className={style.modalColumn}>
+                              <p className={style.legendKey}>
+                                <svg height="20" width="20">
+                                  <circle
+                                    cx="10"
+                                    cy="10"
+                                    r="5"
+                                    fill="#ff718e"
+                                  />
+                                </svg>
+                                State Update Scheduled
+                                <br />
+                                <svg height="20" width="20">
+                                  <circle
+                                    cx="10"
+                                    cy="10"
+                                    r="5"
+                                    fill="#9fc3f3"
+                                  />
+                                </svg>
+                                State Update Scheduled
+                                <br />
+                                <svg height="20" width="20">
+                                  <circle
+                                    cx="10"
+                                    cy="10"
+                                    r="5"
+                                    fill="#a6e59f"
+                                  />
+                                </svg>
+                                Suspended
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
