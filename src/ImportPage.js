@@ -94,6 +94,10 @@ export default function ImportPage({onDataImported}: Props) {
                 </h2>
                 <hr />
                 <p>
+                  Analyze and improve React application performance in the new
+                  cooperative mode called Concurrent Mode.
+                  <br />
+                  <br />
                   Import a captured{' '}
                   <a
                     className={style.link}
@@ -101,10 +105,6 @@ export default function ImportPage({onDataImported}: Props) {
                     performance profile
                   </a>{' '}
                   from Chrome Devtools.
-                  <br />
-                  <br />
-                  According to all known laws of aviation, there is no way a bee
-                  should be able to fly.
                 </p>
 
                 <div className={style.buttongrp}>
@@ -169,8 +169,7 @@ export default function ImportPage({onDataImported}: Props) {
                             <div className={style.modalColumn}>
                               Hover over the flamechart to get information about
                               an individual flame cell. Similar colored
-                              flamecells show work done from the same origin
-                              URL.
+                              flamecells represent work done from the same URL.
                             </div>
                             <div className={style.modalColumn}>
                               <img
@@ -183,10 +182,10 @@ export default function ImportPage({onDataImported}: Props) {
                           <div className={style.modalRow}>
                             <div className={style.modalColumn}>
                               <p>
-                                To zoom, scroll while holding down{' '}
-                                <kbd>Ctrl</kbd> or <kbd>Shift</kbd>. Drag the
-                                grey bar above the flamechart to vertically
-                                resize sections.
+                                Scroll while holding down <kbd>Ctrl</kbd> or{' '}
+                                <kbd>Shift</kbd> to zoom. Drag the grey bar
+                                above the flamechart to vertically resize
+                                sections.
                               </p>
                             </div>
                             <div className={style.modalColumn}>
