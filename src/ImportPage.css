@@ -135,6 +135,7 @@ kbd {
   border: 1px solid #d7dfe4;
   border-radius: 0.4em;
   box-shadow: 0 2px 4px #ddd;
+  margin: auto;
 }
 
 .legendKey {
@@ -144,6 +145,12 @@ kbd {
 
 .legendKey > svg {
   padding-left: 2rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .legendKey {
+    font-size: calc(4px + 1.5vmin);
+  }
 }
 
 .subtext {
