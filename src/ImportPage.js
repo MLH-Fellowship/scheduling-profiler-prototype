@@ -188,39 +188,6 @@ export default function ImportPage({onDataImported}: Props) {
                                 sections.
                               </p>
                             </div>
-                            <div className={style.modalColumn}>
-                              <p className={style.legendKey}>
-                                <svg height="20" width="20">
-                                  <circle
-                                    cx="10"
-                                    cy="10"
-                                    r="5"
-                                    fill="#ff718e"
-                                  />
-                                </svg>
-                                State Update Scheduled
-                                <br />
-                                <svg height="20" width="20">
-                                  <circle
-                                    cx="10"
-                                    cy="10"
-                                    r="5"
-                                    fill="#9fc3f3"
-                                  />
-                                </svg>
-                                State Update Scheduled
-                                <br />
-                                <svg height="20" width="20">
-                                  <circle
-                                    cx="10"
-                                    cy="10"
-                                    r="5"
-                                    fill="#a6e59f"
-                                  />
-                                </svg>
-                                Suspended
-                              </p>
-                            </div>
                           </div>
                         </div>
                       </div>

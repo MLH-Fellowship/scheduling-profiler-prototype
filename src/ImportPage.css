@@ -67,8 +67,8 @@ kbd {
     rgba(255, 255, 255, 0) 42%
   );
   position: relative;
-  -webkit-animation: load3 1.4s infinite linear;
-  animation: load3 1.4s infinite linear;
+  -webkit-animation: load 1.4s infinite linear;
+  animation: load 1.4s infinite linear;
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
@@ -96,7 +96,7 @@ kbd {
   bottom: 0;
   right: 0;
 }
-@-webkit-keyframes load3 {
+@-webkit-keyframes load {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
@@ -106,7 +106,7 @@ kbd {
     transform: rotate(360deg);
   }
 }
-@keyframes load3 {
+@keyframes load {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
@@ -122,39 +122,20 @@ kbd {
   width: 35rem;
   max-width: inherit;
   align-self: center;
-  justify-content: center;
   border: 1px solid #d7dfe4;
   border-radius: 0.4em;
   box-shadow: 0 2px 4px #ddd;
 }
 
 .modalImg {
-  max-width: 90%;
+  width: 40rem;
+  max-width: inherit;
   align-self: center;
-  justify-content: center;
   border: 1px solid #d7dfe4;
   border-radius: 0.4em;
   box-shadow: 0 2px 4px #ddd;
   margin: auto;
-}
-
-.legendKey {
-  font-size: calc(8px + 1.5vmin);
-  margin: auto;
-}
-
-.legendKey > svg {
-  padding-left: 2rem;
-}
-
-@media only screen and (max-width: 600px) {
-  .legendKey {
-    font-size: calc(4px + 1.5vmin);
-  }
-}
-
-.subtext {
-  font-size: 14px;
+  margin-top: 1.5rem;
 }
 
 hr {
@@ -171,6 +152,7 @@ hr {
 }
 
 .modalRow {
+  min-width: 40%;
   margin-top: 1.5rem;
   display: flex;
   flex-direction: row;
@@ -201,10 +183,8 @@ hr {
 .modalColumn {
   display: flex;
   flex-direction: column;
-  flex-basis: 100%;
-  flex: 1;
-  text-align: justify;
-  width: 50%;
+  flex: 1 auto;
+  text-align: left;
 }
 
 /* Card Styling */
@@ -353,8 +333,9 @@ hr {
   margin: 0 auto;
   background-color: #fff;
   width: 80%;
-  max-width: 75rem;
   min-height: 20rem;
+  max-height: 100%;
+  max-width: 75rem;
   padding: 1rem;
   border-radius: 3px;
   opacity: 0;
